@@ -54,12 +54,12 @@ elmo-hikes/
 
 ---
 
+
 ## Contributors 
 -**Abhia**- BCIT CST student, likes going out, shopping and drinking iced coffee.
 - **Minsung** - BCIT CST Student with a passion for coding and inventing something new. Fun fact:I like modifiying cars and going for a cruise.
 - **Jessie Yuen** - BCIT CST Student with an enthusiasm for arts and shopping. Enjoys the great outdoors.
-- **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
-
+- **Faida** - BCIT CST Student who likes video games.
 ---
 
 ## Acknowledgments
