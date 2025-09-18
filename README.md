@@ -55,8 +55,10 @@ elmo-hikes/
 ---
 
 ## Contributors
-
+HEAD
+- **Minsung** - BCIT CST Student with a passion for coding and inventing something new. Fun fact:I like modifiying cars and going for a cruise.
 - **Jessie Yuen** - BCIT CST Student with an enthusiasm for arts and shopping. Enjoys the great outdoors.
+main
 - **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
 
 ---
