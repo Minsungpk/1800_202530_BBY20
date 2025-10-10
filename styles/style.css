@@ -1,3 +1,4 @@
+feature/intro-JessieEY27
 .navbar-light .navbar-brand,
 .navbar-light .navbar-nav .nav-link {
   color: white; /* Dark green for brand name & nav links for visibility */
@@ -10,3 +11,33 @@
   background-color: grey;
   display: none;
 }
+=======
+#welcomepage{
+
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 20px;
+    margin: 100px;
+    height: 500px;
+    width: 400px;
+    font-size: 20px;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+}
+
+#user{
+    background-color: rgb(176, 176, 176);
+    border-radius: 20px;
+    height: 180px;
+    font-size: 30px;
+}
+
+#user2{
+    background-color: rgb(179, 178, 178);
+    height: 180px;
+    border-radius: 20px;
+    font-size: 30px;
+}
+main
