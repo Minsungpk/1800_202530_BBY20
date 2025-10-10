@@ -8,3 +8,34 @@ button.btn-custom-clear {
     background-color: #20c997; /* Teal */
     color: white;
 }
+feature/intro-JessieEY27
+.navbar-light .navbar-brand,
+.navbar-light .navbar-nav .nav-link {
+  color: white; /* Dark green for brand name & nav links for visibility */
+}
+.navbar-brand {
+  font-family: "Helvetica", cursive; /*change the font name for what you have*/
+  font-size: 2.25rem;
+}
+.container-fluid {
+  background-color: grey;
+  display: none;
+}
+/* #welcomepage{
+} */
+    
+
+#user{
+    background-color: rgb(176, 176, 176);
+    border-radius: 20px;
+    height: 180px;
+    font-size: 30px;
+}
+
+#user2{
+    background-color: rgb(179, 178, 178);
+    height: 180px;
+    border-radius: 20px;
+    font-size: 30px;
+}
+/* main */
