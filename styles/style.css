@@ -1,3 +1,13 @@
+/* styles/style.css */
+button.btn-custom-add {
+    background-color: #6f42c1; /* Purple */
+    color: white;
+}
+
+button.btn-custom-clear {
+    background-color: #20c997; /* Teal */
+    color: white;
+}
 feature/intro-JessieEY27
 .navbar-light .navbar-brand,
 .navbar-light .navbar-nav .nav-link {
