@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>To‑Do List</title>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background: #f8f9fa; }
+    .todo-item.completed .todo-text { text-decoration: line-through; opacity: .6; }
+    .todo-item .todo-text[contenteditable="true"] { outline: 2px dashed #dee2e6; border-radius: .25rem; padding: .1rem .25rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Group name</a>
+      <div class="ms-auto">
+        <a class="btn btn-outline-light btn-sm" href="/">← Back to Main</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="d-flex align-items-center mb-3 gap-2">
+          <h1 class="h3 mb-0">My To‑Do List</h1>
+          <span class="badge text-bg-secondary" id="userBadge">guest</span>
+        </div>
+
+        <!-- Add form -->
+        <form id="addForm" class="card shadow-sm mb-3" autocomplete="off">
+          <div class="card-body d-flex gap-2">
+            <input id="todoInput" class="form-control" type="text" placeholder="What do you need to do?" required />
+            <button class="btn btn-primary" type="submit">Add</button>
+          </div>
+        </form>
+
+        <!-- Filters + actions -->
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+          <div class="btn-group" role="group" aria-label="Filters">
+            <input type="radio" class="btn-check" name="filter" id="filter-all" value="all" checked>
+            <label class="btn btn-outline-secondary" for="filter-all">All</label>
+            <input type="radio" class="btn-check" name="filter" id="filter-active" value="active">
+            <label class="btn btn-outline-secondary" for="filter-active">Active</label>
+            <input type="radio" class="btn-check" name="filter" id="filter-completed" value="completed">
+            <label class="btn btn-outline-secondary" for="filter-completed">Completed</label>
+          </div>
+          <button id="clearCompleted" class="btn btn-outline-danger btn-sm ms-auto">Clear completed</button>
+        </div>
+
+        <!-- List -->
+        <ul id="todoList" class="list-group shadow-sm"></ul>
+
+        <!-- Stats -->
+        <div class="text-muted small mt-2" id="stats"></div>
+      </div>
+    </div>
+  </main>
+
+  <template id="todoItemTemplate">
+    <li class="list-group-item d-flex align-items-center justify-content-between gap-2 todo-item">
+      <div class="d-flex align-items-center gap-2 flex-grow-1">
+        <input class="form-check-input m-0 toggle" type="checkbox" aria-label="Mark complete" />
+        <span class="todo-text flex-grow-1" role="textbox" aria-label="Task text" tabindex="0"></span>
+      </div>
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-outline-secondary edit" type="button">Edit</button>
+        <button class="btn btn-outline-danger delete" type="button">Delete</button>
+      </div>
+    </li>
+  </template>
+
+  <script>
+    // --- Minimal, framework‑free to‑do app with Bootstrap UI ---
+
+    /**
+     * Storage is namespaced per user: key = `todo:<userId>`
+     * Call setUser('someId') after login integration.
+     */
+    const App = (() => {
+      let userId = 'guest';
+      const els = {
+        addForm: document.getElementById('addForm'),
+        input: document.getElementById('todoInput'),
+        list: document.getElementById('todoList'),
+        template: document.getElementById('todoItemTemplate'),
+        stats: document.getElementById('stats'),
+        filters: document.querySelectorAll('input[name="filter"]'),
+        clearCompleted: document.getElementById('clearCompleted'),
+        userBadge: document.getElementById('userBadge'),
+      };
+
+      let todos = /** @type {Array<{id:string,text:string,done:boolean,created:number}>} */([]);
+      let activeFilter = 'all';
+
+      const storageKey = () => `todo:${userId}`;
+      const save = () => localStorage.setItem(storageKey(), JSON.stringify(todos));
+      const load = () => JSON.parse(localStorage.getItem(storageKey()) || '[]');
+
+      const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+
+      function render() {
+        els.list.innerHTML = '';
+        const frag = document.createDocumentFragment();
+        const filtered = todos.filter(t => activeFilter === 'all' ? true : activeFilter === 'active' ? !t.done : t.done);
+        for (const t of filtered) {
+          const li = els.template.content.firstElementChild.cloneNode(true);
+          li.dataset.id = t.id;
+          li.querySelector('.toggle').checked = t.done;
+          const textSpan = li.querySelector('.todo-text');
+          textSpan.textContent = t.text;
+          if (t.done) li.classList.add('completed');
+          frag.appendChild(li);
+        }
+        els.list.appendChild(frag);
+        updateStats();
+      }
+
+      function updateStats() {
+        const total = todos.length;
+        const remaining = todos.filter(t => !t.done).length;
+        els.stats.textContent = `${remaining} of ${total} remaining`;
+      }
+
+      function addTodo(text) {
+        todos.push({ id: uid(), text: text.trim(), done: false, created: Date.now() });
+        save(); render();
+      }
+
+      function toggle(id) {
+        const t = todos.find(x => x.id === id); if (!t) return; t.done = !t.done; save(); render();
+      }
+
+      function remove(id) {
+        todos = todos.filter(x => x.id !== id); save(); render();
+      }
+
+      function edit(id) {
+        const t = todos.find(x => x.id === id); if (!t) return; 
+        // Focus the corresponding span and make it editable
+        const li = els.list.querySelector(`[data-id="${id}"]`);
+        const span = li.querySelector('.todo-text');
+        span.setAttribute('contenteditable', 'true');
+        span.focus();
+        // Move caret to end
+        document.getSelection()?.collapse(span, 1);
+      }
+
+      function commitEdit(id, newText) {
+        newText = newText.trim();
+        if (!newText) { remove(id); return; }
+        const t = todos.find(x => x.id === id); if (!t) return;
+        t.text = newText; save(); render();
+      }
+
+      function clearCompleted() {
+        todos = todos.filter(t => !t.done); save(); render();
+      }
+
+      function bind() {
+        els.addForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const text = els.input.value.trim();
+          if (!text) return;
+          addTodo(text);
+          els.input.value = '';
+          els.input.focus();
+        });
+
+        els.list.addEventListener('click', (e) => {
+          const li = e.target.closest('.todo-item'); if (!li) return;
+          const id = li.dataset.id;
+          if (e.target.matches('.toggle')) toggle(id);
+          else if (e.target.matches('.delete')) remove(id);
+          else if (e.target.matches('.edit')) edit(id);
+        });
+
+        // Commit edit on Enter or blur
+        els.list.addEventListener('keydown', (e) => {
+          if (!(e.target instanceof HTMLElement)) return;
+          if (!e.target.classList.contains('todo-text')) return;
+          if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+        });
+        els.list.addEventListener('focusout', (e) => {
+          if (!(e.target instanceof HTMLElement)) return;
+          if (!e.target.classList.contains('todo-text')) return;
+          const li = e.target.closest('.todo-item');
+          e.target.removeAttribute('contenteditable');
+          commitEdit(li.dataset.id, e.target.textContent || '');
+        });
+
+        // Filters
+        els.filters.forEach(r => r.addEventListener('change', () => {
+          activeFilter = document.querySelector('input[name="filter"]:checked').value;
+          render();
+        }));
+
+        els.clearCompleted.addEventListener('click', () => clearCompleted());
+
+        // Keyboard: quickly add with Cmd/Ctrl+Enter
+        document.addEventListener('keydown', (e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            const val = els.input.value.trim(); if (val) { addTodo(val); els.input.value = ''; }
+          }
+        });
+      }
+
+      function setUser(newUserId) {
+        userId = newUserId || 'guest';
+        els.userBadge.textContent = userId;
+        todos = load();
+        render();
+      }
+
+      function init() {
+        bind();
+        todos = load();
+        render();
+      }
+
+      return { init, setUser };
+    })();
+
+    // Boot
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+      // When you wire up login, call: App.setUser('<userId-from-login>')
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<!-- Link this html once the main page is done. 
+ <a class="btn btn-primary" href="todolist.html">My To-Do List</a>
+-->
