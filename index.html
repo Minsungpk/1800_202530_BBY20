@@ -78,12 +78,47 @@
     <div class="card-body">
       <h5 class="card-title">Group to do list</h5>
       <p class="card-text">Connect with your friends group.<br>Go make a group to-do list for your group today!</p>
-
     </div>
   </div>
 
 
+  <!-- Group to-do list -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="mb-4">Name of list</h5>
+      
+      <ul class="list-group">
+        <li class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
+          <label class="form-check-label" for="firstCheckbox">Plan party</label>
+        </li>
+        <li class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" value="" id="secondCheckbox">
+          <label class="form-check-label" for="secondCheckbox">Buy halloween decor</label>
+        </li>
+        <li class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox">
+          <label class="form-check-label" for="thirdCheckbox">Order food and snacks</label>
+        </li>
+      </ul>
+    </div>
 
+    <div class="card-body">
+      <hr class="mb-4">
+    
+      <div class="mb-3">
+        <input type="text" id="itemInput" class="form-control" placeholder="Add tasks...">
+      </div>
+      <div class="d-grid gap-2 mb-4">
+        <button class="btn btn-success" id="addItemBtn">Add Item</button>
+        <button class="btn btn-warning" id="clearListBtn">Clear List</button>
+      </div>
+    </div>
+  </div>
+  
+
+
+<!-- To-do list -->
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Todo list</h5>
@@ -119,36 +154,7 @@
   </div>
 </div>
 
-    <div class="container py-5">
-        <h1 class="mb-4 text-center">Name of list</h1>
-        <hr class="mb-4">
-    
-        <div class="mb-3">
-            <input type="text" id="itemInput" class="form-control" placeholder="Add tasks...">
-        </div>
-        <div class="d-grid gap-2 mb-4">
-            <button class="btn btn-success" id="addItemBtn">Add Item</button>
-            <button class="btn btn-warning" id="clearListBtn">Clear List</button>
-        </div>
 
-    
-        <ul class="list-group" id="itemList">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
-                    <label class="form-check-label" for="firstCheckbox">First checkbox</label>
-                </li>
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="checkbox" value="" id="secondCheckbox">
-                    <label class="form-check-label" for="secondCheckbox">Second checkbox</label>
-                </li>
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" type="checkbox" value="" id="thirdCheckbox">
-                    <label class="form-check-label" for="thirdCheckbox">Third checkbox</label>
-                </li>
-            </ul>
-        </ul>
-    </div>
     <!------------------------------>
     <!-- Your HTML Layout go here -->
 
