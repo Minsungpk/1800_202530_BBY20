@@ -59,6 +59,7 @@
 </head>
 <body class="bg-light">
 
+<!-- Nav bar, Don't delete it.-->
 <nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
   <div class="container-fluid">
     <a class="navbar-brand text-white" href="index.html">Timely</a>
@@ -72,7 +73,7 @@
         <li class="nav-item"><a class="nav-link active text-white" href="index.html">Homepage</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="#">Location Sharing</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="todolist.html">To-Do List</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li> <!-- ✅ New Link -->
+        <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li> 
         <li class="nav-item"><a class="nav-link text-white" href="settingspage.html">Settings</a></li>
       </ul>
       <div class="d-flex">
@@ -88,51 +89,10 @@
     <h2 class="mb-4">Dashboard</h2>
     <p>Welcome back, user!</p>
 
-    <!-- Cards -->
-    <div class="row g-4 mb-4">
-      <div class="col-md-6">
-        <div class="card">
-          <img src="hangout.jpg" class="card-img-top" alt="Hangout">
-          <div class="card-body">
-            <h5 class="card-title">Find friends to hangout today!</h5>
-            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <img src="Group.png" class="card-img-top" alt="Group">
-          <div class="card-body">
-            <h5 class="card-title">Group to-do list</h5>
-            <p class="card-text">Connect with your friends group.<br>Create a group to-do list today!</p>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <!-- To-do List -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">To-do list</h5>
-        <ul class="list-group mb-3" id="todoList">
-          <li class="list-group-item"><input type="checkbox" class="form-check-input me-1">COMM 1116 email assignment</li>
-          <li class="list-group-item"><input type="checkbox" class="form-check-input me-1">COMP 1712 Knowledge test</li>
-          <li class="list-group-item"><input type="checkbox" class="form-check-input me-1">House Cleaning</li>
-          <li class="list-group-item"><input type="checkbox" class="form-check-input me-1">Week 5 Math quiz</li>
-          <li class="list-group-item"><input type="checkbox" class="form-check-input me-1">COMP 1800 DEMO 05</li>
-          <li class="list-group-item"><input type="checkbox" class="form-check-input me-1">Math assignment</li>
-        </ul>
 
-        <div class="mb-3">
-          <input type="text" id="itemInput" class="form-control" placeholder="Add tasks...">
-        </div>
-        <div class="d-grid gap-2">
-          <button class="btn btn-success" id="addItemBtn">Add Item</button>
-          <button class="btn btn-warning" id="clearListBtn">Clear List</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="footer">
