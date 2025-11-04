@@ -1,26 +1,5 @@
 @import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
 
-.settingsicons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: auto;
-  padding: 20px;
-}
-
-.returnicon {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: auto;
-  width: 250px;
-  height: 250px;
-  float: right;
-}
-
-.returnicon:hover {
-  background-color: lightgray;
-  transform: scale(1);
-}
-
 .text {
   display: grid;
   grid-template-columns: 1fr;
@@ -52,4 +31,25 @@
   width: 250px;
   height: 250px;
   padding: 20px;
+}
+
+.locationicons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: auto;
+  padding: 20px;
+}
+
+.returnicon {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: auto;
+  width: 250px;
+  height: 250px;
+  float: right;
+}
+
+.returnicon:hover {
+  background-color: lightgray;
+  transform: scale(1);
 }
