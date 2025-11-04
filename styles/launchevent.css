@@ -1,0 +1,25 @@
+@import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
+
+h1 {
+  font-size: 100px;
+  font-family: Rubik;
+  gap: auto;
+  float: right;
+  padding-top: 10px;
+  margin: 10px;
+  background-color: white;
+  color: black;
+}
+
+#createevent {
+  display: flex;
+  height: 100vh;
+  margin: 10px;
+  font-family: Rubik;
+  flex-direction: column;
+  gap: 20px;
+}
+
+textarea {
+  resize: both;
+}
