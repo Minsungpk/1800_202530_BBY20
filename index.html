@@ -11,6 +11,10 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="./styles/style.css">
 
+  <!-- MapLibre -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+  
   <style>
     body {
       padding-bottom: 80px; /* space for footer */
@@ -90,6 +94,13 @@
     <p>Welcome back, user!</p>
 
 
+    <!-- Map and location  -->
+    <main class="container mt-4 mb-4">
+      <!-- MAPBOX -->
+      <div class="map-card">
+        <div id="map"></div>
+      </div>
+    </main>
 
     <!-- To-do List -->
 
@@ -144,5 +155,9 @@
       todoList.innerHTML = '';
     });
   </script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+  <script src="/src/map.js"></script>
+
+  
 </body>
 </html>
