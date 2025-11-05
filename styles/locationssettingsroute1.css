@@ -53,3 +53,9 @@
   background-color: lightgray;
   transform: scale(1);
 }
+
+#locationbutton {
+
+  font-size: 100px;
+  font-family: Rubik;
+}
