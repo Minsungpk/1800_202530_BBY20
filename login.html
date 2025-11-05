@@ -9,44 +9,77 @@
 
 <body class="bg-light d-flex flex-column justify-content-center align-items-center vh-100">
 
-  <!-- Welcome Section -->
   <div class="text-center mb-4">
     <h1>Welcome to Timely!</h1>
     <p class="text-muted">Your personal time management tool</p>
   </div>
 
-  <!-- Login Card -->
   <div class="card shadow p-4" style="width: 22rem;">
-    <h3 class="text-center mb-3">Timely Login</h3>
+    <h3 class="text-center mb-3">Sign In</h3>
 
-    <!-- Email Input -->
     <div class="mb-3">
       <input type="email" id="email" class="form-control" placeholder="Email" />
     </div>
 
-    <!-- Password Input -->
     <div class="mb-3">
       <input type="password" id="password" class="form-control" placeholder="Password" />
     </div>
 
-    <!-- Login + Sign Up -->
-    <button id="loginBtn" class="btn btn-primary w-100 mb-2">Login</button>
-    <button id="signupBtn" class="btn btn-outline-secondary w-100 mb-2">Sign Up</button>
+    <button type="button" id="loginBtn" class="btn btn-primary w-100 mb-2">Login</button>
+    <button type="button" id="gotoSignupBtn" class="btn btn-outline-secondary w-100 mb-2">Create an account</button>
 
-    <!-- Skip Login -->
-    <button id="skipBtn" class="btn btn-link w-100">Skip Login</button>
+    <button type="button" id="skipBtn" class="btn btn-link w-100">Skip Login</button>
 
-    <!-- Error Message -->
     <p class="text-center text-danger mt-3" id="error"></p>
+    <p class="text-center text-success mt-3" id="success"></p>
   </div>
 
-  <!-- Firebase login logic -->
-  <script type="module" src="./scripts/auth.js"></script>
+  <script type="module">
+    import { auth } from "./src/firebaseConfig.js";
+    import { login } from "./auth.js";
 
-  <!-- Skip Login Logic -->
-  <script>
-    document.getElementById("skipBtn").addEventListener("click", function() {
-      window.location.href = "index.html"; // redirect to your main page
+    const emailEl = document.getElementById("email");
+    const passEl  = document.getElementById("password");
+    const errorEl = document.getElementById("error");
+    const successEl = document.getElementById("success");
+
+    // show success message from signup.html (?msg=...)
+    const params = new URLSearchParams(location.search);
+    const msg = params.get("msg");
+    if (msg) successEl.textContent = decodeURIComponent(msg);
+
+    function showError(m){ errorEl.textContent = m; }
+    function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+    document.getElementById("loginBtn").addEventListener("click", async (e)=>{
+      e.preventDefault();
+      errorEl.textContent = "";
+      const email = emailEl.value.trim();
+      const pass  = passEl.value;
+
+      if (!validEmail(email)) return showError("Enter a valid email.");
+      if (!pass) return showError("Enter your password.");
+
+      try {
+        await login(email, pass);
+        window.location.href = "index.html";
+      } catch (err) {
+        const code = err?.code || "";
+        if (code === "auth/user-not-found") showError("No account found. Click “Create an account”.");
+        else if (code === "auth/wrong-password" || code === "auth/invalid-credential") showError("Wrong email or password.");
+        else if (code === "auth/invalid-email") showError("Invalid email.");
+        else showError(`Firebase: ${err.message || "Login failed"}`);
+      }
+    });
+
+    document.getElementById("gotoSignupBtn").addEventListener("click", (e)=>{
+      e.preventDefault();
+      window.location.href = "signup.html";  // <— go to the signup page
+    });
+
+    document.getElementById("skipBtn").addEventListener("click", (e)=>{
+      e.preventDefault();
+      window.location.href = "index.html";
     });
   </script>
 </body>

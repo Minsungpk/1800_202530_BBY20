@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
 
-.settingsicons {
+.todoicons {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: auto;
@@ -44,18 +44,4 @@
 .text:hover {
   background-color: lightgray;
   transform: scale(1);
-}
-
-.icon {
-  display: grid;
-  grid-template-columns: 1fr;
-  width: 250px;
-  height: 250px;
-  padding: 20px;
-}
-
-#locationbutton {
-
-  font-size: 100px;
-  font-family: Rubik;
 }
