@@ -39,3 +39,10 @@ feature/intro-JessieEY27
     font-size: 30px;
 }
 /* main */
+
+/* map */
+#map {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
