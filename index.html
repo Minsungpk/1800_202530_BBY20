@@ -11,6 +11,10 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="./styles/style.css">
 
+  <!-- MapLibre -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+  
   <style>
     body {
       padding-bottom: 80px; /* space for footer */
@@ -59,25 +63,27 @@
 </head>
 <body class="bg-light">
 
-<!-- Nav bar, Don't delete it.-->
+
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
   <div class="container-fluid">
     <a class="navbar-brand text-white" href="index.html">Timely</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link active text-white" href="index.html">Homepage</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="#">Location Sharing</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="index.html">Homepage</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="todolist.html">To-Do List</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li> 
+        <li class="nav-item"><a class="nav-link text-white" href="events.html">Events</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="settingspage.html">Settings</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="statistics.html">Statistics</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="launchevent.html">Launch Event</a></li>
       </ul>
       <div class="d-flex">
-        <a class="btn btn-outline-light btn-sm" href="login.html">Login</a>
+        <button class="btn btn-outline-light btn-sm" id="logoutBtn">Log Out</button>
       </div>
     </div>
   </div>
@@ -85,26 +91,100 @@
 
 
   <!-- Page Content -->
+
+
   <div class="container py-5 mt-5">
-    <h2 class="mb-4">Dashboard</h2>
-    <p>Welcome back, user!</p>
+    <div class="text-center mb-4">
+      <h2 class="fw-bold" style="color:#0d6efd;letter-spacing:1px;">Welcome to Timely</h2>
+      <p class="text-muted">Your productivity hub — manage tasks, collaborate, and share locations</p>
+    </div>
+    <div class="row justify-content-center mb-4">
+      <div class="col-12 col-lg-8">
+        <div class="card shadow-lg border-0" style="border-radius:18px;">
+          <div class="card-body p-0">
+            <div style="height:320px; border-radius:18px; overflow:hidden;">
+              <div id="map" style="width:100%; height:100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-3 justify-content-center">
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="todolist.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#e7f1ff;color:#0d6efd;"><i class="fas fa-list-check fa-lg"></i></div>
+            <div class="mt-2 fw-bold">To-Do List</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="groupTodoList.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#d1e7dd;color:#198754;"><i class="fas fa-users fa-lg"></i></div>
+            <div class="mt-2 fw-bold">Groups</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="events.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#cff4fc;color:#0dcaf0;"><i class="fas fa-calendar-alt fa-lg"></i></div>
+            <div class="mt-2 fw-bold">Events</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="locationssettingsroute1.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#a7e9af;color:#198754;"><i class="fas fa-map-marker-alt fa-lg"></i></div>
+            <div class="mt-2 fw-bold">Location Sharing</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="statistics.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#f8d7da;color:#dc3545;"><i class="fas fa-chart-line fa-lg"></i></div>
+            <div class="mt-2 fw-bold">Statistics</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="settingspage.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#fff3cd;color:#ffc107;"><i class="fas fa-cog fa-lg"></i></div>
+            <div class="mt-2 fw-bold">Settings</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="launchevent.html" class="feature-card card text-decoration-none text-center shadow-sm h-100">
+          <div class="card-body py-4">
+            <div class="feature-icon" style="background:#b6d4fe;color:#0d6efd;"><i class="fas fa-rocket fa-lg"></i></div>
+            <div class="mt-2 fw-bold">Launch Event</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
 
-
-
-    <!-- To-do List -->
-
+  <style>
+    .feature-card { border-radius: 16px; transition: box-shadow 0.2s, transform 0.2s; }
+    .feature-card:hover { box-shadow: 0 8px 32px rgba(13,110,253,0.18); transform: translateY(-4px) scale(1.03); z-index: 2; }
+    .feature-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    @media (max-width: 600px) { .feature-icon { width: 36px; height: 36px; font-size: 1.1rem; } .feature-card { border-radius: 10px; } }
+  </style>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-icon bell" onclick="alert('Bell clicked!')">
-      <!-- Bell Icon -->
       <svg width="32" height="32" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2C10.343 2 9 3.343 9 5V6.07C6.165 6.527 4 9.003 4 12V17L2 19V20H22V19L20 17V12C20 9.003 17.835 6.527 15 6.07V5C15 3.343 13.657 2 12 2ZM12 22C13.105 22 14 21.105 14 20H10C10 21.105 10.895 22 12 22Z"/>
       </svg>
     </div>
 
     <div class="footer-icon plus" onclick="alert('Plus clicked!')">
-      <!-- Plus Icon -->
       <svg width="48" height="48" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="12"/>
         <line x1="12" y1="6" x2="12" y2="18" stroke="white" stroke-width="2"/>
@@ -112,8 +192,7 @@
       </svg>
     </div>
 
-    <div class="footer-icon exit" onclick="alert('Exit clicked!')">
-      <!-- Exit Icon -->
+    <div class="footer-icon exit" onclick="window.location.href='index.html'">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
         <rect width="24" height="24" rx="4" fill="black"/>
         <path d="M14 8L10 12L14 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -144,5 +223,13 @@
       todoList.innerHTML = '';
     });
   </script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+  <script src="/src/map.js"></script>
+  <script type="module">
+    import { logout } from './src/logout.js';
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+  </script>
+
+  
 </body>
 </html>
