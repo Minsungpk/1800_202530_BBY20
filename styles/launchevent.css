@@ -23,3 +23,8 @@ h1 {
 textarea {
   resize: both;
 }
+
+.custom-btn {
+  margin-top: 50px;
+  display: block;
+}

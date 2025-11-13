@@ -1,0 +1,60 @@
+@import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
+
+.settingsicons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: auto;
+  padding: 20px;
+}
+
+.returnicon {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: auto;
+  width: 250px;
+  height: 250px;
+  float: right;
+}
+
+.returnicon:hover {
+  background-color: lightgray;
+  transform: scale(1);
+}
+
+.text {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: auto;
+  padding: 10px;
+  float: right;
+  border: 2px solid grey;
+  border-radius: 20px;
+  padding: 6px 10px;
+  margin: 8px;
+  background-color: white;
+  color: black;
+  font-size: 100px;
+  text-align: center;
+  align-content: center;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  font-family: Rubik;
+}
+
+.text:hover {
+  background-color: lightgray;
+  transform: scale(1);
+}
+
+.icon {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 250px;
+  height: 250px;
+  padding: 20px;
+}
+
+#locationbutton {
+  font-size: 100px;
+  font-family: Rubik;
+}
