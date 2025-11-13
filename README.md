@@ -83,6 +83,34 @@ elmo-hikes/
 - Add filtering and sorting options (e.g., by difficulty, distance).
 - Create a dark mode for better usability in low-light conditions.
 
+## Statistics & Rewards (new)
+
+This project now includes a basic statistics and rewards system backed by Firestore.
+
+- Events: user actions are stored in a top-level `events` collection. Each document has:
+	- `userUid` (string)
+	- `type` ("arrival" | "completion")
+	- `timestamp` (serverTimestamp)
+	- `meta` (object with taskId, scheduledTime, onTime, locationId, etc.)
+
+- Rewards: each user has a `userRewards/{uid}` document that tracks `points` earned.
+	- Completions award 10 points.
+	- On-time arrivals award 20 points.
+
+Deployment notes
+- Make sure Firestore is enabled for the Firebase project in `src/firebaseConfig.js` and deploy the rules in `firestore.rules` before testing the feature. If you manage the Firebase project from the CLI:
+
+```bash
+firebase deploy --only firestore:rules --project <your-project-id>
+```
+
+Security
+- Firestore rules restrict both `events` and `userRewards` so users can only create/read/update their own documents. See `firestore.rules` for full details.
+
+Testing
+- Use the "Seed sample data" button on `statistics.html` to populate sample events and points for quick testing.
+
+
 ---
 
 ## License

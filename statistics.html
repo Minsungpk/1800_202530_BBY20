@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistics | Timely</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="./styles/style.css">
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --success: #198754;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --info: #0dcaf0;
+      --light-bg: #f8f9fa;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+    main { padding-top: 100px; padding-bottom: 3rem; }
+
+    .page-header {
+      background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 3rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items-center;
+      gap: 1rem;
+    }
+
+    .page-header .subtitle {
+      font-size: 1rem;
+      opacity: 0.95;
+      margin-top: 0.75rem;
+    }
+
+    .kpi-card {
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border-left: 4px solid var(--primary);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .kpi-card.success { border-left-color: var(--success); }
+    .kpi-card.warning { border-left-color: var(--warning); }
+    .kpi-card.info { border-left-color: var(--info); }
+
+    .kpi-card .card-body { padding: 1.5rem; }
+
+    .kpi-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    .kpi-icon.success { color: var(--success); }
+    .kpi-icon.warning { color: var(--warning); }
+    .kpi-icon.info { color: var(--info); }
+
+    .kpi-label {
+      font-size: 0.9rem;
+      color: #6c757d;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #212529;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-meta {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+
+    .chart-card {
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+    }
+
+    .chart-card .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #212529;
+    }
+
+    .timeline-card {
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+    }
+
+    .timeline-card .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #212529;
+      display: flex;
+      align-items-center;
+      gap: 0.75rem;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      border-left: 3px solid #dee2e6;
+      margin-left: 1rem;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s;
+    }
+
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-item:hover {
+      border-left-color: var(--primary);
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+
+    .timeline-item.completion { border-left-color: var(--success); }
+    .timeline-item.arrival { border-left-color: var(--info); }
+
+    .timeline-dot {
+      min-width: 2rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .timeline-item.completion .timeline-dot {
+      border-color: var(--success);
+      background: #d1e7dd;
+      color: var(--success);
+    }
+
+    .timeline-item.arrival .timeline-dot {
+      border-color: var(--info);
+      background: #cfe2ff;
+      color: var(--info);
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-time {
+      font-size: 0.85rem;
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    .timeline-desc {
+      font-size: 0.95rem;
+      color: #212529;
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+
+    .timeline-meta {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .timeline-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #f0f0f0;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .timeline-item.completion .timeline-badge { background: #d1e7dd; color: var(--success); }
+    .timeline-item.arrival .timeline-badge { background: #cfe2ff; color: var(--info); }
+
+    .form-card {
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+    }
+
+    .form-card .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #212529;
+      display: flex;
+      align-items-center;
+      gap: 0.75rem;
+    }
+
+    .form-control {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-secondary { border-radius: 8px; font-weight: 600; }
+
+    .alert { border-radius: 8px; border: none; }
+
+    .empty-timeline {
+      text-align: center;
+      padding: 2rem;
+      color: #6c757d;
+    }
+
+    .empty-timeline i { font-size: 2.5rem; opacity: 0.3; margin-bottom: 1rem; }
+
+    .show-more-btn {
+      display: block;
+      margin: 1.5rem auto;
+      text-align: center;
+    }
+
+    .timeline-collapsed .timeline-item:nth-child(n+4) {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .page-header { padding: 1.5rem 1rem; }
+      .page-header h1 { font-size: 1.75rem; }
+      .kpi-value { font-size: 2rem; }
+      .form-row { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="index.html">Timely</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white" href="index.html">Homepage</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="todolist.html">To-Do List</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li> 
+        <li class="nav-item"><a class="nav-link text-white" href="events.html">Events</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="settingspage.html">Settings</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="statistics.html">Statistics</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="launchevent.html">Launch Event</a></li>
+      </ul>
+      <div class="d-flex">
+  <button class="btn btn-outline-light btn-sm" id="logoutBtn">Log Out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>
+      <i class="fas fa-chart-line"></i>
+      Your Statistics
+      <span id="equippedBadgeDisplay" style="margin-left: 12px;
+        display:inline-flex; align-items:center; gap:8px;
+        padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.15);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        font-weight:700;
+        display:none;
+      "></span>
+    </h1>
+    <div class="subtitle">Track your progress and celebrate your achievements</div>
+  </div>
+
+  <div id="authMsg" class="mb-3"></div>
+
+  <!-- KPI Cards Grid -->
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card kpi-card success">
+        <div class="card-body">
+          <div class="kpi-icon success"><i class="fas fa-bullseye"></i></div>
+          <div class="kpi-label">On-Time Arrivals</div>
+          <div class="kpi-value" id="kpi-onTime">—</div>
+          <div class="kpi-meta" id="kpi-onTime-meta"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card kpi-card info">
+        <div class="card-body">
+          <div class="kpi-icon info"><i class="fas fa-map-pin"></i></div>
+          <div class="kpi-label">Total Arrivals</div>
+          <div class="kpi-value" id="kpi-arrivals">—</div>
+          <div class="kpi-meta">Last 30 days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card kpi-card">
+        <div class="card-body">
+          <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="kpi-label">Task Completions</div>
+          <div class="kpi-value" id="kpi-completions">—</div>
+          <div class="kpi-meta">Last 30 days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+      <div class="card kpi-card warning">
+        <div class="card-body">
+          <div class="kpi-icon warning"><i class="fas fa-star"></i></div>
+          <div class="kpi-label">Reward Points</div>
+          <div class="kpi-value" id="kpi-points">—</div>
+          <div class="kpi-meta" id="kpi-points-meta"></div>
+          <button id="redeemBtn" class="btn btn-sm btn-warning mt-2" style="display:none;">
+            <i class="fas fa-gift me-2"></i>Redeem 1000
+          </button>
+          <button id="openStoreBtn" class="btn btn-sm btn-outline-warning mt-2">
+            <i class="fas fa-store me-2"></i>Rewards Store
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Trend Chart -->
+  <div class="chart-card">
+    <h5 class="card-title">
+      <i class="fas fa-line-chart me-2"></i>
+      Activity Trend (Last 30 Days)
+    </h5>
+    <canvas id="trendChart" style="height:280px; width:100%;"></canvas>
+  </div>
+
+  <!-- Activity Timeline -->
+  <div class="timeline-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <h5 class="card-title" style="margin: 0;">
+        <i class="fas fa-history me-2"></i>
+        Recent Activity
+      </h5>
+      <button id="clearActivityBtn" class="btn btn-sm btn-outline-danger" style="display: none;">
+        <i class="fas fa-trash me-2"></i>Clear Activity
+      </button>
+    </div>
+    <div id="activityTimeline" class="activity-timeline timeline-collapsed">
+      <div class="empty-timeline">
+        <i class="fas fa-inbox"></i>
+        <p>No activity yet. Start completing tasks in your To-Do List!</p>
+      </div>
+    </div>
+    <div id="showMoreContainer"></div>
+  </div>
+
+  <!-- Rewards Store Modal (lightweight custom modal) -->
+  <div id="rewardsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; width:min(960px, 92vw); max-height:85vh; overflow:auto; box-shadow:0 8px 24px rgba(0,0,0,0.2);">
+      <div style="padding:1rem 1.25rem; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
+        <h5 class="m-0"><i class="fas fa-store me-2"></i>Rewards Store</h5>
+        <button id="closeStoreBtn" class="btn btn-sm btn-outline-secondary"><i class="fas fa-times"></i></button>
+      </div>
+      <div style="padding: 1rem 1.25rem;">
+        <div class="row" id="rewardsGrid"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Statistics module -->
+<script type="module" src="src/statistics.js"></script>
+
+</body>
+<script type="module">
+  import { logout } from './src/logout.js';
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+</script>
+</html>

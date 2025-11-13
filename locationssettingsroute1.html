@@ -10,6 +10,33 @@
     />
   </head>
   <body>
+    <!-- Top navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white" href="index.html">Timely</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link text-white" href="index.html">Homepage</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="todolist.html">To-Do List</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="events.html">Events</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="settingspage.html">Settings</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="statistics.html">Statistics</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="launchevent.html">Launch Event</a></li>
+          </ul>
+          <div class="d-flex">
+            <button class="btn btn-outline-light btn-sm" id="logoutBtn">Log Out</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div style="padding-top: 5rem;"></div>
+
     <img
       class="icon"
       src="/images/location-pin-svgrepo-com.png"
@@ -37,5 +64,9 @@
       alt="This is an icon of a return key."
     />
 
+  <script type="module">
+    import { logout } from './src/logout.js';
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+  </script>
   </body>
 </html>

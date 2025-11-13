@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+<<<<<<< HEAD
     <meta charset="utf-8" />
     <title>Launch Event</title>
     <link rel="stylesheet" href="styles/launchevent.css" />
@@ -74,5 +75,287 @@
     </div>
 
     <script type="module" src="launchevent.js"></script>
+=======
+    <title>Launch Event | Timely</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      :root {
+        --primary: #0d6efd;
+        --success: #198754;
+        --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 100px;
+      }
+
+      .page-header {
+        background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--card-shadow);
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .page-header p {
+        margin: 0.5rem 0 0;
+        opacity: 0.95;
+        font-size: 0.95rem;
+      }
+
+      .form-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        padding: 2rem;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .form-control:focus, .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+      }
+
+      .friend-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #e7f1ff;
+        color: #0a58ca;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        margin: 0.25rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .friend-pill .remove-friend {
+        cursor: pointer;
+        color: #dc3545;
+        font-weight: 700;
+      }
+
+      #selectedFriends {
+        min-height: 3rem;
+        padding: 0.5rem;
+        border: 1px dashed #dee2e6;
+        border-radius: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .info-box {
+        background: #cfe2ff;
+        border-left: 4px solid var(--primary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .info-box i {
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white" href="index.html">Timely</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link text-white" href="index.html">Homepage</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="todolist.html">To-Do List</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="events.html">Events</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="settingspage.html">Settings</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="statistics.html">Statistics</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="launchevent.html">Launch Event</a></li>
+          </ul>
+          <div class="d-flex">
+            <button class="btn btn-outline-light btn-sm" id="logoutBtn">Log Out</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+          <!-- Page Header -->
+          <div class="page-header">
+            <h1>
+              <i class="fas fa-rocket"></i>
+              Launch a New Event
+            </h1>
+            <p>Create shared events with friends — plan hangouts, parties, trips, and more!</p>
+          </div>
+
+          <div id="authMsg" class="mb-3"></div>
+
+          <!-- Event Form -->
+          <div class="form-card">
+            <form id="launchEventForm">
+              <!-- Event Name -->
+              <div class="mb-3">
+                <label for="eventTitle" class="form-label">
+                  <i class="fas fa-heading me-2"></i>Event Name
+                </label>
+                <input
+                  type="text"
+                  id="eventTitle"
+                  class="form-control"
+                  placeholder="e.g., Beach Day, Study Session, Game Night"
+                  required
+                />
+              </div>
+
+              <!-- Date & Time -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="eventDate" class="form-label">
+                    <i class="fas fa-calendar me-2"></i>Date
+                  </label>
+                  <input type="date" id="eventDate" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="eventTime" class="form-label">
+                    <i class="fas fa-clock me-2"></i>Time
+                  </label>
+                  <input type="time" id="eventTime" class="form-control" required />
+                </div>
+              </div>
+
+              <!-- Location -->
+              <div class="mb-3">
+                <label for="eventLocation" class="form-label">
+                  <i class="fas fa-map-marker-alt me-2"></i>Location
+                </label>
+                <input
+                  type="text"
+                  id="eventLocation"
+                  class="form-control"
+                  placeholder="Where will this event take place?"
+                />
+              </div>
+
+              <!-- Description -->
+              <div class="mb-3">
+                <label for="eventDescription" class="form-label">
+                  <i class="fas fa-align-left me-2"></i>Description
+                </label>
+                <textarea
+                  id="eventDescription"
+                  class="form-control"
+                  rows="3"
+                  placeholder="What's this event about?"
+                ></textarea>
+              </div>
+
+              <!-- What to Bring -->
+              <div class="mb-3">
+                <label for="eventBring" class="form-label">
+                  <i class="fas fa-shopping-bag me-2"></i>What to Bring / Wear
+                </label>
+                <textarea
+                  id="eventBring"
+                  class="form-control"
+                  rows="2"
+                  placeholder="e.g., Sunscreen, towels, snacks, comfortable shoes"
+                ></textarea>
+              </div>
+
+              <!-- Invite Friends (email list) -->
+              <div class="mb-3">
+                <label for="friendEmail" class="form-label">
+                  <i class="fas fa-user-friends me-2"></i>Invite Friends
+                </label>
+                <div class="input-group">
+                  <input
+                    type="email"
+                    id="friendEmail"
+                    class="form-control"
+                    placeholder="friend@example.com"
+                  />
+                  <button type="button" id="addFriendBtn" class="btn btn-outline-primary">
+                    <i class="fas fa-plus me-2"></i>Add
+                  </button>
+                </div>
+                <div id="selectedFriends" class="mt-2">
+                  <small class="text-muted">No friends added yet</small>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-rocket me-2"></i>Launch Event
+                </button>
+                <a href="events.html" class="btn btn-outline-secondary">
+                  <i class="fas fa-calendar me-2"></i>View All Events
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="./src/launchEvent.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+      import { logout } from './src/logout.js';
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+    </script>
+>>>>>>> main
   </body>
 </html>
