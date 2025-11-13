@@ -1,172 +1,78 @@
-// src/launchEvent.js - Create shared events with friends
-import { auth, db } from './firebaseConfig.js';
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+// change this js script
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  Timestamp,
+} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-let currentUser = null;
-let invitedFriends = []; // emails of invited friends
-
-const els = {
-  form: document.getElementById('launchEventForm'),
-  authMsg: document.getElementById('authMsg'),
-  friendEmail: document.getElementById('friendEmail'),
-  addFriendBtn: document.getElementById('addFriendBtn'),
-  selectedFriends: document.getElementById('selectedFriends'),
-  eventTitle: document.getElementById('eventTitle'),
-  eventDate: document.getElementById('eventDate'),
-  eventTime: document.getElementById('eventTime'),
-  eventLocation: document.getElementById('eventLocation'),
-  eventDescription: document.getElementById('eventDescription'),
-  eventBring: document.getElementById('eventBring'),
+let firebaseConfig = {
+  apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
+  authDomain: "group-project-8a6ee.firebaseapp.com",
+  projectId: "group-project-8a6ee",
+  storageBucket: "group-project-8a6ee.firebasestorage.app",
+  messagingSenderId: "922685674876",
+  appId: "1:922685674876:web:6edeac0ff4fb485db780f9",
+  measurementId: "G-1LCVJ62HEL",
 };
 
-// Verify all elements were found
-console.log('Elements loaded:', {
-  form: !!els.form,
-  authMsg: !!els.authMsg,
-  friendEmail: !!els.friendEmail,
-  addFriendBtn: !!els.addFriendBtn,
-  selectedFriends: !!els.selectedFriends,
-  eventTitle: !!els.eventTitle,
-  eventDate: !!els.eventDate,
-  eventTime: !!els.eventTime,
-  eventLocation: !!els.eventLocation,
-  eventDescription: !!els.eventDescription,
-  eventBring: !!els.eventBring,
-});
+let app = initializeApp(firebaseConfig);
+let db = getFirestore(app);
 
-if (!els.form) {
-  console.error('CRITICAL: launchEventForm not found!');
-}
+async function createEvent(event) {
+  event.preventDefault();
+  console.log("Form submitted");
 
-onAuthStateChanged(auth, (user) => {
-  currentUser = user || null;
-  console.log('Auth state changed:', currentUser ? `Logged in as ${currentUser.email}` : 'Not logged in');
-  if (!currentUser) {
-    els.authMsg.innerHTML = `<div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i>Please <a href="login.html">log in</a> to create events.</div>`;
-    els.form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
-  } else {
-    els.authMsg.innerHTML = '';
-    els.form.querySelectorAll('input, textarea, button').forEach(el => el.disabled = false);
-  }
-});
+  try {
+    let name = document.getElementById("eventname").value.trim();
+    let description = document.getElementById("eventdescription").value.trim();
+    let dateValue = document.getElementById("eventdate").value;
+    let location = document.getElementById("eventlocation").value.trim();
+    let friendsInput = document.getElementById("invitefriends").value;
+    let friends = friendsInput
+      ? friendsInput.split(",").map((f) => f.trim())
+      : [];
 
-// Add friend to invite list
-if (els.addFriendBtn) {
-  els.addFriendBtn.addEventListener('click', () => {
-    console.log('Add friend button clicked');
-    const email = els.friendEmail.value.trim();
-    if (!email) return;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      alert('Enter a valid email address');
-      return;
-    }
-    if (currentUser && email === currentUser.email) {
-      alert("You can't invite yourself!");
-      return;
-    }
-    if (invitedFriends.includes(email)) {
-      alert('This friend is already added');
-      return;
-    }
-    invitedFriends.push(email);
-    els.friendEmail.value = '';
-    renderFriendsList();
-  });
-  console.log('Add friend button listener attached');
-} else {
-  console.error('addFriendBtn element not found!');
-}
-
-function renderFriendsList() {
-  if (invitedFriends.length === 0) {
-    els.selectedFriends.innerHTML = `<small class="text-muted">No friends added yet</small>`;
-    return;
-  }
-  els.selectedFriends.innerHTML = invitedFriends.map((email, idx) => `
-    <span class="friend-pill">
-      <i class="fas fa-user"></i>
-      ${email}
-      <span class="remove-friend" data-idx="${idx}" title="Remove">&times;</span>
-    </span>
-  `).join('');
-
-  // Bind remove handlers
-  els.selectedFriends.querySelectorAll('.remove-friend').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const idx = parseInt(e.target.dataset.idx, 10);
-      invitedFriends.splice(idx, 1);
-      renderFriendsList();
+    console.log("Form values:", {
+      name,
+      description,
+      dateValue,
+      location,
+      friends,
     });
-  });
-}
 
-// Launch event form
-if (els.form) {
-  els.form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log('Form submitted');
-    
-    if (!currentUser) {
-      alert('Please log in first');
+    if (!dateValue) {
+      alert("Please select a date and time for your event.");
       return;
     }
 
-    const title = els.eventTitle.value.trim();
-    const date = els.eventDate.value;
-    const time = els.eventTime.value;
-    const location = els.eventLocation.value.trim();
-    const description = els.eventDescription.value.trim();
-    const bring = els.eventBring.value.trim();
-
-    console.log('Form values:', { title, date, time, location, description, bring });
-
-    if (!title || !date || !time) {
-      alert('Please fill in Event Name, Date, and Time');
+    let dateObj = new Date(dateValue);
+    if (isNaN(dateObj)) {
+      console.error("Invalid date:", dateValue);
+      alert("Invalid date. Please check your input.");
       return;
     }
 
-    // Combine date + time into ISO string for scheduled field
-    const scheduled = new Date(`${date}T${time}`).toISOString();
+    let date = Timestamp.fromDate(dateObj);
+    console.log("Converted Firestore Timestamp:", date);
 
-    // Participants: creator + invited friends (we'll store emails for now; 
-    // in a real app you'd resolve these to UIDs, but for demo we use emails)
-    const participants = [currentUser.email, ...invitedFriends];
+    let docRef = await addDoc(collection(db, "events"), {
+      name,
+      description,
+      date,
+      location,
+      createdAt: Timestamp.fromDate(new Date()),
+      attendees: friends,
+    });
 
-    try {
-      const eventData = {
-        title,
-        scheduled,
-        location,
-        description,
-        bring,
-        participants,
-        ownerUid: currentUser.uid,
-        ownerEmail: currentUser.email,
-        createdAt: serverTimestamp()
-      };
-
-      console.log('Creating event with data:', eventData);
-      const docRef = await addDoc(collection(db, 'sharedEvents'), eventData);
-      console.log('Event created successfully with ID:', docRef.id);
-      
-      alert(`🎉 Event "${title}" launched successfully!\n\nView it on the Events page.`);
-      
-      // Reset form
-      els.form.reset();
-      invitedFriends = [];
-      renderFriendsList();
-      
-      // Optionally redirect to Events page
-      // window.location.href = 'events.html';
-    } catch (err) {
-      console.error('Failed to launch event:', err);
-      console.error('Error code:', err.code);
-      console.error('Error message:', err.message);
-      alert(`Could not create event: ${err.message}\n\nCheck console for details.`);
-    }
-  });
-  console.log('Form submit listener attached');
-} else {
-  console.error('Form element not found!');
+    console.log("Event created successfully! ID:", docRef.id);
+    alert("Event created successfully!");
+    document.getElementById("eventForm").reset();
+  } catch (error) {
+    console.error("Error creating event:", error);
+    alert("Error creating event. Check console for details.");
+  }
 }
+
+document.getElementById("eventForm").addEventListener("submit", createEvent);
