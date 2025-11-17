@@ -42,7 +42,7 @@
       font-weight: 700;
       margin: 0;
       display: flex;
-      align-items-center;
+      align-items: center;
       gap: 0.75rem;
     }
 
@@ -195,7 +195,7 @@
 
     .todo-meta-item {
       display: flex;
-      align-items-center;
+      align-items: center;
       gap: 0.4rem;
     }
 
@@ -303,7 +303,7 @@
     </div>
   </nav>
 
-    <main class="container py-5">
+  <main class="container py-5">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-10">
         <!-- Page Header -->
@@ -380,17 +380,51 @@
   </template>
 
   <script type="module">
-    // --- Minimal, framework‑free to‑do app with Bootstrap UI ---
-    // Added: Firebase imports for recording completion events and auth state
-  import { auth, db } from './src/firebaseConfig.js';
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-  import { collection, addDoc, serverTimestamp, doc, getDoc, setDoc, updateDoc, increment, deleteDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    // --- To-do app with Firebase + Notifications ---
 
-    let currentUser = null; // populated after auth state changes
+    import { auth, db } from './src/firebaseConfig.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+    import {
+      collection,
+      addDoc,
+      serverTimestamp,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      increment,
+      deleteDoc,
+      getDocs,
+      query,
+      where
+    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+    let currentUser = null; // set via onAuthStateChanged
+
+    // 🔔 Helper: create a notification document for the current user
+    async function createNotification(message, type = "todo") {
+      try {
+        if (!currentUser) {
+          console.log("No logged-in user, skipping notification.");
+          return;
+        }
+
+        await addDoc(collection(db, "notifications"), {
+          userUid: currentUser.uid,
+          message,
+          type,                 // e.g. "todo_created", "todo_completed"
+          createdAt: serverTimestamp(),
+          read: false
+        });
+
+        console.log("Notification created:", message);
+      } catch (err) {
+        console.error("Failed to create notification:", err);
+      }
+    }
 
     /**
      * Storage is namespaced per user: key = `todo:<userId>`
-     * Call setUser('someId') after login integration.
      */
     const App = (() => {
       let userId = 'guest';
@@ -405,52 +439,30 @@
         stats: document.getElementById('stats'),
         filters: document.querySelectorAll('input[name="filter"]'),
         clearCompleted: document.getElementById('clearCompleted'),
-        userBadge: document.getElementById('userBadge'),
       };
 
-  let todos = /** @type {Array<{id:string,text:string,done:boolean,created:number,scheduled?:string,description?:string,completionRecorded?:boolean,completedLocal?:string,onTimeLocal?:boolean}>} */([]);
+      let todos = [];
       let activeFilter = 'all';
-      let currentOnTimeStreak = 0; // Track how many on-time completions in current streak
+      let currentOnTimeStreak = 0;
 
       const storageKey = () => `todo:${userId}`;
       const save = () => localStorage.setItem(storageKey(), JSON.stringify(todos));
       const load = () => JSON.parse(localStorage.getItem(storageKey()) || '[]');
-
       const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
 
       function celebrateStreakWith3OnTimeCompletions() {
-        // Trigger confetti celebration!
         console.log('🎉 3 on-time completions in a row! Celebrating with confetti!');
-        
-        // Reset streak counter after celebration
         currentOnTimeStreak = 0;
-        
-        // Use canvas-confetti library if available, otherwise use CSS fallback
         try {
           if (typeof confetti !== 'undefined') {
-            confetti({
-              particleCount: 200,
-              spread: 100,
-              startVelocity: 30,
-              decay: 0.95,
-              scalar: 1.2
-            });
-            
-            // Optional: second burst for extra celebration
+            confetti({ particleCount: 200, spread: 100, startVelocity: 30, decay: 0.95, scalar: 1.2 });
             setTimeout(() => {
-              confetti({
-                particleCount: 100,
-                spread: 80,
-                startVelocity: 20,
-                decay: 0.9
-              });
+              confetti({ particleCount: 100, spread: 80, startVelocity: 20, decay: 0.9 });
             }, 300);
           }
         } catch (e) {
           console.warn('Confetti library not loaded', e);
         }
-        
-        // Visual celebration: show a temporary banner
         const banner = document.createElement('div');
         banner.style.cssText = `
           position: fixed;
@@ -470,66 +482,47 @@
         `;
         banner.innerHTML = '🎉 Amazing! 3 on-time completions in a row! 🎉';
         document.body.appendChild(banner);
-        
-        // Add animation styles if not already present
         if (!document.getElementById('celebrationStyles')) {
           const style = document.createElement('style');
           style.id = 'celebrationStyles';
           style.textContent = `
             @keyframes slideDown {
-              from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-              }
-              to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-              }
+              from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+              to   { opacity: 1; transform: translateX(-50%) translateY(0); }
             }
             @keyframes slideUp {
-              from {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-              }
-              to {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-              }
+              from { opacity: 1; transform: translateX(-50%) translateY(0); }
+              to   { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             }
           `;
           document.head.appendChild(style);
         }
-        
-        // Remove banner after animation
         setTimeout(() => banner.remove(), 5000);
       }
 
       function updateStreakCounter(taskOnTime) {
-        // Update the streak counter based on whether the latest task was on-time
         if (taskOnTime) {
           currentOnTimeStreak++;
           console.log(`On-time streak: ${currentOnTimeStreak}/3`);
-          
-          // Check if we've hit 3
-          if (currentOnTimeStreak === 3) {
-            return true; // Trigger celebration
-          }
+          if (currentOnTimeStreak === 3) return true;
         } else {
-          // Late completion breaks the streak
           console.log(`Streak broken! Late completion. Resetting to 0.`);
           currentOnTimeStreak = 0;
         }
-        
         return false;
       }
 
       function render() {
         els.list.innerHTML = '';
         const frag = document.createDocumentFragment();
-        const filtered = todos.filter(t => activeFilter === 'all' ? !t.done : activeFilter === 'active' ? !t.done : t.done);
-        
-        console.log(`Rendering with filter "${activeFilter}": ${filtered.length} tasks (total: ${todos.length})`);
-        
+        const filtered = todos.filter(
+          t => activeFilter === 'all'
+            ? !t.done
+            : activeFilter === 'active'
+              ? !t.done
+              : t.done
+        );
+
         if (filtered.length === 0) {
           const emptyMsg = document.createElement('div');
           emptyMsg.className = 'empty-state';
@@ -549,39 +542,34 @@
           li.querySelector('.toggle').checked = t.done;
           const textSpan = li.querySelector('.todo-text');
           textSpan.textContent = t.text;
-          
-          // scheduled time & description
+
           const schedEl = li.querySelector('.todo-scheduled');
           const descEl = li.querySelector('.todo-desc');
-          
+
           if (t.scheduled) {
             const schedDisplay = t.scheduled.replace('T', ' ');
             schedEl.innerHTML = `<i class="fas fa-clock"></i> ${schedDisplay}`;
           } else {
             schedEl.innerHTML = '';
           }
-          
+
           if (t.description) {
             descEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${t.description}`;
           } else {
             descEl.innerHTML = '';
           }
-          
+
           if (t.done) li.classList.add('completed');
-          
-          // status emoji for completed tasks
+
           const statusEl = li.querySelector('.status-emoji');
-          if (t.done) {
-            if (typeof t.onTimeLocal === 'boolean') {
-              statusEl.textContent = t.onTimeLocal ? '✅ On-Time' : '🕒 Late';
-              statusEl.classList.toggle('text-success', t.onTimeLocal);
-              statusEl.classList.toggle('text-warning', !t.onTimeLocal);
-            } else {
-              statusEl.textContent = '';
-            }
+          if (t.done && typeof t.onTimeLocal === 'boolean') {
+            statusEl.textContent = t.onTimeLocal ? '✅ On-Time' : '🕒 Late';
+            statusEl.classList.toggle('text-success', t.onTimeLocal);
+            statusEl.classList.toggle('text-warning', !t.onTimeLocal);
           } else {
             statusEl.textContent = '';
           }
+
           frag.appendChild(li);
         }
         els.list.appendChild(frag);
@@ -595,15 +583,25 @@
         if (total === 0) {
           els.stats.innerHTML = '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
         } else {
-          els.stats.innerHTML = `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed • <strong>${remaining}</strong> remaining`;
+          els.stats.innerHTML =
+            `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed • <strong>${remaining}</strong> remaining`;
         }
       }
 
+      // 🔹 When a todo is added, also create a "todo_created" notification
       async function addTodo(text, scheduled, description) {
-        const newTodo = { id: uid(), text: text.trim(), done: false, created: Date.now(), scheduled: scheduled || '', description: description || '' };
+        const newTodo = {
+          id: uid(),
+          text: text.trim(),
+          done: false,
+          created: Date.now(),
+          scheduled: scheduled || '',
+          description: description || ''
+        };
         todos.push(newTodo);
-        save(); render();
-        // Persist to Firestore for signed-in users
+        save();
+        render();
+
         try {
           if (!currentUser) return;
           await setDoc(doc(db, 'tasks', newTodo.id), {
@@ -615,33 +613,35 @@
             created: serverTimestamp()
           });
           console.info('Task persisted', newTodo.id);
+
+          // 🔔 notify user that a task was created
+          await createNotification(`Task created: ${newTodo.text}`, "todo_created");
         } catch (e) {
           console.warn('Could not persist task to Firestore', e);
         }
       }
 
+      // 🔹 When a todo is completed, also create a "todo_completed" notification
       async function toggle(id) {
-        const t = todos.find(x => x.id === id); if (!t) return;
+        const t = todos.find(x => x.id === id);
+        if (!t) return;
         const wasDone = t.done;
         t.done = !t.done;
-        console.log(`Toggled task ${id}: done=${t.done}`);
-        save(); render();
-        
-        // If the task just became done, record a completion event for analytics
+        save();
+        render();
+
         if (!wasDone && t.done) {
           try {
-            if (!currentUser) { 
+            if (!currentUser) {
               console.log('No current user, skipping completion event');
-              return; // only record for authenticated users
+              return;
             }
 
-            // Avoid duplicate local writes: only write once per todo per client session
             if (t.completionRecorded) {
               console.info('Completion already recorded for', t.id);
               return;
             }
 
-            // compute completedTime (client-side ISO) and onTime boolean if scheduled exists
             const completedISO = new Date().toISOString();
             let onTime = false;
             if (t.scheduled) {
@@ -651,38 +651,36 @@
               } catch (e) { onTime = false; }
             }
 
-            console.log(`Recording completion event for ${t.id}, onTime=${onTime}`);
-
             await addDoc(collection(db, 'events'), {
               userUid: currentUser.uid,
               type: 'completion',
               timestamp: serverTimestamp(),
-              meta: { taskId: t.id, taskText: t.text, scheduledTime: t.scheduled || null, completedTime: completedISO, onTime, source: 'todoToggle' }
+              meta: {
+                taskId: t.id,
+                taskText: t.text,
+                scheduledTime: t.scheduled || null,
+                completedTime: completedISO,
+                onTime,
+                source: 'todoToggle'
+              }
             });
 
-            // mark locally to avoid duplicate writes from this client
-            t.completionRecorded = true; t.completedLocal = completedISO; t.onTimeLocal = onTime; save();
+            t.completionRecorded = true;
+            t.completedLocal = completedISO;
+            t.onTimeLocal = onTime;
+            save();
 
-            // Persist task completion state to Firestore task doc
             try {
-              if (currentUser) {
-                console.log(`Updating Firestore task doc ${t.id} with done=true`);
-                await updateDoc(doc(db, 'tasks', t.id), {
-                  done: true,
-                  completedTime: serverTimestamp(),
-                  completedTimeClient: completedISO,
-                  onTime: onTime
-                });
-                
-                // Verify the update by reading the doc back
-                const updatedSnap = await getDoc(doc(db, 'tasks', t.id));
-                console.log(`✓ Task doc updated. Verification read:`, updatedSnap.data());
-              }
+              await updateDoc(doc(db, 'tasks', t.id), {
+                done: true,
+                completedTime: serverTimestamp(),
+                completedTimeClient: completedISO,
+                onTime: onTime
+              });
             } catch (e) {
               console.warn('Could not update task doc with completion', e);
             }
 
-            // award reward points (10 per completion)
             const rewardsRef = doc(db, 'userRewards', currentUser.uid);
             const rSnap = await getDoc(rewardsRef);
             if (rSnap.exists()) {
@@ -691,10 +689,12 @@
               await setDoc(rewardsRef, { points: 10, lastUpdated: serverTimestamp() });
             }
 
-            // Check for 3 on-time completions in a row and celebrate
             if (updateStreakCounter(onTime)) {
               celebrateStreakWith3OnTimeCompletions();
             }
+
+            // 🔔 notify user that a task was completed
+            await createNotification(`Task completed: ${t.text}`, "todo_completed");
 
           } catch (e) {
             console.error('Failed to record completion event', e);
@@ -703,9 +703,9 @@
       }
 
       async function remove(id) {
-        // remove locally
-        todos = todos.filter(x => x.id !== id); save(); render();
-        // remove from Firestore if exists
+        todos = todos.filter(x => x.id !== id);
+        save();
+        render();
         try {
           if (!currentUser) return;
           await deleteDoc(doc(db, 'tasks', id));
@@ -716,14 +716,12 @@
       }
 
       function edit(id) {
-        const t = todos.find(x => x.id === id); if (!t) return;
+        const t = todos.find(x => x.id === id);
+        if (!t) return;
         const li = els.list.querySelector(`[data-id="${id}"]`);
-        if (!li) return;
-        // If already in edit mode, do nothing
-        if (li.dataset.editing === 'true') return;
+        if (!li || li.dataset.editing === 'true') return;
         li.dataset.editing = 'true';
 
-        // Replace the display spans with inputs for inline editing
         const textSpan = li.querySelector('.todo-text');
         const schedSpan = li.querySelector('.todo-scheduled');
         const descSpan = li.querySelector('.todo-desc');
@@ -736,13 +734,11 @@
         const schedInput = document.createElement('input');
         schedInput.type = 'datetime-local';
         schedInput.className = 'form-control form-control-sm edit-scheduled mt-1';
-        // convert stored scheduled (ISO or '') into datetime-local value if present
         if (t.scheduled) {
           try {
             const dt = new Date(t.scheduled);
             if (!isNaN(dt.getTime())) {
-              // format to yyyy-MM-ddTHH:mm
-              const pad = (n) => n.toString().padStart(2,'0');
+              const pad = n => n.toString().padStart(2,'0');
               const y = dt.getFullYear();
               const m = pad(dt.getMonth()+1);
               const d = pad(dt.getDate());
@@ -750,7 +746,7 @@
               const mm = pad(dt.getMinutes());
               schedInput.value = `${y}-${m}-${d}T${hh}:${mm}`;
             }
-          } catch (e) { /* ignore */ }
+          } catch (e) {}
         }
 
         const descInput = document.createElement('input');
@@ -758,12 +754,10 @@
         descInput.className = 'form-control form-control-sm edit-desc mt-1';
         descInput.value = t.description || '';
 
-        // Replace nodes
         textSpan.replaceWith(textInput);
         if (schedSpan) schedSpan.replaceWith(schedInput);
         if (descSpan) descSpan.replaceWith(descInput);
 
-        // Change Edit button to Save and add Cancel button
         const editBtn = li.querySelector('.edit');
         editBtn.textContent = 'Save';
         editBtn.classList.add('btn-success');
@@ -774,46 +768,38 @@
         cancelBtn.textContent = 'Cancel';
         editBtn.after(cancelBtn);
 
-        // Focus the text input and select the end
         textInput.focus();
         textInput.selectionStart = textInput.value.length;
 
-        // Wire cancel handler
         cancelBtn.addEventListener('click', () => {
-          // restore display by rerendering
           li.dataset.editing = 'false';
           render();
         }, { once: true });
       }
 
-  async function commitEdit(id, newText) {
+      async function commitEdit(id, newText) {
         newText = (newText || '').trim();
-        const t = todos.find(x => x.id === id); if (!t) return;
+        const t = todos.find(x => x.id === id);
+        if (!t) return;
         if (!newText) { remove(id); return; }
-        // read scheduled & description inputs if present in DOM
+
         const li = els.list.querySelector(`[data-id="${id}"]`);
         if (li) {
           const schedInput = li.querySelector('.edit-scheduled');
           const descInput = li.querySelector('.edit-desc');
-          if (schedInput) {
-            t.scheduled = schedInput.value || '';
-          }
-          if (descInput) {
-            t.description = descInput.value || '';
-          }
+          if (schedInput) t.scheduled = schedInput.value || '';
+          if (descInput) t.description = descInput.value || '';
         }
         t.text = newText;
-        // preserve completion flags (user requested) — do not clear them
-        save(); render();
+        save();
+        render();
 
-        // Persist edits to Firestore
         try {
           if (!currentUser) return;
           await updateDoc(doc(db, 'tasks', id), {
             text: t.text,
             scheduled: t.scheduled || null,
             description: t.description || null,
-            // keep done/completed fields untouched by this edit
           });
           console.info('Task edits persisted', id);
         } catch (e) {
@@ -823,10 +809,13 @@
 
       async function clearCompleted() {
         const toRemove = todos.filter(t => t.done).map(t => t.id);
-        todos = todos.filter(t => !t.done); save(); render();
+        todos = todos.filter(t => !t.done);
+        save();
+        render();
         if (!currentUser) return;
         for (const id of toRemove) {
-          try { await deleteDoc(doc(db, 'tasks', id)); } catch (e) { console.warn('Could not delete completed task', id, e); }
+          try { await deleteDoc(doc(db, 'tasks', id)); }
+          catch (e) { console.warn('Could not delete completed task', id, e); }
         }
       }
 
@@ -835,7 +824,7 @@
           e.preventDefault();
           els.addFormError.classList.add('d-none');
           document.getElementById('errorText').textContent = '';
-          
+
           const text = els.input.value.trim();
           if (!text) {
             document.getElementById('errorText').textContent = 'Please enter a task name.';
@@ -843,7 +832,7 @@
             els.input.focus();
             return;
           }
-          
+
           const sched = els.scheduled.value || '';
           const desc = els.description.value || '';
           addTodo(text, sched, desc);
@@ -853,7 +842,6 @@
           els.input.focus();
         });
 
-        // Clear error on input
         els.input.addEventListener('input', () => {
           if (els.input.value.trim()) {
             els.addFormError.classList.add('d-none');
@@ -861,12 +849,12 @@
         });
 
         els.list.addEventListener('click', (e) => {
-          const li = e.target.closest('.todo-item'); if (!li) return;
+          const li = e.target.closest('.todo-item');
+          if (!li) return;
           const id = li.dataset.id;
           if (e.target.matches('.toggle')) toggle(id);
           else if (e.target.matches('.delete')) remove(id);
           else if (e.target.matches('.edit')) {
-            // if in edit mode, Save; otherwise enter edit mode
             if (li.dataset.editing === 'true') {
               const textInput = li.querySelector('.edit-text');
               const newText = textInput ? textInput.value : '';
@@ -875,30 +863,25 @@
               edit(id);
             }
           } else if (e.target.matches('.cancel')) {
-            // cancel button: simply re-render to restore display
-            li.dataset.editing = 'false'; render();
+            li.dataset.editing = 'false';
+            render();
           }
         });
 
-        // Commit edit on Enter or blur
         els.list.addEventListener('keydown', (e) => {
           if (!(e.target instanceof HTMLElement)) return;
-          // When editing text, Enter should save
           if (e.target.classList.contains('edit-text')) {
             if (e.key === 'Enter') {
               e.preventDefault();
               const li = e.target.closest('.todo-item');
               const id = li?.dataset?.id;
-              if (id) {
-                commitEdit(id, e.target.value);
-              }
+              if (id) commitEdit(id, e.target.value);
             }
-          }
-          // retain previous behaviour for plain todo-text if any
-          else if (e.target.classList.contains('todo-text')) {
+          } else if (e.target.classList.contains('todo-text')) {
             if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
           }
         });
+
         els.list.addEventListener('focusout', (e) => {
           if (!(e.target instanceof HTMLElement)) return;
           if (!e.target.classList.contains('todo-text')) return;
@@ -907,7 +890,6 @@
           commitEdit(li.dataset.id, e.target.textContent || '');
         });
 
-        // Filters
         els.filters.forEach(r => r.addEventListener('change', () => {
           activeFilter = document.querySelector('input[name="filter"]:checked').value;
           render();
@@ -915,24 +897,20 @@
 
         els.clearCompleted.addEventListener('click', () => clearCompleted());
 
-        // Keyboard: quickly add with Cmd/Ctrl+Enter
         document.addEventListener('keydown', (e) => {
           if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-            const val = els.input.value.trim(); if (val) { addTodo(val); els.input.value = ''; }
+            const val = els.input.value.trim();
+            if (val) { addTodo(val); els.input.value = ''; }
           }
         });
       }
 
       async function setUser(newUserId) {
         userId = newUserId || 'guest';
-        // When signed in, try to load authoritative tasks from Firestore
         if (userId && userId !== 'guest') {
           try {
             const q = query(collection(db, 'tasks'), where('userUid', '==', userId));
             const snap = await getDocs(q);
-            console.log('Firestore query returned', snap.docs.length, 'tasks');
-            
-            // Build map of Firestore tasks
             const fsMap = {};
             snap.docs.forEach(d => {
               const data = d.data();
@@ -948,35 +926,25 @@
                 onTimeLocal: data.onTime
               };
             });
-            
-            // Merge with local storage (local storage is authoritative for offline edits)
+
             const localTodos = load();
-            const merged = {};
-            
-            // Start with all Firestore tasks
-            Object.assign(merged, fsMap);
-            
-            // Override with local tasks if they exist and have unsaved changes
+            const merged = { ...fsMap };
             localTodos.forEach(lt => {
               if (merged[lt.id]) {
-                // Task exists in both - use Firestore as source of truth for done/completed fields
                 merged[lt.id].done = fsMap[lt.id].done;
                 merged[lt.id].onTimeLocal = fsMap[lt.id].onTimeLocal;
                 merged[lt.id].completedLocal = fsMap[lt.id].completedLocal;
               } else {
-                // Local task not in Firestore - keep it
                 merged[lt.id] = lt;
               }
             });
-            
+
             todos = Object.values(merged);
-            console.log('Merged tasks:', todos.map(t => ({ id: t.id, text: t.text, done: t.done })));
-            save(); 
+            save();
             render();
             return;
           } catch (e) {
             console.warn('Could not load tasks from Firestore', e);
-            // fall back to local storage
           }
         }
         todos = load();
@@ -992,10 +960,8 @@
       return { init, setUser };
     })();
 
-    // Boot
     document.addEventListener('DOMContentLoaded', () => {
       App.init();
-      // Wire auth -> App.setUser
       onAuthStateChanged(auth, (user) => {
         currentUser = user || null;
         App.setUser(user ? user.uid : 'guest');
@@ -1006,7 +972,3 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-<!-- Link this html once the main page is done. 
- <a class="btn btn-primary" href="todolist.html">My To-Do List</a>
--->

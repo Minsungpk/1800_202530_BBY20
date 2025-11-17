@@ -20,9 +20,16 @@ let firebaseConfig = {
 let app = initializeApp(firebaseConfig);
 let db = getFirestore(app);
 
+
+console.log("🔥 Firebase initialized. Project ID:", app.options.projectId);
+console.log("🔥 Firestore DB object:", db);
+
 async function createEvent(event) {
   event.preventDefault();
   console.log("Form submitted");
+  console.log("📨 createEvent handler running");
+
+
 
   try {
     let name = document.getElementById("eventname").value.trim();
@@ -57,7 +64,7 @@ async function createEvent(event) {
     let date = Timestamp.fromDate(dateObj);
     console.log("Converted Firestore Timestamp:", date);
 
-    let docRef = await addDoc(collection(db, "events"), {
+    let docRef = await addDoc(collection(db, "testEvents"), {
       name,
       description,
       date,
