@@ -68,7 +68,6 @@ async function createEvent(event) {
 
     console.log("Event created successfully! ID:", docRef.id);
     alert("Event created successfully!");
-    document.getElementById("eventForm").reset();
   } catch (error) {
     console.error("Error creating event:", error);
     alert("Error creating event. Check console for details.");
