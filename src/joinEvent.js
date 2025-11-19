@@ -1,11 +1,10 @@
-// listEvents.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import {
   getFirestore,
   collection,
   getDocs,
   query,
-  orderBy
+  orderBy,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
 let firebaseConfig = {
@@ -22,7 +21,7 @@ let firebaseConfig = {
 let app = initializeApp(firebaseConfig);
 let db = getFirestore(app);
 
-console.log("🔥 Firebase initialized (list page)");
+console.log("Firebase initialized (list page)");
 
 // Container in HTML
 let eventsList = document.getElementById("eventsList");
