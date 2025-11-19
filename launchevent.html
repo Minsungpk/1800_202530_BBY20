@@ -64,6 +64,7 @@
             placeholder="Where will you host this?"
             required
           />
+          <div id="locationResults" class="autocomplete-results"></div>
         </div>
 
         <button type="submit" class="btn btn-danger custom-btn">
@@ -72,8 +73,6 @@
       </form>
     </div>
 
-    <!-- MAP CONTAINER (must exist only once) -->
-    <div id="map" style="height: 50vh; width: 100vw; margin-top: 20px"></div>
 
     <!-- Your external JS file -->
     <script type="module" src="./src/launchEvent.js"></script>
@@ -87,18 +86,37 @@
         zoom: 2,
       });
 
-      const control = new maplibreSearchBox.MapLibreSearchControl({
-        useMapFocusPoint: true,
-        onResultSelected: (feature) => {
-          console.log("Selected coordinates:", feature.geometry.coordinates);
+      // -------- AUTOCOMPLETE INTO YOUR OWN INPUT FIELD --------
+      const search = new maplibreSearchBox.MapLibreSearchBox({
+        accessToken: "710361f6-69e6-410f-8299-244cc2fecf5f",
 
-          // OPTIONALLY update the location input automatically
-          const name = feature.properties.name || "";
-          document.getElementById("eventlocation").value = name;
+        // Tell the plugin to use your input box
+        input: document.getElementById("eventlocation"),
+
+        // Optional: attach results directly under the input field
+        resultsContainer: document.createElement("div"),
+
+        // Customize dropdown styling
+        minLength: 2,
+        limit: 5,
+
+        onSelect: (feature) => {
+          const label = feature.properties.label;
+          const coords = feature.geometry.coordinates;
+
+          console.log("Selected:", label, coords);
+
+          // Fill the input field
+          document.getElementById("eventlocation").value = label;
         }
       });
 
-      map.addControl(control, "top-left");
+      // Insert the results dropdown after your input
+      const locationInput = document.getElementById("eventlocation");
+      locationInput.parentNode.appendChild(search.options.resultsContainer);
+
+      // NO SEARCH BAR ON MAP (removed map control)
     </script>
+
   </body>
 </html>
