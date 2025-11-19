@@ -1,9 +1,10 @@
-// change this js script
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import {
   getFirestore,
   collection,
   addDoc,
+  doc,
+  setDoc,
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
@@ -20,26 +21,30 @@ let firebaseConfig = {
 let app = initializeApp(firebaseConfig);
 let db = getFirestore(app);
 
+console.log("Firebase initialized. Project ID:", app.options.projectId);
+console.log("Firestore DB object:", db);
+
 async function createEvent(event) {
   event.preventDefault();
   console.log("Form submitted");
+  console.log("createEvent handler running");
 
   try {
     let name = document.getElementById("eventname").value.trim();
     let description = document.getElementById("eventdescription").value.trim();
     let dateValue = document.getElementById("eventdate").value;
     let location = document.getElementById("eventlocation").value.trim();
-    let friendsInput = document.getElementById("invitefriends").value;
-    let friends = friendsInput
-      ? friendsInput.split(",").map((f) => f.trim())
-      : [];
+    // let friendsInput = document.getElementById("invitefriends").value;
+    // let friends = friendsInput
+    //   ? friendsInput.split(",").map((f) => f.trim())
+    //   : [];
 
     console.log("Form values:", {
       name,
       description,
       dateValue,
       location,
-      friends,
+      // friends,
     });
 
     if (!dateValue) {
@@ -57,18 +62,17 @@ async function createEvent(event) {
     let date = Timestamp.fromDate(dateObj);
     console.log("Converted Firestore Timestamp:", date);
 
-    let docRef = await addDoc(collection(db, "events"), {
+    let docRef = await addDoc(collection(db, "testEvents"), {
       name,
       description,
       date,
       location,
       createdAt: Timestamp.fromDate(new Date()),
-      attendees: friends,
+      // attendees: friends,
     });
 
     console.log("Event created successfully! ID:", docRef.id);
     alert("Event created successfully!");
-    document.getElementById("eventForm").reset();
   } catch (error) {
     console.error("Error creating event:", error);
     alert("Error creating event. Check console for details.");
