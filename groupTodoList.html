@@ -770,7 +770,7 @@
   <script type="module">
     import { auth, db } from './src/firebaseConfig.js';
   import { onAuthStateChanged, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-  import { collection, addDoc, serverTimestamp, doc, getDoc, setDoc, updateDoc, deleteDoc, getDocs, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+  import { collection, addDoc, serverTimestamp, doc, getDoc, setDoc, updateDoc, deleteDoc, getDocs, query, where, onSnapshot, increment } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
     let currentUser = null;
 
@@ -941,6 +941,7 @@
 
       async function toggle(id) {
         const t = todos.find(x => x.id === id); if (!t) return;
+        const wasDone = t.done;
         t.done = !t.done;
         console.log(`Toggled task ${id}: done=${t.done}`);
         render(); // Render immediately for UI feedback
@@ -953,6 +954,40 @@
             completedAt: t.done ? serverTimestamp() : null
           });
           console.log(`✓ Group task updated in Firestore`);
+          
+          // Record completion event and award points when task is completed
+          if (!wasDone && t.done) {
+            try {
+              const completedISO = new Date().toISOString();
+              
+              // Record completion event for statistics
+              await addDoc(collection(db, 'events'), {
+                userUid: currentUser.uid,
+                type: 'completion',
+                timestamp: serverTimestamp(),
+                meta: {
+                  taskId: t.id,
+                  taskText: t.text,
+                  completedTime: completedISO,
+                  source: 'groupTodoToggle',
+                  groupId: groupId
+                }
+              });
+              console.log('✓ Completion event recorded for statistics');
+              
+              // Award 10 points for completing a group task
+              const rewardsRef = doc(db, 'userRewards', currentUser.uid);
+              const rSnap = await getDoc(rewardsRef);
+              if (rSnap.exists()) {
+                await updateDoc(rewardsRef, { points: increment(10) });
+              } else {
+                await setDoc(rewardsRef, { points: 10, lastUpdated: serverTimestamp() });
+              }
+              console.log('✓ Awarded 10 points for group task completion');
+            } catch (e) {
+              console.error('Failed to record completion event or award points', e);
+            }
+          }
         } catch (e) {
           console.warn('Could not update group task in Firestore', e);
         }
