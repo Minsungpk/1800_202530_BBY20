@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
 
-    <!-- Map stuff -->
+    <!-- Map Libraries -->
     <script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js"></script>
     <link
       href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css"
@@ -21,9 +21,11 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
     <div id="createevent" class="container createevent">
       <h1>Launch a new event!</h1>
+
       <form id="eventForm">
         <div class="formbox">
           <label for="eventname" class="form-label"><b>Event Name:</b></label>
@@ -32,8 +34,7 @@
 
         <div class="formbox">
           <label for="eventdescription" class="form-label"
-            ><b>Event Description:</b></label
-          >
+            ><b>Event Description:</b></label>
           <textarea
             id="eventdescription"
             class="form-control"
@@ -44,22 +45,18 @@
 
         <div class="formbox">
           <label for="eventdate" class="form-label"
-            ><b>Event Date & Time:</b></label
-          >
+            ><b>Event Date & Time:</b></label>
           <input
             type="datetime-local"
             id="eventdate"
             class="form-control"
             required
           />
-
-          <div id="map" style="height: 100vh; width: 100vw"></div>
         </div>
 
         <div class="formbox">
           <label for="eventlocation" class="form-label"
-            ><b>Event Location:</b></label
-          >
+            ><b>Event Location:</b></label>
           <input
             type="text"
             id="eventlocation"
@@ -69,43 +66,38 @@
           />
         </div>
 
-        <!-- <div class="formbox">
-          <label for="invitefriends" class="form-label"
-            ><b>Invite Friends (email address, comma-separated):</b></label
-          >
-          <input
-            type="text"
-            id="invitefriends"
-            class="form-control"
-            placeholder="Who do you want to invite?"
-          /> -->
-        <!-- </div> -->
-
         <button type="submit" class="btn btn-danger custom-btn">
           Launch Event
         </button>
       </form>
     </div>
+
+    <!-- MAP CONTAINER (must exist only once) -->
+    <div id="map" style="height: 50vh; width: 100vw; margin-top: 20px"></div>
+
+    <!-- Your external JS file -->
     <script type="module" src="./src/launchEvent.js"></script>
 
-    <!-- JS for map and location -->
-     <script type="application/javascript">
-      var control = new maplibreSearchBox.MapLibreSearchControl({
-        useMapFocusPoint: true,
-        onResultSelected: feature => {
-          // You can add code here to take some action when a result is selected.
-          console.log(feature.geometry.coordinates);
-        },
-        // You can also use our EU endpoint to keep traffic within the EU using the basePath option:
-        // baseUrl: "https://api-eu.stadiamaps.com",
-      });
-      var map = new maplibregl.Map({
+    <!-- Map Initialization -->
+    <script>
+      const map = new maplibregl.Map({
         container: "map",
-        // You can also use our EU endpoints here by changing the host to tiles-eu.stadiamaps.com
-        style: "https://tiles.stadiamaps.com/styles/alidade_smooth.json", // stylesheet location
-        center: [-74.5, 40], // starting position [lng, lat]
-        zoom: 2, // starting zoom
+        style: "https://tiles.stadiamaps.com/styles/alidade_smooth.json",
+        center: [-74.5, 40],
+        zoom: 2,
       });
+
+      const control = new maplibreSearchBox.MapLibreSearchControl({
+        useMapFocusPoint: true,
+        onResultSelected: (feature) => {
+          console.log("Selected coordinates:", feature.geometry.coordinates);
+
+          // OPTIONALLY update the location input automatically
+          const name = feature.properties.name || "";
+          document.getElementById("eventlocation").value = name;
+        }
+      });
+
       map.addControl(control, "top-left");
     </script>
   </body>
