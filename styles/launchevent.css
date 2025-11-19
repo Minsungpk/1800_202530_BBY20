@@ -28,3 +28,22 @@ textarea {
   margin-top: 50px;
   display: block;
 }
+
+.autocomplete-results {
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+}
+
+.autocomplete-results div {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.autocomplete-results div:hover {
+  background-color: #eee;
+}
