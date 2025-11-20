@@ -42,7 +42,7 @@
       font-weight: 700;
       margin: 0;
       display: flex;
-      align-items-center;
+      align-items: center;
       gap: 1rem;
     }
 
@@ -135,7 +135,7 @@
       margin-bottom: 1.5rem;
       color: #212529;
       display: flex;
-      align-items-center;
+      align-items: center;
       gap: 0.75rem;
     }
 
@@ -240,7 +240,7 @@
       margin-bottom: 1.5rem;
       color: #212529;
       display: flex;
-      align-items-center;
+      align-items: center;
       gap: 0.75rem;
     }
 
@@ -293,10 +293,217 @@
     }
 
     @media (max-width: 768px) {
-      .page-header { padding: 1.5rem 1rem; }
-      .page-header h1 { font-size: 1.75rem; }
-      .kpi-value { font-size: 2rem; }
-      .form-row { gap: 1rem; }
+      body {
+        font-size: 14px;
+      }
+      main { 
+        padding-top: 65px;
+        padding-bottom: 2rem;
+      }
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        max-width: 100%;
+      }
+      .page-header { 
+        padding: 1.25rem 1rem; 
+        margin-bottom: 1.25rem;
+        border-radius: 10px;
+      }
+      .page-header h1 { 
+        font-size: 1.4rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        text-align: center;
+      }
+      .page-header .subtitle {
+        font-size: 0.9rem;
+        text-align: center;
+        width: 100%;
+      }
+      .row.g-3 {
+        row-gap: 0.75rem !important;
+        column-gap: 0.75rem !important;
+      }
+      .kpi-card {
+        margin-bottom: 0;
+      }
+      .kpi-card .card-body {
+        padding: 1.25rem 1rem;
+        text-align: center;
+      }
+      .kpi-value { 
+        font-size: 1.75rem; 
+        margin-bottom: 0.25rem;
+      }
+      .kpi-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      .kpi-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+      .kpi-meta {
+        font-size: 0.8rem;
+      }
+      .chart-card, .timeline-card {
+        padding: 1rem;
+        margin-bottom: 1.25rem;
+        border-radius: 10px;
+      }
+      .chart-card .card-title,
+      .timeline-card .card-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      #trendChart {
+        height: 220px !important;
+      }
+      .timeline-item {
+        padding: 0.75rem;
+        margin-left: 0.5rem;
+        padding-left: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 6px;
+      }
+      .timeline-dot {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.7rem;
+        min-width: 1.5rem;
+      }
+      .timeline-time {
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .timeline-desc {
+        font-size: 0.85rem;
+        margin-top: 0.35rem;
+      }
+      .timeline-meta {
+        font-size: 0.75rem;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+      .timeline-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+      }
+      .btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+      }
+      .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+      }
+      .form-control {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+      }
+      #equippedBadgeDisplay {
+        font-size: 0.75rem !important;
+        padding: 4px 8px !important;
+      }
+      .show-more-btn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.25rem;
+      }
+      #clearActivityBtn {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      body {
+        font-size: 13px;
+      }
+      main {
+        padding-top: 60px;
+      }
+      .page-header h1 {
+        font-size: 1.2rem;
+      }
+      .page-header .subtitle {
+        font-size: 0.85rem;
+      }
+      .kpi-card .card-body {
+        padding: 1rem 0.75rem;
+      }
+      .kpi-value {
+        font-size: 1.5rem;
+      }
+      .kpi-label {
+        font-size: 0.7rem;
+      }
+      .kpi-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+      .chart-card, .timeline-card {
+        padding: 0.75rem;
+      }
+      .chart-card .card-title,
+      .timeline-card .card-title {
+        font-size: 0.9rem;
+      }
+      #trendChart {
+        height: 200px !important;
+      }
+      .timeline-item {
+        padding: 0.6rem;
+        padding-left: 0.75rem;
+        margin-left: 0.25rem;
+      }
+      .timeline-dot {
+        width: 1.25rem;
+        height: 1.25rem;
+        font-size: 0.6rem;
+      }
+      .timeline-time {
+        font-size: 0.7rem;
+      }
+      .timeline-desc {
+        font-size: 0.8rem;
+      }
+      .timeline-meta {
+        font-size: 0.7rem;
+      }
+      .timeline-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+      }
+      .navbar-brand {
+        font-size: 1rem;
+      }
+      .nav-link {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .page-header {
+        padding: 1rem 0.75rem;
+      }
+      .page-header h1 {
+        font-size: 1.1rem;
+      }
+      .kpi-value {
+        font-size: 1.35rem;
+      }
+      .timeline-item {
+        padding: 0.5rem;
+        padding-left: 0.6rem;
+      }
+      #trendChart {
+        height: 180px !important;
+      }
     }
   </style>
 </head>
@@ -347,7 +554,7 @@
   <div id="authMsg" class="mb-3"></div>
 
   <!-- KPI Cards Grid -->
-  <div class="row g-4 mb-4">
+  <div class="row g-3 g-md-4 mb-4">
     <div class="col-12 col-md-6 col-lg-3">
       <div class="card kpi-card success">
         <div class="card-body">
