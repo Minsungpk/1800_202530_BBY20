@@ -15,8 +15,23 @@
   font-size: 40px;
   text-align: center;
   align-content: center;
-  cursor: pointer;
-  transition: all 0.5s ease;
+  /* cursor: pointer;
+  transition: all 0.5s ease; */
+}
+
+.icon {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 250px;
+  height: 250px;
+  padding: 20px;
+}
+
+.notificationicons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: auto;
+  padding: 20px;
 }
 
 .returnicon {
