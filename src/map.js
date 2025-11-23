@@ -67,6 +67,7 @@ map.addControl(
 // ======================================================================
 // 4. GEOLOCATE CONTROL (blue dot only - NOT Firestore)
 // ======================================================================
+/*
 const geolocate = new maplibregl.GeolocateControl({
   positionOptions: { enableHighAccuracy: true },
   trackUserLocation: true,
@@ -74,7 +75,7 @@ const geolocate = new maplibregl.GeolocateControl({
 });
 
 map.addControl(geolocate);
-
+*/
 // Start geolocation visual when map loads
 map.on("load", () => geolocate.trigger());
 
