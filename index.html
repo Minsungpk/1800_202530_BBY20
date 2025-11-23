@@ -139,7 +139,6 @@
     <input type="password" id="password" class="form-control" placeholder="Password" />
     <button type="button" id="loginBtn" class="btn btn-primary w-100">Login</button>
     <button type="button" id="gotoSignupBtn" class="btn btn-outline-secondary w-100">Create an account</button>
-    <button type="button" id="skipBtn" class="btn btn-link w-100">Skip Login</button>
     <p class="text-center text-danger mt-3" id="error"></p>
     <p class="text-center text-success mt-3" id="success"></p>
   </div>
@@ -187,10 +186,8 @@
       window.location.href = "signup.html";  // <— go to the signup page
     });
 
-    document.getElementById("skipBtn").addEventListener("click", (e)=>{
-      e.preventDefault();
-      window.location.href = "landing.html";
-    });
+
+
   </script>
 </body>
 </html>
