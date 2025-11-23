@@ -11,8 +11,11 @@ import {
   doc,
   query,
   orderBy,
+  getDoc,
+  onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
+// Firebase config
 let firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -23,20 +26,18 @@ let firebaseConfig = {
   measurementId: "G-1LCVJ62HEL",
 };
 
-// Init
+// Init Firebase
 let app = initializeApp(firebaseConfig);
 let db = getFirestore(app);
 let auth = getAuth(app);
 let currentUser = null;
 
-console.log("Firebase initialized (list page)");
+const eventsList = document.getElementById("eventsList");
 
-// Container in HTML
-let eventsList = document.getElementById("eventsList");
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
-    loadEvents(); // Reload events once user is known
+    loadEvents();
   } else {
     eventsList.innerHTML = "<p>Please log in to join events.</p>";
   }
@@ -51,48 +52,84 @@ async function loadEvents() {
   eventsList.innerHTML = "";
 
   snapshot.forEach(async (docSnap) => {
-    let data = docSnap.data();
-    let eventId = docSnap.id;
-    let dateString = data.date.toDate().toLocaleString();
+    const data = docSnap.data();
+    const eventId = docSnap.id;
+    const dateString = data.date.toDate().toLocaleString();
 
     // Create card
-    let card = document.createElement("div");
+    const card = document.createElement("div");
     card.className = "event-card";
+
+    // Participant count element
+    const participantsCountElem = document.createElement("p");
+    participantsCountElem.innerHTML = "<strong>Participants:</strong> 0";
+
+    // Join badge element
+    const joinBadge = document.createElement("span");
+    joinBadge.className = "joined-badge";
+    joinBadge.textContent = "Joined";
+    joinBadge.style.display = "none";
+
+    // Join button
+    const joinButton = document.createElement("button");
+    joinButton.className = "join-btn";
+    joinButton.textContent = "Join Event";
+    joinButton.dataset.id = eventId;
+
+    // Append content to card
     card.innerHTML = `
       <h3>${data.name}</h3>
       <p>${data.description}</p>
       <p><strong>Location:</strong> ${data.location.name}</p>
       <p><strong>Date:</strong> ${dateString}</p>
-      <button data-id="${eventId}" class="join-btn">
-        Join Event
-      </button>
     `;
-
+    card.appendChild(participantsCountElem);
+    card.appendChild(joinBadge);
+    card.appendChild(joinButton);
     eventsList.appendChild(card);
 
-    // Reference to participant document
-    const participantRef = doc(
+    const participantsColRef = collection(
+      db,
+      `testEvents/${eventId}/participants`
+    );
+    const participantDocRef = doc(
       db,
       `testEvents/${eventId}/participants/${currentUser.uid}`
     );
-    const joinedSnap = await getDoc(participantRef);
 
-    const joinButton = card.querySelector(".join-btn");
+    // Load initial participant count
+    const participantsSnapshot = await getDocs(participantsColRef);
+    participantsCountElem.innerHTML = `<strong>Participants:</strong> ${participantsSnapshot.size}`;
 
+    // Check if current user already joined
+    const joinedSnap = await getDoc(participantDocRef);
     if (joinedSnap.exists()) {
       joinButton.textContent = "Joined";
       joinButton.disabled = true;
+      joinBadge.style.display = "inline-block";
+      card.classList.add("joined-card");
     }
 
+    // Join button click
     joinButton.addEventListener("click", async () => {
-      await setDoc(participantRef, {
-        joinedAt: new Date(),
-      });
+      try {
+        await setDoc(participantDocRef, { joinedAt: new Date() });
+        joinButton.textContent = "Joined";
+        joinButton.disabled = true;
+        joinBadge.style.display = "inline-block";
+        card.classList.add("joined-card");
 
-      joinButton.textContent = "Joined";
-      joinButton.disabled = true;
+        // Update participant count
+        const updatedSnap = await getDocs(participantsColRef);
+        participantsCountElem.innerHTML = `<strong>Participants:</strong> ${updatedSnap.size}`;
+      } catch (err) {
+        console.error("Error joining event:", err);
+        alert("Failed to join event. Please try again.");
+      }
+    });
+
+    onSnapshot(participantsColRef, (snap) => {
+      participantsCountElem.innerHTML = `<strong>Participants:</strong> ${snap.size}`;
     });
   });
 }
-
-loadEvents();
