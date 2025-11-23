@@ -2,8 +2,6 @@
 // 1. IMPORT FIREBASE MODULES (from CDN)
 // ======================================================================
 // These imports allow this JavaScript file to talk to Firebase services.
-// We use the Firebase "modular" SDK, which loads individual functions
-// instead of a huge bundle (faster and more modern).
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import {
   getFirestore,
@@ -13,12 +11,14 @@ import {
   onSnapshot,
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
 // ======================================================================
 // 2. FIREBASE CONFIGURATION + INITIALIZATION
 // ======================================================================
-// firebaseConfig identifies WHICH Firebase project we want to connect to.
-// This allows the browser to send data to the correct Firestore database.
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -29,36 +29,18 @@ const firebaseConfig = {
   measurementId: "G-1LCVJ62HEL",
 };
 
-// Connect to Firebase
+// Initialize Firebase app + services
 const app = initializeApp(firebaseConfig);
-
-// Connect to Firestore database
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// These will be filled AFTER the user logs in
+let userId = null;
+let userDisplayName = null;
 
 // ======================================================================
-// 3. CREATE A SIMPLE USER ID (one per browser)
+// 3. CREATE THE MAP USING MAPLIBRE
 // ======================================================================
-// We need to uniquely identify each user so each device’s location can
-// be stored separately in Firestore.
-//
-// Instead of forcing login, we generate a random ID and save it in
-// localStorage so it stays the same after refresh.
-let userId = localStorage.getItem("timelyUserId");
-if (!userId) {
-  userId = "user_" + Math.floor(Math.random() * 1000000);
-  localStorage.setItem("timelyUserId", userId);
-}
-
-console.log("My userId:", userId);
-
-// ======================================================================
-// 4. CREATE THE MAP USING MAPLIBRE
-// ======================================================================
-// This initializes the MapLibre map component.
-// - container: HTML element where the map appears
-// - style: MapTiler map style URL
-// - center: starting map position
-// - zoom: initial zoom level
 const map = new maplibregl.Map({
   container: "map",
   style:
@@ -83,11 +65,8 @@ map.addControl(
 );
 
 // ======================================================================
-// 5. GEOLOCATE CONTROL (shows your own blue dot)
+// 4. GEOLOCATE CONTROL (blue dot only - NOT Firestore)
 // ======================================================================
-// This control shows where you are on the map and updates as you move.
-// It does NOT send your location to Firebase. It is only visual.
-// Firebase sending is done in the next section.
 const geolocate = new maplibregl.GeolocateControl({
   positionOptions: { enableHighAccuracy: true },
   trackUserLocation: true,
@@ -96,34 +75,32 @@ const geolocate = new maplibregl.GeolocateControl({
 
 map.addControl(geolocate);
 
-// Start geolocation when map loads
+// Start geolocation visual when map loads
 map.on("load", () => geolocate.trigger());
 
 // ======================================================================
-// 6. SEND **MY** LOCATION TO FIREBASE (real-time updating)
+// 5. SEND MY LOCATION TO FIREBASE (real-time updating)
 // ======================================================================
-// This function receives GPS coordinates from the browser and writes them
-// to Firestore under the user's document.
-//
-// Structure in Firestore:
-// locations
-//   └── user_123456
-//         ├── lat: 49.xxx
-//         ├── lng: -123.xxx
-//         └── updatedAt: Timestamp
 async function sendMyLocationToFirebase(position) {
+  // If we don't know who the user is yet, skip
+  if (!userId) {
+    console.warn("No logged-in user yet, skipping location update.");
+    return;
+  }
+
   const lat = position.coords.latitude;
   const lng = position.coords.longitude;
 
   try {
     await setDoc(
-      doc(db, "locations", userId), // document path
+      doc(db, "locations", userId), // document ID = Firebase Auth UID
       {
         lat: lat,
         lng: lng,
-        updatedAt: Timestamp.now(), // so we know when it updated
+        updatedAt: Timestamp.now(),
+        displayName: userDisplayName,
       },
-      { merge: true } // keeps old fields if they exist
+      { merge: true } // keep other fields if they exist
     );
 
     console.log("Updated my location in Firestore:", lat, lng);
@@ -132,62 +109,92 @@ async function sendMyLocationToFirebase(position) {
   }
 }
 
-// Browser continuously watches GPS and calls our function each time
-if ("geolocation" in navigator) {
-  navigator.geolocation.watchPosition(
-    sendMyLocationToFirebase,
-    (err) => console.error("Geolocation error:", err),
-    { enableHighAccuracy: true }
-  );
-} else {
-  console.error("Geolocation is not supported on this device.");
+// ======================================================================
+// 6. LISTEN FOR ALL USERS' LOCATIONS (real-time map updates)
+// ======================================================================
+const markers = {}; // one marker per userId
+
+function startLocationsListener() {
+  onSnapshot(collection(db, "locations"), (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      const otherUserId = change.doc.id;
+      const data = change.doc.data();
+
+      // Skip invalid data
+      if (data.lat == null || data.lng == null) return;
+
+      const isMe = otherUserId === userId;
+
+      // Text to show in popup
+      const popupText = data.displayName || data.email || otherUserId;
+
+      // ADDED or MODIFIED → create or move marker
+      if (change.type === "added" || change.type === "modified") {
+        if (markers[otherUserId]) {
+          // Move existing marker
+          markers[otherUserId].setLngLat([data.lng, data.lat]);
+
+          // Update popup text if popup exists
+          const existingPopup = markers[otherUserId].getPopup();
+          if (existingPopup) {
+            existingPopup.setText(popupText);
+          }
+        } else {
+          // Create popup
+          const popup = new maplibregl.Popup({ offset: 25 }).setText(popupText);
+
+          // Create new marker with popup
+          markers[otherUserId] = new maplibregl.Marker({
+            color: isMe ? "#00FF00" : "#FF0000", // Green = me, Red = others
+          })
+            .setLngLat([data.lng, data.lat])
+            .setPopup(popup)
+            .addTo(map);
+
+          // Automatically show popup
+          markers[otherUserId].togglePopup();
+        }
+      }
+
+      // REMOVED → delete marker
+      if (change.type === "removed") {
+        if (markers[otherUserId]) {
+          markers[otherUserId].remove();
+          delete markers[otherUserId];
+        }
+      }
+    });
+  });
 }
 
 // ======================================================================
-// 7. LISTEN FOR ALL USERS' LOCATIONS (real-time map updates)
+// 7. AUTH STATE LISTENER – START EVERYTHING AFTER LOGIN
 // ======================================================================
-// markers[] will store all map markers, one per user.
-const markers = {};
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // ✅ User is logged in
+    userId = user.uid;
+    userDisplayName = user.displayName || user.email || "Anonymous";
 
-// Firestore's onSnapshot() watches the entire "locations" collection
-// and triggers whenever ANY user updates their location.
-//
-// This gives us real-time updates exactly like Snapchat maps.
-onSnapshot(collection(db, "locations"), (snapshot) => {
-  snapshot.docChanges().forEach((change) => {
-    const otherUserId = change.doc.id;
-    const data = change.doc.data();
+    console.log("Logged in as:", userId, userDisplayName);
 
-    // Skip invalid data
-    if (data.lat == null || data.lng == null) return;
-
-    const isMe = otherUserId === userId;
-
-    // ----------------------------------------------------------
-    // If user is ADDED or UPDATED → create or move marker
-    // ----------------------------------------------------------
-    if (change.type === "added" || change.type === "modified") {
-      if (markers[otherUserId]) {
-        // Move existing marker to new location
-        markers[otherUserId].setLngLat([data.lng, data.lat]);
-      } else {
-        // Create a new marker if this user has no marker yet
-        markers[otherUserId] = new maplibregl.Marker({
-          color: isMe ? "#00FF00" : "#FF0000", // Green = me, Red = other users
-        })
-          .setLngLat([data.lng, data.lat])
-          .addTo(map);
-      }
+    // Start watching GPS → sendMyLocationToFirebase
+    if ("geolocation" in navigator) {
+      navigator.geolocation.watchPosition(
+        sendMyLocationToFirebase,
+        (err) => console.error("Geolocation error:", err),
+        { enableHighAccuracy: true }
+      );
+    } else {
+      console.error("Geolocation is not supported on this device.");
     }
 
-    // ----------------------------------------------------------
-    // If a user is REMOVED from Firestore → remove marker
-    // ----------------------------------------------------------
-    if (change.type === "removed") {
-      if (markers[otherUserId]) {
-        markers[otherUserId].remove();
-        delete markers[otherUserId];
-      }
-    }
-  });
+    // Start listening to all users' locations
+    startLocationsListener();
+  } else {
+    // ❌ No user logged in → redirect to login page
+    console.log("No user logged in. Redirecting to login...");
+    // Adjust path if needed (e.g., "./login.html" or "/auth/login.html")
+    window.location.href = "login.html";
+  }
 });
