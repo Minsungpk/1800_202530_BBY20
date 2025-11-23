@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <title>Launch Event</title>
     <link rel="stylesheet" href="styles/launchevent.css" />
     <link
@@ -21,7 +21,6 @@
       rel="stylesheet"
     />
   </head>
-
   <body>
     <div id="createevent" class="container createevent">
       <h1>Launch a new event!</h1>
@@ -34,7 +33,8 @@
 
         <div class="formbox">
           <label for="eventdescription" class="form-label"
-            ><b>Event Description:</b></label>
+            ><b>Event Description:</b></label
+          >
           <textarea
             id="eventdescription"
             class="form-control"
@@ -45,7 +45,8 @@
 
         <div class="formbox">
           <label for="eventdate" class="form-label"
-            ><b>Event Date & Time:</b></label>
+            ><b>Event Date & Time:</b></label
+          >
           <input
             type="datetime-local"
             id="eventdate"
@@ -55,8 +56,9 @@
         </div>
 
         <div class="formbox">
-          <label for="eventlocation" class="form-label"><b>Event Location:</b></label>
-
+          <label for="eventlocation" class="form-label"
+            ><b>Event Location:</b></label
+          >
           <div id="location-search">
             <input
               type="text"
@@ -65,11 +67,9 @@
               placeholder="Where will you host this?"
               required
             />
-            <ul id="autocomplete-results" class="list-group" style="position:absolute; z-index:9999;"></ul>
+            <ul id="autocomplete-results" class="autocomplete-results"></ul>
           </div>
         </div>
-
-
 
         <button type="submit" class="btn btn-danger custom-btn">
           Launch Event
@@ -77,56 +77,6 @@
       </form>
     </div>
 
-
-    <!-- Your external JS file -->
     <script type="module" src="./src/launchEvent.js"></script>
-
-    <script>
-      const input = document.getElementById("search-container");
-      const resultsList = document.getElementById("autocomplete-results");
-
-      // API key is from when I made an account for Stadia Maps
-      const API_KEY = "710361f6-69e6-410f-8299-244cc2fecf5f"; 
-
-      async function searchStadia(query) {
-        const url = `https://api.stadiamaps.com/geocoding/v1/search?text=${encodeURIComponent(query)}&api_key=${API_KEY}`;
-
-        const res = await fetch(url);
-        const data = await res.json();
-        return data.features || [];
-      }
-
-      input.addEventListener("input", async () => {
-        const query = input.value.trim();
-
-        if (query.length < 3) {
-          resultsList.innerHTML = "";
-          return;
-        }
-
-        const results = await searchStadia(query);
-
-        resultsList.innerHTML = ""; // clear previous
-
-        results.forEach((place) => {
-          const li = document.createElement("li");
-          li.className = "list-group-item";
-          li.textContent = place.properties.label;
-
-          li.addEventListener("click", () => {
-            input.value = place.properties.label;
-            resultsList.innerHTML = ""; // clear dropdown
-
-            console.log("Coordinates:", place.geometry.coordinates); 
-            // you can store to Firestore here
-            // lat = coordinates[1], lng = coordinates[0]
-          });
-
-          resultsList.appendChild(li);
-        });
-      });
-    </script>
-
-
   </body>
 </html>

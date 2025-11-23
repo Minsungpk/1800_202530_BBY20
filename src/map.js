@@ -67,6 +67,7 @@ map.addControl(
 // ======================================================================
 // 4. GEOLOCATE CONTROL (blue dot only - NOT Firestore)
 // ======================================================================
+/*
 const geolocate = new maplibregl.GeolocateControl({
   positionOptions: { enableHighAccuracy: true },
   trackUserLocation: true,
@@ -74,7 +75,7 @@ const geolocate = new maplibregl.GeolocateControl({
 });
 
 map.addControl(geolocate);
-
+*/
 // Start geolocation visual when map loads
 map.on("load", () => geolocate.trigger());
 
@@ -144,7 +145,7 @@ function startLocationsListener() {
           // Create custom icon element (image marker)
           // ---------------------------------------------
           const iconUrl = isMe
-            ? "./images/faida.jpg"     // 🔹 your icon
+            ? "./images/jessy.jpg"     // 🔹 your icon
             : "./images/faida.jpg"; // 🔹 other users' icon
 
           const el = document.createElement("img");
