@@ -144,7 +144,7 @@ function startLocationsListener() {
           // Create custom icon element (image marker)
           // ---------------------------------------------
           const iconUrl = isMe
-            ? "./images/faida.jpg"     // 🔹 your icon
+            ? "./images/jessy.jpg"     // 🔹 your icon
             : "./images/faida.jpg"; // 🔹 other users' icon
 
           const el = document.createElement("img");
