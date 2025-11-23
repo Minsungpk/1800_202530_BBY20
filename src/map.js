@@ -125,7 +125,7 @@ function startLocationsListener() {
 
       const isMe = otherUserId === userId;
 
-      // Text to show in popup
+      // Text to show in popup (name/email/uid)
       const popupText = data.displayName || data.email || otherUserId;
 
       // ADDED or MODIFIED → create or move marker
@@ -140,12 +140,27 @@ function startLocationsListener() {
             existingPopup.setText(popupText);
           }
         } else {
+          // ---------------------------------------------
+          // Create custom icon element (image marker)
+          // ---------------------------------------------
+          const iconUrl = isMe
+            ? "./images/ryan.png"     // 🔹 your icon
+            : "./images/ryan.png"; // 🔹 other users' icon
+
+          const el = document.createElement("img");
+          el.src = iconUrl;
+          el.alt = popupText;
+          el.style.width = "40px";
+          el.style.height = "40px";
+          el.style.borderRadius = "50%"; // optional: make it circular
+          el.style.objectFit = "cover";
+
           // Create popup
           const popup = new maplibregl.Popup({ offset: 25 }).setText(popupText);
 
-          // Create new marker with popup
+          // Create new marker with custom element + popup
           markers[otherUserId] = new maplibregl.Marker({
-            color: isMe ? "#00FF00" : "#FF0000", // Green = me, Red = others
+            element: el,
           })
             .setLngLat([data.lng, data.lat])
             .setPopup(popup)
