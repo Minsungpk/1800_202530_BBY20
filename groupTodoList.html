@@ -1120,8 +1120,9 @@
           unsubscribeGroups();
           unsubscribeGroups = null;
         }
-        // Clear stale groups and hide the view until data loads
+        // Clear stale groups and show loading state briefly
         groups = [];
+        renderGroups(); // Show empty state immediately
         els.groupsView.classList.add('loading');
         console.log('[Groups] Subscribing real-time');
         const qRef = query(collection(db, 'groups'), where('members', 'array-contains', currentUser.email));
@@ -1133,6 +1134,8 @@
         }, (err) => {
           console.error('[Groups] Real-time listener error', err);
           els.groupsView.classList.remove('loading');
+          // Even on error, ensure empty state is visible
+          renderGroups();
         });
       }
 
@@ -1513,6 +1516,8 @@
         if (currentUser) {
           subscribeGroups(); // will clear and render before subscribing
         } else {
+          // User not logged in - always show empty state
+          els.groupsView.classList.remove('loading');
           renderGroups(); // show empty state
           if (unsubscribeGroups) { unsubscribeGroups(); unsubscribeGroups = null; }
         }
