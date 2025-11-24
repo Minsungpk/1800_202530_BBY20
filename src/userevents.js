@@ -6,9 +6,9 @@ import {
 import {
   getFirestore,
   collection,
+  doc,
   getDocs,
   setDoc,
-  doc,
   query,
   orderBy,
   getDoc,
@@ -17,7 +17,7 @@ import {
 
 // Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
+  apiKey: "YOUR_API_KEY",
   authDomain: "group-project-8a6ee.firebaseapp.com",
   projectId: "group-project-8a6ee",
   storageBucket: "group-project-8a6ee.firebasestorage.app",
@@ -32,25 +32,12 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 let currentUser = null;
 
+// Container in HTML
 const eventsList = document.getElementById("eventsList");
 
-// ✅ Ensure user exists and then load events
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
-
-    // Ensure Firestore document exists for the user
-    const userDocRef = doc(db, "users", currentUser.uid);
-    const userSnap = await getDoc(userDocRef);
-    if (!userSnap.exists()) {
-      await setDoc(userDocRef, {
-        createdAt: new Date(),
-        email: currentUser.email,
-      });
-      console.log("User document created for:", currentUser.uid);
-    }
-
-    // Load all events
     loadEvents();
   } else {
     eventsList.innerHTML = "<p>Please log in to join events.</p>";
@@ -68,19 +55,16 @@ async function loadEvents() {
   snapshot.forEach(async (docSnap) => {
     const data = docSnap.data();
     const eventId = docSnap.id;
-    const dateString = data.date.toDate().toLocaleString();
+    const dateString = data.date
+      ? data.date.toDate().toLocaleString()
+      : "No date";
 
-    // Create event card
+    // Create card
     const card = document.createElement("div");
     card.className = "event-card";
 
     const participantsCountElem = document.createElement("p");
     participantsCountElem.innerHTML = "<strong>Participants:</strong> 0";
-
-    const joinBadge = document.createElement("span");
-    joinBadge.className = "joined-badge";
-    joinBadge.textContent = "Joined";
-    joinBadge.style.display = "none";
 
     const joinButton = document.createElement("button");
     joinButton.className = "join-btn";
@@ -94,7 +78,6 @@ async function loadEvents() {
       <p><strong>Date:</strong> ${dateString}</p>
     `;
     card.appendChild(participantsCountElem);
-    card.appendChild(joinBadge);
     card.appendChild(joinButton);
     eventsList.appendChild(card);
 
@@ -116,17 +99,16 @@ async function loadEvents() {
     if (joinedSnap.exists()) {
       joinButton.textContent = "Joined";
       joinButton.disabled = true;
-      joinBadge.style.display = "inline-block";
       card.classList.add("joined-card");
     }
 
-    // Join button click
+    // Handle join button click
     joinButton.addEventListener("click", async () => {
       try {
-        // 1️⃣ Add user to event participants
+        // 1. Add user to event participants
         await setDoc(participantDocRef, { joinedAt: new Date() });
 
-        // 2️⃣ Add event to user's joinedEvents subcollection
+        // 2. Add event reference to user's joinedEvents subcollection
         const userJoinedRef = doc(
           db,
           `users/${currentUser.uid}/joinedEvents/${eventId}`
@@ -136,13 +118,12 @@ async function loadEvents() {
           joinedAt: new Date(),
         });
 
-        // 3️⃣ Update UI
+        // Update UI
         joinButton.textContent = "Joined";
         joinButton.disabled = true;
-        joinBadge.style.display = "inline-block";
         card.classList.add("joined-card");
 
-        // 4️⃣ Update participant count dynamically
+        // Update participant count dynamically
         const updatedSnap = await getDocs(participantsColRef);
         participantsCountElem.innerHTML = `<strong>Participants:</strong> ${updatedSnap.size}`;
       } catch (err) {
@@ -151,7 +132,7 @@ async function loadEvents() {
       }
     });
 
-    // Real-time participant count updates
+    // Listen for real-time updates to participant count
     onSnapshot(participantsColRef, (snap) => {
       participantsCountElem.innerHTML = `<strong>Participants:</strong> ${snap.size}`;
     });
