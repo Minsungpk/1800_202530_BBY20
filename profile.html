@@ -18,11 +18,14 @@
     <a href="settingspage.html">
       <img src="images/gear.png" class="setting" alt="Settings">
     </a>
+        <a href="userevents.html">
+      <img src="images/task-list.png" class="setting" alt="Settings">
+    </a>
   </div>
 
   <div id="profile">
     <!-- Profile image -->
-    <img src="images/ryan.png" class="profilepicture" id="profilePic" alt="Profile picture">
+    <img src="images/Profile.avif" class="profilepicture" id="profilePic" alt="Profile picture">
 
     <!-- Hidden file input (for choosing a new image) -->
     <input type="file" id="imagePicker" accept="image/*" style="display:none;">
@@ -112,7 +115,7 @@
     const profileName = document.getElementById("profileName");
     const profileEmail = document.getElementById("profileEmail");
 
-    const DEFAULT_IMG = "images/ryan.png";
+    const DEFAULT_IMG = "images/Profile.avif";
     let currentUser = null;
 
     // 5. AUTH STATE – load user + saved photo
