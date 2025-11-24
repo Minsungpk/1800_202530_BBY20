@@ -32,6 +32,7 @@
       background: transparent;
       box-shadow: none;
       color: #212529; 
+      margin-bottom: 1rem;
     }
 
     .page-header h1 {
@@ -41,7 +42,6 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding-bottom: 20px;
     }
 
     .page-header .subtitle {
@@ -263,7 +263,117 @@
       color: #6c757d;
     }
 
+      /* Footer Styling */
+    .footer {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem 0;
+      background-color: #7796CB;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .footer-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .footer-icon:hover {
+      transform: scale(1.2);
+    }
+
+    .footer-icon svg {
+      width: 32px;
+      height: 32px;
+      color: #FFFFFF;
+    }
+
+    /* Bottom Sheet */
+    .bottom-sheet {
+      position: fixed;
+      left: 0;
+      bottom: -40%;
+      width: 100%;
+      height: 40%;
+      background: rgba(0,0,0,0);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      transition: bottom 0.35s ease;
+      z-index: 2000;
+    }
+
+    /* The window itself */
+    .sheet-content {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 18px rgba(0,0,0,0.2);
+      padding: 20px;
+      text-align: center;
+      position: relative; /* allows X button */
+    }
+
+    .sheet-title {
+      margin-top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Close X button */
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      z-index: 10;
+    }
+
+    .close-btn svg {
+      pointer-events: none;
+    }
+
+    /* Buttons in window */
+    .sheet-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      background: #eee;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .sheet-btn:hover {
+      background: #e0e0e0;
+    }
+
+    .bottom-sheet.open {
+      bottom: 0;
+    }
     .empty-state i { font-size: 3rem; opacity: 0.3; margin-bottom: 1rem; }
+
+    @media (max-width: 576px) {
+      .footer {
+        padding: 1.5rem;
+      }
+      .footer-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
 
     @media (max-width: 768px) {
       body {
@@ -573,6 +683,64 @@
       </div>
     </li>
   </template>
+
+  <!-- Footer navigation -->
+  <footer class="footer">
+    <div class="footer-icon" onclick="window.location.href='landing.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
+        <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="openSheet()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="window.location.href='statistics.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
+        <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
+      </svg>
+    </div>
+    
+    <div class="footer-icon" onclick="window.location.href='index.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+      </svg>
+    </div>
+  </footer>
+
+  <!-- Bottom sheet (create menu) -->
+  <div id="bottomSheet" class="bottom-sheet">
+    <div class="sheet-content">
+      <button class="close-btn" onclick="closeSheet()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+        </svg>
+      </button>
+
+      <h5 class="sheet-title">Create</h5>
+
+      <button class="sheet-btn" onclick="window.location.href='todolist.html'">
+        To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
+        Group To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
+        Events
+      </button>
+    </div>
+  </div>
 
   <script type="module">
     // --- To-do app with Firebase + Notifications ---
@@ -1165,5 +1333,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bottom-sheet behaviour -->
+  <script src="/design/bottom-window.js"></script>
 </body>
 </html>
