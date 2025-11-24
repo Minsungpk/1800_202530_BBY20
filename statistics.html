@@ -509,155 +509,187 @@
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand text-white" href="index.html">Timely</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link text-white" href="index.html">Homepage</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="todolist.html">To-Do List</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="groupTodoList.html">Group To-Do List</a></li> 
-        <li class="nav-item"><a class="nav-link text-white" href="events.html">Events</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="settingspage.html">Settings</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="statistics.html">Statistics</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="launchevent.html">Launch Event</a></li>
-      </ul>
-      <div class="d-flex">
-  <button class="btn btn-outline-light btn-sm" id="logoutBtn">Log Out</button>
-      </div>
+  <main class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>
+        <i class="fas fa-chart-line"></i>
+        Your Statistics
+        <span id="equippedBadgeDisplay" style="margin-left: 12px;
+          display:inline-flex; align-items:center; gap:8px;
+          padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.15);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          font-weight:700;
+          display:none;
+        "></span>
+      </h1>
+      <div class="subtitle">Track your progress and celebrate your achievements</div>
     </div>
-  </div>
-</nav>
 
-<main class="container">
-  <!-- Page Header -->
-  <div class="page-header">
-    <h1>
-      <i class="fas fa-chart-line"></i>
-      Your Statistics
-      <span id="equippedBadgeDisplay" style="margin-left: 12px;
-        display:inline-flex; align-items:center; gap:8px;
-        padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.15);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        font-weight:700;
-        display:none;
-      "></span>
-    </h1>
-    <div class="subtitle">Track your progress and celebrate your achievements</div>
-  </div>
+    <div id="authMsg" class="mb-3"></div>
 
-  <div id="authMsg" class="mb-3"></div>
+    <!-- KPI Cards Grid -->
+    <div class="row g-3 g-md-4 mb-4">
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card kpi-card success">
+          <div class="card-body">
+            <div class="kpi-icon success"><i class="fas fa-bullseye"></i></div>
+            <div class="kpi-label">On-Time Arrivals</div>
+            <div class="kpi-value" id="kpi-onTime">—</div>
+            <div class="kpi-meta" id="kpi-onTime-meta"></div>
+          </div>
+        </div>
+      </div>
 
-  <!-- KPI Cards Grid -->
-  <div class="row g-3 g-md-4 mb-4">
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card kpi-card success">
-        <div class="card-body">
-          <div class="kpi-icon success"><i class="fas fa-bullseye"></i></div>
-          <div class="kpi-label">On-Time Arrivals</div>
-          <div class="kpi-value" id="kpi-onTime">—</div>
-          <div class="kpi-meta" id="kpi-onTime-meta"></div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card kpi-card info">
+          <div class="card-body">
+            <div class="kpi-icon info"><i class="fas fa-map-pin"></i></div>
+            <div class="kpi-label">Total Arrivals</div>
+            <div class="kpi-value" id="kpi-arrivals">—</div>
+            <div class="kpi-meta">Last 30 days</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card kpi-card">
+          <div class="card-body">
+            <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="kpi-label">Task Completions</div>
+            <div class="kpi-value" id="kpi-completions">—</div>
+            <div class="kpi-meta">Last 30 days</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card kpi-card warning">
+          <div class="card-body">
+            <div class="kpi-icon warning"><i class="fas fa-star"></i></div>
+            <div class="kpi-label">Reward Points</div>
+            <div class="kpi-value" id="kpi-points">—</div>
+            <div class="kpi-meta" id="kpi-points-meta"></div>
+            <button id="redeemBtn" class="btn btn-sm btn-warning mt-2" style="display:none;">
+              <i class="fas fa-gift me-2"></i>Redeem 1000
+            </button>
+            <button id="openStoreBtn" class="btn btn-sm btn-outline-warning mt-2">
+              <i class="fas fa-store me-2"></i>Rewards Store
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card kpi-card info">
-        <div class="card-body">
-          <div class="kpi-icon info"><i class="fas fa-map-pin"></i></div>
-          <div class="kpi-label">Total Arrivals</div>
-          <div class="kpi-value" id="kpi-arrivals">—</div>
-          <div class="kpi-meta">Last 30 days</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card kpi-card">
-        <div class="card-body">
-          <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
-          <div class="kpi-label">Task Completions</div>
-          <div class="kpi-value" id="kpi-completions">—</div>
-          <div class="kpi-meta">Last 30 days</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-md-6 col-lg-3">
-      <div class="card kpi-card warning">
-        <div class="card-body">
-          <div class="kpi-icon warning"><i class="fas fa-star"></i></div>
-          <div class="kpi-label">Reward Points</div>
-          <div class="kpi-value" id="kpi-points">—</div>
-          <div class="kpi-meta" id="kpi-points-meta"></div>
-          <button id="redeemBtn" class="btn btn-sm btn-warning mt-2" style="display:none;">
-            <i class="fas fa-gift me-2"></i>Redeem 1000
-          </button>
-          <button id="openStoreBtn" class="btn btn-sm btn-outline-warning mt-2">
-            <i class="fas fa-store me-2"></i>Rewards Store
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Activity Trend Chart -->
-  <div class="chart-card">
-    <h5 class="card-title">
-      <i class="fas fa-line-chart me-2"></i>
-      Activity Trend (Last 30 Days)
-    </h5>
-    <canvas id="trendChart" style="height:280px; width:100%;"></canvas>
-  </div>
-
-  <!-- Activity Timeline -->
-  <div class="timeline-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <h5 class="card-title" style="margin: 0;">
-        <i class="fas fa-history me-2"></i>
-        Recent Activity
+    <!-- Activity Trend Chart -->
+    <div class="chart-card">
+      <h5 class="card-title">
+        <i class="fas fa-line-chart me-2"></i>
+        Activity Trend (Last 30 Days)
       </h5>
-      <button id="clearActivityBtn" class="btn btn-sm btn-outline-danger" style="display: none;">
-        <i class="fas fa-trash me-2"></i>Clear Activity
+      <canvas id="trendChart" style="height:280px; width:100%;"></canvas>
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="timeline-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h5 class="card-title" style="margin: 0;">
+          <i class="fas fa-history me-2"></i>
+          Recent Activity
+        </h5>
+        <button id="clearActivityBtn" class="btn btn-sm btn-outline-danger" style="display: none;">
+          <i class="fas fa-trash me-2"></i>Clear Activity
+        </button>
+      </div>
+      <div id="activityTimeline" class="activity-timeline timeline-collapsed">
+        <div class="empty-timeline">
+          <i class="fas fa-inbox"></i>
+          <p>No activity yet. Start completing tasks in your To-Do List!</p>
+        </div>
+      </div>
+      <div id="showMoreContainer"></div>
+    </div>
+
+    <!-- Rewards Store Modal (lightweight custom modal) -->
+    <div id="rewardsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:12px; width:min(960px, 92vw); max-height:85vh; overflow:auto; box-shadow:0 8px 24px rgba(0,0,0,0.2);">
+        <div style="padding:1rem 1.25rem; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
+          <h5 class="m-0"><i class="fas fa-store me-2"></i>Rewards Store</h5>
+          <button id="closeStoreBtn" class="btn btn-sm btn-outline-secondary"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="padding: 1rem 1.25rem;">
+          <div class="row" id="rewardsGrid"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-icon" onclick="window.location.href='landing.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
+        <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="openSheet()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="window.location.href='statistics.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
+        <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
+      </svg>
+    </div>
+    
+    <div class="footer-icon" onclick="window.location.href='index.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+      </svg>
+    </div>
+  </footer>
+
+  <!-- Bottom sheet (create menu) -->
+  <div id="bottomSheet" class="bottom-sheet">
+    <div class="sheet-content">
+      <button class="close-btn" onclick="closeSheet()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+        </svg>
+      </button>
+
+      <h5 class="sheet-title">Create</h5>
+
+      <button class="sheet-btn" onclick="window.location.href='todolist.html'">
+        To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
+        Group To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
+        Events
       </button>
     </div>
-    <div id="activityTimeline" class="activity-timeline timeline-collapsed">
-      <div class="empty-timeline">
-        <i class="fas fa-inbox"></i>
-        <p>No activity yet. Start completing tasks in your To-Do List!</p>
-      </div>
-    </div>
-    <div id="showMoreContainer"></div>
   </div>
 
-  <!-- Rewards Store Modal (lightweight custom modal) -->
-  <div id="rewardsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; align-items:center; justify-content:center;">
-    <div style="background:#fff; border-radius:12px; width:min(960px, 92vw); max-height:85vh; overflow:auto; box-shadow:0 8px 24px rgba(0,0,0,0.2);">
-      <div style="padding:1rem 1.25rem; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
-        <h5 class="m-0"><i class="fas fa-store me-2"></i>Rewards Store</h5>
-        <button id="closeStoreBtn" class="btn btn-sm btn-outline-secondary"><i class="fas fa-times"></i></button>
-      </div>
-      <div style="padding: 1rem 1.25rem;">
-        <div class="row" id="rewardsGrid"></div>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Statistics module -->
-<script type="module" src="src/statistics.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Statistics module -->
+  <script type="module" src="src/statistics.js"></script>
+  <script type="module">
+    import { logout } from './src/logout.js';
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+  </script>
 
 </body>
-<script type="module">
-  import { logout } from './src/logout.js';
-  document.getElementById('logoutBtn').addEventListener('click', logout);
-</script>
 </html>

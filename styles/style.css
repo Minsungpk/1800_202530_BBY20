@@ -148,3 +148,26 @@ html, body {
 .bottom-sheet.open {
   bottom: 0;
 }
+
+#nav {
+  display: flex;
+  justify-content: flex-start; /* keeps items on the left */
+  align-items: center;
+  padding: 10px;
+}
+.setting{
+  width: 60px;
+}
+
+#profile{
+  text-align: center;
+  font-size: 50px;
+}
+
+
+.profilepicture {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}

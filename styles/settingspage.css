@@ -55,7 +55,16 @@
 }
 
 #locationbutton {
+  font-size: 100px;
+  font-family: Rubik;
+}
 
+#notificationbutton {
+  font-size: 100px;
+  font-family: Rubik;
+}
+
+p {
   font-size: 100px;
   font-family: Rubik;
 }
