@@ -6,12 +6,12 @@ import {
 import {
   getFirestore,
   collection,
-  getDocs,
   doc,
+  getDoc,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-// ✅ Firebase config — make sure this matches your other JS files
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -22,18 +22,16 @@ const firebaseConfig = {
   measurementId: "G-1LCVJ62HEL",
 };
 
-// Initialize Firebase
+// Init Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// HTML container
 const joinedEventsList = document.getElementById("joinedEventsList");
 
-// Listen for auth changes
+// Auth listener
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    console.log("User is logged in:", user.email);
     await loadJoinedEvents(user);
   } else {
     joinedEventsList.innerHTML =
@@ -41,11 +39,11 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Load joined events for a user
+// Load joined events
 async function loadJoinedEvents(user) {
   const joinedEventsRef = collection(db, `users/${user.uid}/joinedEvents`);
 
-  // Real-time listener for joined events
+  // Listen for changes in joinedEvents
   onSnapshot(joinedEventsRef, async (snapshot) => {
     joinedEventsList.innerHTML = "";
 
@@ -54,30 +52,31 @@ async function loadJoinedEvents(user) {
       return;
     }
 
-    snapshot.forEach(async (docSnap) => {
+    for (const docSnap of snapshot.docs) {
       const joinedData = docSnap.data();
       const eventRef = joinedData.eventRef;
 
-      // Get the actual event document
-      const eventSnap = await getDocs(collection(db, "testEvents"));
-      const eventDoc = await doc(db, "testEvents", docSnap.id);
-      const eventDataSnap =
-        (await eventRef.get?.()) || (await eventDoc.get?.());
+      if (!eventRef) continue; // skip if no reference
 
-      let eventData = {};
-      try {
-        const docData = await (await eventRef.get())?.data?.();
-        if (docData) eventData = docData;
-      } catch {
-        eventData = { name: "Event not found", description: "" };
+      // Get the actual event document using the reference
+      const eventSnap = await getDoc(eventRef);
+      if (!eventSnap.exists()) {
+        console.warn("Event doc not found:", docSnap.id);
+        continue;
       }
 
-      // Render event card
+      const eventData = eventSnap.data();
+
+      // Render card
       const card = document.createElement("div");
       card.className = "event-card";
       card.innerHTML = `
-        <h3>${eventData.name || "Event"}</h3>
-        <p>${eventData.description || ""}</p>
+        <h3>${eventData.name}</h3>
+        <p>${eventData.description}</p>
+        <p><strong>Location:</strong> ${eventData.location?.name || ""}</p>
+        <p><strong>Date:</strong> ${
+          eventData.date?.toDate ? eventData.date.toDate().toLocaleString() : ""
+        }</p>
         <p><strong>Joined at:</strong> ${
           joinedData.joinedAt?.toDate
             ? joinedData.joinedAt.toDate().toLocaleString()
@@ -85,6 +84,6 @@ async function loadJoinedEvents(user) {
         }</p>
       `;
       joinedEventsList.appendChild(card);
-    });
+    }
   });
 }
