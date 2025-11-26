@@ -43,7 +43,6 @@
   transition: opacity 0.4s ease;
 }
 
-/* Initial visibility */
 #image1 {
   opacity: 1;
   z-index: 2;
@@ -53,7 +52,6 @@
   z-index: 1;
 }
 
-/* Toggled visibility */
 #image1.hide {
   opacity: 0;
   z-index: 1;
@@ -83,7 +81,7 @@
   border-radius: 20px;
   background-color: white;
   color: black;
-  font-size: 40px; /* adjust so it fits next to toggle */
+  font-size: 40px;
   text-align: center;
   align-content: center;
   cursor: pointer;
