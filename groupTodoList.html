@@ -936,7 +936,8 @@
         if (total === 0) {
           els.stats.innerHTML = '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
         } else {
-          els.stats.innerHTML = `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed • <strong>${remaining}</strong> remaining`;
+          const percentage = Math.round((completed / total) * 100);
+          els.stats.innerHTML = `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed (${percentage}%) • <strong>${remaining}</strong> remaining`;
         }
       }
 
@@ -1094,8 +1095,9 @@
           unsubscribeGroups();
           unsubscribeGroups = null;
         }
-        // Clear stale groups and hide the view until data loads
+        // Clear stale groups and show loading state briefly
         groups = [];
+        renderGroups(); // Show empty state immediately
         els.groupsView.classList.add('loading');
         console.log('[Groups] Subscribing real-time');
         const qRef = query(collection(db, 'groups'), where('members', 'array-contains', currentUser.email));
@@ -1107,6 +1109,8 @@
         }, (err) => {
           console.error('[Groups] Real-time listener error', err);
           els.groupsView.classList.remove('loading');
+          // Even on error, ensure empty state is visible
+          renderGroups();
         });
       }
 
@@ -1487,6 +1491,8 @@
         if (currentUser) {
           subscribeGroups(); // will clear and render before subscribing
         } else {
+          // User not logged in - always show empty state
+          els.groupsView.classList.remove('loading');
           renderGroups(); // show empty state
           if (unsubscribeGroups) { unsubscribeGroups(); unsubscribeGroups = null; }
         }

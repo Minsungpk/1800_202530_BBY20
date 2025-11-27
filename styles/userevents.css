@@ -1,0 +1,26 @@
+@import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
+
+h2 {
+  font-weight: bold;
+  font-family: Rubik;
+}
+
+#joinedEventsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start; /* or center */
+}
+
+.event-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f7f7f7;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-family: Rubik;
+
+  flex: 1 1 300px;
+  max-width: 400px;
+  box-sizing: border-box;
+}

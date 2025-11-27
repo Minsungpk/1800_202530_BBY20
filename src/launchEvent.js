@@ -1,4 +1,3 @@
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import {
   getFirestore,
@@ -7,7 +6,6 @@ import {
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -38,7 +36,6 @@ async function searchStadia(query) {
   return data.features || [];
 }
 
-// Autocomplete input
 input.addEventListener("input", async () => {
   const query = input.value.trim();
   if (query.length < 3) {
@@ -63,7 +60,6 @@ input.addEventListener("input", async () => {
   });
 });
 
-// Form submission
 document.getElementById("eventForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
