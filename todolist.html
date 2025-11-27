@@ -785,8 +785,9 @@
         if (total === 0) {
           els.stats.innerHTML = '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
         } else {
+          const percentage = Math.round((completed / total) * 100);
           els.stats.innerHTML =
-            `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed • <strong>${remaining}</strong> remaining`;
+            `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed (${percentage}%) • <strong>${remaining}</strong> remaining`;
         }
       }
 
