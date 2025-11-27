@@ -1,203 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    crossorigin="anonymous"
-  />
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="./styles/style.css" />
-</head>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/style.css" />
+  </head>
 
-<body>
-  <div id="nav">
-    <a href="settingspage.html">
-      <img src="images/gear.png" class="setting" alt="Settings">
-    </a>
-        <a href="userevents.html">
-      <img src="images/task-list.png" class="setting" alt="Settings">
-    </a>
-  </div>
-
-  <div id="profile">
-    <!-- Profile image -->
-    <img src="images/Profile.avif" class="profilepicture" id="profilePic" alt="Profile picture">
-
-    <!-- Hidden file input (for choosing a new image) -->
-    <input type="file" id="imagePicker" accept="image/*" style="display:none;">
-
-    <p id="profileName">Ryan</p>
-    <p id="profileEmail">Email:</p>
-    <p>Request friends</p>
-    <p>Settings</p>
-  </div>
-
-  <!-- Footer navigation -->
-  <footer class="footer">
-    <div class="footer-icon" onclick="window.location.href='landing.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
-      </svg>
+  <body>
+    <div id="nav">
+      <a href="settingspage.html">
+        <img src="images/gear.png" class="setting" alt="Settings" />
+      </a>
+      <a href="userevents.html">
+        <img src="images/task-list.png" class="setting" alt="Settings" />
+      </a>
     </div>
 
-    <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
-        <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
-      </svg>
+    <div id="profile">
+      <!-- Profile image -->
+      <img
+        src="images/Profile.avif"
+        class="profilepicture"
+        id="profilePic"
+        alt="Profile picture"
+      />
+
+      <!-- Hidden file input (for choosing a new image) -->
+      <input
+        type="file"
+        id="imagePicker"
+        accept="image/*"
+        style="display: none"
+      />
+
+      <p id="profileName">Ryan</p>
+      <p id="profileEmail">Email:</p>
     </div>
 
-    <div class="footer-icon" onclick="openSheet()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-      </svg>
-    </div>
+    <!-- Footer navigation -->
+    <footer class="footer">
+      <div class="footer-icon" onclick="window.location.href='landing.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-map-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"
+          />
+        </svg>
+      </div>
 
-    <div class="footer-icon" onclick="window.location.href='statistics.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
-        <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
-      </svg>
-    </div>
-    
-    <div class="footer-icon" onclick="window.location.href='profile.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-      </svg>
-    </div>
-  </footer>
+      <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-compass-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"
+          />
+        </svg>
+      </div>
 
-  <!-- Firebase + profile logic -->
-  <script type="module">
-    // 1. IMPORT FIREBASE MODULES
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-    } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-    } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-    import {
-      getStorage,
-      ref,
-      uploadBytes,
-      getDownloadURL,
-    } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js";
+      <div class="footer-icon" onclick="openSheet()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-plus-circle-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
+          />
+        </svg>
+      </div>
 
-    // 2. FIREBASE CONFIG (must match your project)
-    // ⚠️ If this bucket name is wrong, update it to what you see in
-    // Firebase Console → Storage → Bucket name.
-    const firebaseConfig = {
-  apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
-  authDomain: "group-project-8a6ee.firebaseapp.com",
-  projectId: "group-project-8a6ee",
-  storageBucket: "group-project-8a6ee.firebasestorage.app",
-  messagingSenderId: "922685674876",
-  appId: "1:922685674876:web:6edeac0ff4fb485db780f9",
-  measurementId: "G-1LCVJ62HEL"
-};
+      <div class="footer-icon" onclick="window.location.href='statistics.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-bar-chart-line-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"
+          />
+        </svg>
+      </div>
 
-    // 3. INITIALIZE
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const storage = getStorage(app);
+      <div class="footer-icon" onclick="window.location.href='index.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-person-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+          />
+        </svg>
+      </div>
+    </footer>
 
-    // 4. DOM ELEMENTS
-    const profilePic = document.getElementById("profilePic");
-    const imagePicker = document.getElementById("imagePicker");
-    const profileName = document.getElementById("profileName");
-    const profileEmail = document.getElementById("profileEmail");
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+      import {
+        getStorage,
+        ref,
+        uploadBytes,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js";
 
-    const DEFAULT_IMG = "images/Profile.avif";
-    let currentUser = null;
+      const firebaseConfig = {
+        apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
+        authDomain: "group-project-8a6ee.firebaseapp.com",
+        projectId: "group-project-8a6ee",
+        storageBucket: "group-project-8a6ee.firebasestorage.app",
+        messagingSenderId: "922685674876",
+        appId: "1:922685674876:web:6edeac0ff4fb485db780f9",
+        measurementId: "G-1LCVJ62HEL",
+      };
 
-    // 5. AUTH STATE – load user + saved photo
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        console.log("No user logged in, redirecting to login...");
-        window.location.href = "login.html";   // adjust if needed
-        return;
-      }
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+      const storage = getStorage(app);
 
-      currentUser = user;
+      const profilePic = document.getElementById("profilePic");
+      const imagePicker = document.getElementById("imagePicker");
+      const profileName = document.getElementById("profileName");
+      const profileEmail = document.getElementById("profileEmail");
 
-      // Show basic info
-      profileName.textContent = user.displayName || "Anonymous";
-      profileEmail.textContent = "Email: " + (user.email || "Unknown");
+      const DEFAULT_IMG = "images/Profile.avif";
+      let currentUser = null;
 
-      // Load saved profile photo from Firestore, if any
-      const userDocRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userDocRef);
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          console.log("No user logged in, redirecting to login...");
+          window.location.href = "login.html"; // adjust if needed
+          return;
+        }
 
-      console.log("Fetched user doc:", userSnap.exists(), userSnap.data());
+        currentUser = user;
 
-      if (userSnap.exists() && userSnap.data().photoURL) {
-        const url = userSnap.data().photoURL;
-        profilePic.src = url;
-        console.log("Using saved photoURL:", url);
-      } else {
-        profilePic.src = DEFAULT_IMG;
-        console.log("No photoURL in Firestore, using default image");
-      }
-    });
+        profileName.textContent = user.displayName || "Anonymous";
+        profileEmail.textContent = "Email: " + (user.email || "Unknown");
 
-    // 6. CLICK IMAGE → OPEN FILE PICKER
-    profilePic.addEventListener("click", () => {
-      imagePicker.click();
-    });
+        const userDocRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userDocRef);
 
-    // 7. FILE PICKED → PREVIEW + UPLOAD + SAVE URL
-    imagePicker.addEventListener("change", async (event) => {
-      const file = event.target.files[0];
+        console.log("Fetched user doc:", userSnap.exists(), userSnap.data());
 
-      if (!file) return;
-      if (!currentUser) {
-        alert("You must be logged in to change your picture.");
-        return;
-      }
+        if (userSnap.exists() && userSnap.data().photoURL) {
+          const url = userSnap.data().photoURL;
+          profilePic.src = url;
+          console.log("Using saved photoURL:", url);
+        } else {
+          profilePic.src = DEFAULT_IMG;
+          console.log("No photoURL in Firestore, using default image");
+        }
+      });
 
-      // Local preview right away
-      const localUrl = URL.createObjectURL(file);
-      profilePic.src = localUrl;
+      profilePic.addEventListener("click", () => {
+        imagePicker.click();
+      });
 
-      try {
-        // Upload to Firebase Storage
-        const storageRef = ref(storage, `profileImages/${currentUser.uid}`);
-        await uploadBytes(storageRef, file);
-        console.log("✅ Upload success");
+      imagePicker.addEventListener("change", async (event) => {
+        const file = event.target.files[0];
 
-        // Get public download URL
-        const downloadURL = await getDownloadURL(storageRef);
-        console.log("✅ Download URL:", downloadURL);
+        if (!file) return;
+        if (!currentUser) {
+          alert("You must be logged in to change your picture.");
+          return;
+        }
 
-        // Save URL to Firestore
-        const userDocRef = doc(db, "users", currentUser.uid);
-        await setDoc(
-          userDocRef,
-          {
-            photoURL: downloadURL,
-            displayName: currentUser.displayName || currentUser.email || "Anonymous",
-          },
-          { merge: true }
-        );
-        console.log("✅ Firestore updated for user:", currentUser.uid);
+        const localUrl = URL.createObjectURL(file);
+        profilePic.src = localUrl;
 
-        // Use final URL
-        profilePic.src = downloadURL;
+        try {
+          const storageRef = ref(storage, `profileImages/${currentUser.uid}`);
+          await uploadBytes(storageRef, file);
+          console.log("Upload success");
 
-        console.log("Profile picture updated!");
-      } catch (err) {
-        console.error("🔥 Error uploading/saving profile image:", err);
-        alert("Could not upload image. Check console for details.");
-      }
-    });
-  </script>
-</body>
+          const downloadURL = await getDownloadURL(storageRef);
+          console.log("Download URL:", downloadURL);
+
+          const userDocRef = doc(db, "users", currentUser.uid);
+          await setDoc(
+            userDocRef,
+            {
+              photoURL: downloadURL,
+              displayName:
+                currentUser.displayName || currentUser.email || "Anonymous",
+            },
+            { merge: true }
+          );
+          console.log("Firestore updated for user:", currentUser.uid);
+
+          profilePic.src = downloadURL;
+
+          console.log("Profile picture updated!");
+        } catch (err) {
+          console.error("Error uploading/saving profile image:", err);
+          alert("Could not upload image. Check console for details.");
+        }
+      });
+    </script>
+  </body>
 </html>
