@@ -41,7 +41,7 @@
         style="display: none"
       />
 
-      <p id="profileName">Ryan</p>
+      <p id="profileName">Username</p>
       <p id="profileEmail">Email:</p>
     </div>
 
@@ -139,6 +139,7 @@
     </footer>
 
     <script type="module">
+ 
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
       import {
         getFirestore,
@@ -189,14 +190,13 @@
 
         currentUser = user;
 
-        profileName.textContent = user.displayName || "Anonymous";
+        profileName.textContent = user.displayName || "User Name";
         profileEmail.textContent = "Email: " + (user.email || "Unknown");
 
         const userDocRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userDocRef);
 
         console.log("Fetched user doc:", userSnap.exists(), userSnap.data());
-
         if (userSnap.exists() && userSnap.data().photoURL) {
           const url = userSnap.data().photoURL;
           profilePic.src = url;
