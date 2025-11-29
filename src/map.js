@@ -127,7 +127,7 @@ function startLocationsListener() {
       const isMe = otherUserId === userId;
 
       // Text to show in popup (name/email/uid)
-      const popupText = data.displayName || data.email || otherUserId;
+      const popupText = data.displayName || data.userDisplayName || otherUserId;
 
       // ADDED or MODIFIED → create or move marker
       if (change.type === "added" || change.type === "modified") {
@@ -144,9 +144,8 @@ function startLocationsListener() {
           // ---------------------------------------------
           // Create custom icon element (image marker)
           // ---------------------------------------------
-          const iconUrl = isMe
-            ? "./images/jessy.jpg"     // 🔹 your icon
-            : "./images/faida.jpg"; // 🔹 other users' icon
+          const iconUrl = "./images/otherpin.png"; // 🔹 other users' icon
+          // ? "./images/pin.png"     // 🔹 your icon
 
           const el = document.createElement("img");
           el.src = iconUrl;
