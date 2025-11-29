@@ -125,8 +125,30 @@
     <input type="password" id="password" class="form-control" placeholder="Password (minimum 6 characters)" />
     <input type="password" id="confirm" class="form-control" placeholder="Confirm Password" />
 
-    <button type="button" id="signupBtn" class="btn btn-primary w-100">Create Account</button>
-    <button type="button" id="backBtn" class="btn btn-outline-secondary w-100">Back to Sign in</button>
+    <div class="mb-3">
+      <input
+      type="text"
+      id="username"
+      class="form-control"
+      placeholder="Username"
+      />
+    </div>
+
+    <div class="mb-3">
+      <input type="email" id="email" class="form-control" placeholder="Email (name@example.com)" />
+    </div>
+
+    <div class="mb-3">
+      <input type="password" id="password" class="form-control" placeholder="Password (min 6 chars)" />
+    </div>
+
+    <div class="mb-3">
+      <input type="password" id="confirm" class="form-control" placeholder="Confirm password" />
+    </div>
+
+    <button type="button" id="signupBtn" class="btn btn-info w-100 mb-2">Create account</button>
+    <button type="button" id="backBtn" class="btn btn-outline-secondary w-100">Back to sign in</button>
+
     <p class="text-center text-danger mt-3" id="error"></p>
     <p class="text-center text-success mt-3" id="success"></p>
   </div>
@@ -134,7 +156,8 @@
   <script type="module">
     import { auth } from "./src/firebaseConfig.js";
     import { signup } from "./src/auth2.js";
-
+    
+    const userEl = document.getElementById("username");
     const emailEl = document.getElementById("email");
     const passEl  = document.getElementById("password");
     const confEl  = document.getElementById("confirm");
@@ -149,13 +172,16 @@
       const email = emailEl.value.trim();
       const pass  = passEl.value;
       const conf  = confEl.value;
+      const username = userEl.value.trim();
+
+      if(!username) return errEl.textContent = "Please enter a username.";
 
       if (!emailOk(email)) return errEl.textContent = "Enter a valid email.";
       if (!pass || pass.length < 6) return errEl.textContent = "Password must be at least 6 characters.";
       if (pass !== conf) return errEl.textContent = "Passwords do not match.";
 
       try {
-        await signup(email, pass);
+        await signup(email, pass, username);
         const msg = encodeURIComponent("Account created! Please sign in.");
         window.location.href = `login.html?msg=${msg}`;
       } catch (err) {

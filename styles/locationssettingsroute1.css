@@ -55,7 +55,11 @@
 }
 
 #locationbutton {
-
   font-size: 100px;
   font-family: Rubik;
+}
+
+#backbutton {
+  grid-column: 2;
+  justify-self: end;
 }

@@ -10,8 +10,7 @@
     />
   </head>
   <body>
-    
-    <div style="padding-top: 5rem;"></div>
+    <div style="padding-top: 5rem"></div>
 
     <img
       class="icon"
@@ -44,14 +43,18 @@
       />
       <h2 class="text">Friend D</h2>
     </div>
-    <img
-      class="returnicon"
-      src="/images/return-svgrepo-com.png"
-      alt="This is an icon of a return key."
-    />
-  <script type="module">
-    import { logout } from './src/logout.js';
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-  </script>
+    <div id="backbutton">
+      <button onclick="window.location.href='locationssettingsroute1.html'">
+        <img
+          class="returnicon"
+          src="/images/return-svgrepo-com.png"
+          alt="This is an icon of a return key."
+        />
+      </button>
+    </div>
+    <!-- <script type="module">
+      import { logout } from "./src/logout.js";
+      document.getElementById("logoutBtn").addEventListener("click", logout);
+    </script> -->
   </body>
 </html>
