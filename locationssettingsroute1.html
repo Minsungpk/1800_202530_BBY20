@@ -10,9 +10,7 @@
     />
   </head>
   <body>
-    
-
-    <div style="padding-top: 5rem;"></div>
+    <div style="padding-top: 5rem"></div>
 
     <img
       class="icon"
@@ -29,21 +27,28 @@
       <img
         class="icon"
         src="/images/people-fill-svgrepo-com.png"
-        alt="This is an icon of two people"/>
-        <div id="locationbutton">
-        <button onclick="window.location.href='locationssettingsroute2.html'">Request Friends' Location </button>
-        </div>
+        alt="This is an icon of two people"
+      />
+      <div id="locationbutton">
+        <button onclick="window.location.href='locationssettingsroute2.html'">
+          Request Friends' Location
+        </button>
+      </div>
     </div>
 
-    <img
-      class="returnicon"
-      src="/images/return-svgrepo-com.png"
-      alt="This is an icon of a return key."
-    />
+    <div id="backbutton">
+      <button onclick="window.location.href='settingspage.html'">
+        <img
+          class="returnicon"
+          src="/images/return-svgrepo-com.png"
+          alt="This is an icon of a return key."
+        />
+      </button>
+    </div>
 
-  <script type="module">
+    <!-- <script type="module">
     import { logout } from './src/logout.js';
     document.getElementById('logoutBtn').addEventListener('click', logout);
-  </script>
+  </script> -->
   </body>
 </html>

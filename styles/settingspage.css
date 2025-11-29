@@ -8,12 +8,10 @@
 }
 
 .returnicon {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: auto;
   width: 250px;
   height: 250px;
-  float: right;
+  grid-column: 2;
+  justify-self: end;
 }
 
 .returnicon:hover {
@@ -62,6 +60,11 @@
 #notificationbutton {
   font-size: 100px;
   font-family: Rubik;
+}
+
+#backbutton {
+  grid-column: 2;
+  justify-self: end;
 }
 
 p {
