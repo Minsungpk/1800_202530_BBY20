@@ -2,29 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Bootstrap CSS -->
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
       crossorigin="anonymous"
     />
 
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="./styles/style.css" />
   </head>
 
   <body>
     <div id="nav">
       <a href="settingspage.html">
-        <img src="images/gear.png" class="setting" alt="Settings" />
+        <img src="images/gear-svgrepo-com.png" class="setting" alt="Settings" />
       </a>
       <a href="userevents.html">
-        <img src="images/task-list.png" class="setting" alt="Settings" />
+        <img
+          src="images/calendar-exclamation-svgrepo-com.png"
+          class="setting"
+          alt="Settings"
+        />
       </a>
     </div>
 
     <div id="profile">
-      <!-- Profile image -->
       <img
         src="images/Profile.avif"
         class="profilepicture"
@@ -32,7 +34,6 @@
         alt="Profile picture"
       />
 
-      <!-- Hidden file input (for choosing a new image) -->
       <input
         type="file"
         id="imagePicker"
@@ -40,11 +41,10 @@
         style="display: none"
       />
 
-      <p id="profileName">Ryan</p>
+      <p id="profileName">Username</p>
       <p id="profileEmail">Email:</p>
     </div>
 
-    <!-- Footer navigation -->
     <footer class="footer">
       <div class="footer-icon" onclick="window.location.href='landing.html'">
         <svg
@@ -62,6 +62,7 @@
         </svg>
       </div>
 
+
       <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -76,6 +77,7 @@
           />
         </svg>
       </div>
+
 
       <div class="footer-icon" onclick="openSheet()">
         <svg
@@ -107,7 +109,7 @@
         </svg>
       </div>
 
-      <div class="footer-icon" onclick="window.location.href='index.html'">
+      <div class="footer-icon" onclick="window.location.href='profile.html'">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -149,6 +151,7 @@
     </div>
 
     <script type="module">
+ 
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
       import {
         getFirestore,
@@ -193,20 +196,19 @@
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
           console.log("No user logged in, redirecting to login...");
-          window.location.href = "login.html"; // adjust if needed
+          window.location.href = "login.html";
           return;
         }
 
         currentUser = user;
 
-        profileName.textContent = user.displayName || "Anonymous";
+        profileName.textContent = user.displayName || "User Name";
         profileEmail.textContent = "Email: " + (user.email || "Unknown");
 
         const userDocRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userDocRef);
 
         console.log("Fetched user doc:", userSnap.exists(), userSnap.data());
-
         if (userSnap.exists() && userSnap.data().photoURL) {
           const url = userSnap.data().photoURL;
           profilePic.src = url;

@@ -15,7 +15,6 @@ import {
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -26,7 +25,6 @@ const firebaseConfig = {
   measurementId: "G-1LCVJ62HEL",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -34,12 +32,10 @@ let currentUser = null;
 
 const eventsList = document.getElementById("eventsList");
 
-// Ensure user exists and then load events
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
 
-    // Ensure Firestore document exists for the user
     const userDocRef = doc(db, "users", currentUser.uid);
     const userSnap = await getDoc(userDocRef);
     if (!userSnap.exists()) {
@@ -50,7 +46,6 @@ onAuthStateChanged(auth, async (user) => {
       console.log("User document created for:", currentUser.uid);
     }
 
-    // Load all events
     loadEvents();
   } else {
     eventsList.innerHTML = "<p>Please log in to join events.</p>";
@@ -70,7 +65,6 @@ async function loadEvents() {
     const eventId = docSnap.id;
     const dateString = data.date.toDate().toLocaleString();
 
-    // Create event card
     const card = document.createElement("div");
     card.className = "event-card";
 
@@ -108,11 +102,9 @@ async function loadEvents() {
       `testEvents/${eventId}/participants/${currentUser.uid}`
     );
 
-    // Load initial participant count
     const participantsSnapshot = await getDocs(participantsColRef);
     participantsCountElem.innerHTML = `<strong>Participants:</strong> ${participantsSnapshot.size}`;
 
-    // Check if current user already joined
     const joinedSnap = await getDoc(participantDocRef);
     if (joinedSnap.exists()) {
       joinButton.textContent = "Joined";
@@ -121,13 +113,10 @@ async function loadEvents() {
       card.classList.add("joined-card");
     }
 
-    // Join button click
     joinButton.addEventListener("click", async () => {
       try {
-        // Add user to event participants
         await setDoc(participantDocRef, { joinedAt: new Date() });
 
-        // Add event to user's joinedEvents subcollection
         const userJoinedRef = doc(
           db,
           `users/${currentUser.uid}/joinedEvents/${eventId}`
@@ -137,13 +126,11 @@ async function loadEvents() {
           joinedAt: new Date(),
         });
 
-        // Update UI
         joinButton.textContent = "Joined";
         joinButton.disabled = true;
         joinBadge.style.display = "inline-block";
         card.classList.add("joined-card");
 
-        // Update participant count dynamically
         const updatedSnap = await getDocs(participantsColRef);
         participantsCountElem.innerHTML = `<strong>Participants:</strong> ${updatedSnap.size}`;
       } catch (err) {
@@ -152,7 +139,6 @@ async function loadEvents() {
       }
     });
 
-    // Real-time participant count updates
     onSnapshot(participantsColRef, (snap) => {
       participantsCountElem.innerHTML = `<strong>Participants:</strong> ${snap.size}`;
     });
