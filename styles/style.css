@@ -171,3 +171,7 @@ html, body {
   border-radius: 50%;
   object-fit: cover;
 }
+
+.caption{
+  font-size: 20px;
+}
