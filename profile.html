@@ -64,7 +64,7 @@
           class="form-control"
           placeholder="Enter user's email or ID"
         />
-        <button class="btn btn-primary" id="sendRequestBtn">Send</button>
+        <button class="btn btn-info" id="sendRequestBtn">Send</button>
       </div>
       <p id="sendRequestMessage" class="text-success"></p>
     </div>
@@ -203,6 +203,8 @@
     </div>
 
     <script type="module">
+      import { sendFriendRequest as sendFriendRequestToDB } from "./src/friends.js";
+
       import {
         acceptFriendRequest,
         declineFriendRequest,
@@ -309,27 +311,33 @@
           }
 
           try {
-            const usersRef = doc(db, "users", targetIdOrEmail); // Use UID
-            const userSnap = await getDoc(usersRef);
+            let toUserId;
 
-            if (!userSnap.exists()) {
-              sendRequestMessage.textContent = "User not found.";
-              return;
+            if (targetIdOrEmail.includes("@")) {
+              // Input is email → query Firestore
+              const q = query(
+                collection(db, "users"),
+                where("email", "==", targetIdOrEmail)
+              );
+              const querySnapshot = await getDocs(q);
+
+              if (querySnapshot.empty) {
+                sendRequestMessage.textContent = "User not found.";
+                return;
+              }
+
+              toUserId = querySnapshot.docs[0].id; // UID
+            } else {
+              // Input is UID
+              const userSnap = await getDoc(doc(db, "users", targetIdOrEmail));
+              if (!userSnap.exists()) {
+                sendRequestMessage.textContent = "User not found.";
+                return;
+              }
+              toUserId = targetIdOrEmail;
             }
 
-            const targetData = userSnap.data();
-            const targetFriendRequests = targetData.friendRequests || [];
-
-            if (targetFriendRequests.includes(currentUser.uid)) {
-              sendRequestMessage.textContent = "Friend request already sent!";
-              return;
-            }
-
-            await setDoc(
-              usersRef,
-              { friendRequests: [...targetFriendRequests, currentUser.uid] },
-              { merge: true }
-            );
+            await sendFriendRequestToDB(currentUser.uid, toUserId);
 
             sendRequestMessage.textContent = "Friend request sent!";
             friendRequestInput.value = "";
