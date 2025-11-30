@@ -139,6 +139,8 @@ async function loadEvents() {
       }
     });
 
+    
+
     onSnapshot(participantsColRef, (snap) => {
       participantsCountElem.innerHTML = `<strong>Participants:</strong> ${snap.size}`;
     });
