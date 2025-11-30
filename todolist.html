@@ -1,600 +1,776 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My To-Do List | Timely</title>
-  <!-- Bootstrap 5 CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <!-- Confetti CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
-  <style>
-    @import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My To-Do List | Timely</title>
+    <!-- Bootstrap 5 CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
+    <style>
+      @import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
 
-    :root {
-      --primary: #0d6efd;
-      --success: #198754;
-      --warning: #ffc107;
-      --danger: #dc3545;
-      --light-bg: #f8f9fa;
-      --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+      :root {
+        --primary: #0d6efd;
+        --success: #198754;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light-bg: #f8f9fa;
+        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
 
-    body {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+      body {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-    main { padding-top: 100px; }
+      main {
+        padding-top: 100px;
+      }
 
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 45px;
-      margin-left: 20px;
-      margin-right: 20px;
-      margin-bottom: 10px;
-    }
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 45px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 10px;
+      }
 
-    .page-header h1 {
-      font-size: 3rem;
-      font-weight: bold;
-      font-family: Rubik;
-    }
+      .page-header h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        font-family: Rubik;
+      }
 
-    .badge {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-    }
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+      }
 
-    .add-form-card {
-      background: white;
-      border: none;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 2rem;
-      margin-left: 20px;
-      margin-right: 20px;
-      transition: box-shadow 0.3s ease;
-    }
+      .add-form-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+        margin-left: 20px;
+        margin-right: 20px;
+        transition: box-shadow 0.3s ease;
+      }
 
-    .add-form-card:focus-within {
-      box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
-    }
+      .add-form-card:focus-within {
+        box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
+      }
 
-    .add-form-card .card-body { padding: 1rem; }
+      .add-form-card .card-body {
+        padding: 1rem;
+      }
 
-    .form-control {
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 0.75rem;
-      font-size: 0.95rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
+      .form-control {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
 
-    .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    }
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+      }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-    }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+      }
 
-    /* Box icon no active tasks */
-    .filters-bar {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+      /* Box icon no active tasks */
+      .filters-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
 
-    .btn-group .btn {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
+      .btn-group .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
 
-    .btn-group .btn-check:checked + .btn {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
+      .btn-group .btn-check:checked + .btn {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
 
-    .btn-outline-danger {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
+      .btn-outline-danger {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
 
-    .todo-list {
-      list-style: none;
-      padding: 0;
-    }
+      .todo-list {
+        list-style: none;
+        padding: 0;
+      }
 
-    .todo-item {
-      background: white;
-      border: 1px solid #e9ecef;
-      border-radius: 8px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
+      .todo-item {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
 
-    .todo-item:hover {
-      box-shadow: var(--card-shadow);
-      transform: translateY(-2px);
-      border-color: #dee2e6;
-    }
+      .todo-item:hover {
+        box-shadow: var(--card-shadow);
+        transform: translateY(-2px);
+        border-color: #dee2e6;
+      }
 
-    .todo-item.completed {
-      background: #f8f9fa;
-      border-color: #dee2e6;
-      opacity: 0.85;
-    }
+      .todo-item.completed {
+        background: #f8f9fa;
+        border-color: #dee2e6;
+        opacity: 0.85;
+      }
 
-    .todo-item.completed .todo-text {
-      text-decoration: line-through;
-      color: #6c757d;
-    }
+      .todo-item.completed .todo-text {
+        text-decoration: line-through;
+        color: #6c757d;
+      }
 
-    .todo-checkbox {
-      width: 1.5rem;
-      height: 1.5rem;
-      margin-top: 0.15rem;
-      cursor: pointer;
-      accent-color: var(--success);
-      flex-shrink: 0;
-    }
+      .todo-checkbox {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-top: 0.15rem;
+        cursor: pointer;
+        accent-color: var(--success);
+        flex-shrink: 0;
+      }
 
-    .todo-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+      .todo-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
 
-    .todo-text {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #212529;
-      word-break: break-word;
-    }
+      .todo-text {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #212529;
+        word-break: break-word;
+      }
 
-    .todo-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      font-size: 0.85rem;
-      color: #6c757d;
-    }
+      .todo-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
 
-    .todo-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
+      .todo-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
 
-    .todo-meta-item i { color: var(--primary); }
+      .todo-meta-item i {
+        color: var(--primary);
+      }
 
-    .status-emoji {
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 0.25rem 0.5rem;
-      border-radius: 6px;
-      background: #f0f0f0;
-    }
+      .status-emoji {
+        font-size: 1rem;
+        font-weight: 700;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        background: #f0f0f0;
+      }
 
-    .status-emoji.text-success { background: #d1e7dd; }
-    .status-emoji.text-warning { background: #fff3cd; }
+      .status-emoji.text-success {
+        background: #d1e7dd;
+      }
+      .status-emoji.text-warning {
+        background: #fff3cd;
+      }
 
-    .btn-group-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
+      .btn-group-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-    .btn-group-actions .btn {
-      border-radius: 6px;
-      font-size: 0.85rem;
-      padding: 0.5rem 0.75rem;
-      transition: all 0.2s;
-    }
+      .btn-group-actions .btn {
+        border-radius: 6px;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+      }
 
-    .btn-outline-secondary:hover {
-      background: #6c757d;
-      border-color: #6c757d;
-      color: white;
-    }
+      .btn-outline-secondary:hover {
+        background: #6c757d;
+        border-color: #6c757d;
+        color: white;
+      }
 
-    .btn-outline-danger:hover {
-      background: var(--danger);
-      border-color: var(--danger);
-      color: white;
-    }
+      .btn-outline-danger:hover {
+        background: var(--danger);
+        border-color: var(--danger);
+        color: white;
+      }
 
-    .edit-input {
-      border-radius: 6px;
-      border: 2px solid var(--primary);
-      padding: 0.5rem;
-      font-size: 0.95rem;
-    }
+      .edit-input {
+        border-radius: 6px;
+        border: 2px solid var(--primary);
+        padding: 0.5rem;
+        font-size: 0.95rem;
+      }
 
-    .edit-input:focus {
-      outline: none;
-      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-    }
+      .edit-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+      }
 
-    .stats-footer {
-      text-align: center;
-      padding: 1rem;
-      background: white;
-      border-radius: 8px;
-      margin-top: 2rem;
-      font-weight: 600;
-      color: #495057;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
+      .stats-footer {
+        text-align: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        margin-top: 2rem;
+        font-weight: 600;
+        color: #495057;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #6c757d;
-    }
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+      }
 
       /* Footer Styling */
-    .footer {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 1rem 0;
-      background-color: #7796CB;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      z-index: 1000;
-    }
-
-    .footer-icon {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .footer-icon:hover {
-      transform: scale(1.2);
-    }
-
-    .footer-icon svg {
-      width: 32px;
-      height: 32px;
-      color: #FFFFFF;
-    }
-
-    /* Bottom Sheet */
-    .bottom-sheet {
-      position: fixed;
-      left: 0;
-      bottom: -40%;
-      width: 100%;
-      height: 40%;
-      background: rgba(0,0,0,0);
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      transition: bottom 0.35s ease;
-      z-index: 2000;
-    }
-
-    /* The window itself */
-    .sheet-content {
-      width: 100%;
-      height: 100%;
-      background: #fff;
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 -4px 18px rgba(0,0,0,0.2);
-      padding: 20px;
-      text-align: center;
-      position: relative; /* allows X button */
-    }
-
-    .sheet-title {
-      margin-top: 10px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    /* Close X button */
-    .close-btn {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      z-index: 10;
-    }
-
-    .close-btn svg {
-      pointer-events: none;
-    }
-
-    /* Buttons in window */
-    .sheet-btn {
-      width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      background: #eee;
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .sheet-btn:hover {
-      background: #e0e0e0;
-    }
-
-    .bottom-sheet.open {
-      bottom: 0;
-    }
-    .empty-state i { font-size: 3rem; opacity: 0.3; margin-bottom: 1rem; }
-
-    @media (max-width: 480px){
-      .page-header h1 {
-        font-size: 2.5rem;
+      footer.footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: #7796cb; /* landing page color */
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+        padding: 1rem 0;
       }
-    }
 
-    @media (max-width: 360px){
-      .page-header h1 {
-        font-size: 2rem;
+      .footer-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #495057;
       }
-    }
 
-  </style>
-</head>
-<body>
-  
-  <main class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-10">
-        <!-- Page Header -->
-        <div class="page-header">
-          <h1>
-            My To-Do List
-          </h1>
-          <!-- <div class="subtitle">Stay organized and on top of your tasks</div> -->
-        </div>
+      .footer-icon:hover {
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+      }
 
-        <!-- Add form -->
-        <form id="addForm" class="card add-form-card" autocomplete="off" novalidate>
-          <div class="card-body">
-            <div id="addFormError" class="alert alert-danger d-none mb-3" role="alert">
-              <i class="fas fa-exclamation-circle me-2"></i>
-              <span id="errorText"></span>
-            </div>
-            <div class="d-flex gap-2 flex-column flex-lg-row">
-              <input id="todoInput" class="form-control" type="text" placeholder="What's your next task?" />
-              <input id="todoScheduled" class="form-control" type="datetime-local" placeholder="Schedule (optional)" />
-              <input id="todoDescription" class="form-control" type="text" placeholder="Description (optional)" />
-              <button class="btn btn-primary" type="submit"><i class="fas fa-plus me-2"></i>Add</button>
-            </div>
+      .footer-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .footer-icon.active {
+        background: #0d6efd;
+        color: #fff;
+      }
+
+      /* Bottom Sheet */
+      .bottom-sheet {
+        position: fixed;
+        left: 0;
+        bottom: -40%;
+        width: 100%;
+        height: 40%;
+        background: rgba(0, 0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        transition: bottom 0.35s ease;
+        z-index: 2000;
+      }
+
+      /* The window itself */
+      .sheet-content {
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        text-align: center;
+        position: relative; /* allows X button */
+      }
+
+      .sheet-title {
+        margin-top: 10px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      /* Close X button */
+      .close-btn {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        z-index: 10;
+      }
+
+      .close-btn svg {
+        pointer-events: none;
+      }
+
+      /* Buttons in window */
+      .sheet-btn {
+        width: 100%;
+        padding: 14px;
+        margin-top: 12px;
+        background: #eee;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .sheet-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .bottom-sheet.open {
+        bottom: 0;
+      }
+      .empty-state i {
+        font-size: 3rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 480px) {
+        .page-header h1 {
+          font-size: 2.5rem;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .page-header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+          <!-- Page Header -->
+          <div class="page-header">
+            <h1>My To-Do List</h1>
+            <!-- <div class="subtitle">Stay organized and on top of your tasks</div> -->
           </div>
-        </form>
 
-        <!-- Filters + actions -->
-        <div class="filters-bar">
-          <div class="btn-group" role="group" aria-label="Task filters">
-            <input type="radio" class="btn-check" name="filter" id="filter-all" value="all" checked>
-            <label class="btn btn-outline-secondary" for="filter-all"><i class="fas fa-list me-2"></i>All Tasks</label>
-            <input type="radio" class="btn-check" name="filter" id="filter-active" value="active">
-            <label class="btn btn-outline-secondary" for="filter-active"><i class="fas fa-circle-notch me-2"></i>Active</label>
-            <input type="radio" class="btn-check" name="filter" id="filter-completed" value="completed">
-            <label class="btn btn-outline-secondary" for="filter-completed"><i class="fas fa-check-circle me-2"></i>Completed</label>
+          <!-- Add form -->
+          <form
+            id="addForm"
+            class="card add-form-card"
+            autocomplete="off"
+            novalidate
+          >
+            <div class="card-body">
+              <div
+                id="addFormError"
+                class="alert alert-danger d-none mb-3"
+                role="alert"
+              >
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span id="errorText"></span>
+              </div>
+              <div class="d-flex gap-2 flex-column flex-lg-row">
+                <input
+                  id="todoInput"
+                  class="form-control"
+                  type="text"
+                  placeholder="What's your next task?"
+                />
+                <input
+                  id="todoScheduled"
+                  class="form-control"
+                  type="datetime-local"
+                  placeholder="Schedule (optional)"
+                />
+                <input
+                  id="todoDescription"
+                  class="form-control"
+                  type="text"
+                  placeholder="Description (optional)"
+                />
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-plus me-2"></i>Add
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Filters + actions -->
+          <div class="filters-bar">
+            <div class="btn-group" role="group" aria-label="Task filters">
+              <input
+                type="radio"
+                class="btn-check"
+                name="filter"
+                id="filter-all"
+                value="all"
+                checked
+              />
+              <label class="btn btn-outline-secondary" for="filter-all"
+                ><i class="fas fa-list me-2"></i>All Tasks</label
+              >
+              <input
+                type="radio"
+                class="btn-check"
+                name="filter"
+                id="filter-active"
+                value="active"
+              />
+              <label class="btn btn-outline-secondary" for="filter-active"
+                ><i class="fas fa-circle-notch me-2"></i>Active</label
+              >
+              <input
+                type="radio"
+                class="btn-check"
+                name="filter"
+                id="filter-completed"
+                value="completed"
+              />
+              <label class="btn btn-outline-secondary" for="filter-completed"
+                ><i class="fas fa-check-circle me-2"></i>Completed</label
+              >
+            </div>
+            <button
+              id="clearCompleted"
+              class="btn btn-outline-danger btn-sm ms-auto"
+            >
+              <i class="fas fa-trash me-2"></i>Clear Completed
+            </button>
           </div>
-          <button id="clearCompleted" class="btn btn-outline-danger btn-sm ms-auto"><i class="fas fa-trash me-2"></i>Clear Completed</button>
-        </div>
 
-        <!-- List -->
-        <ul id="todoList" class="todo-list" role="list"></ul>
-
-      </div>
-    </div>
-  </main>
-
-  <template id="todoItemTemplate">
-    <li class="todo-item" role="listitem">
-      <div class="todo-content">
-        <div class="d-flex align-items-center gap-2">
-          <input class="form-check-input toggle todo-checkbox" type="checkbox" aria-label="Mark complete" />
-          <span class="todo-text flex-grow-1"></span>
-          <span class="status-emoji ms-2"></span>
-        </div>
-        <div class="todo-meta">
-          <span class="todo-meta-item todo-scheduled"></span>
-          <span class="todo-meta-item todo-desc"></span>
+          <!-- List -->
+          <ul id="todoList" class="todo-list" role="list"></ul>
         </div>
       </div>
-      <div class="btn-group-actions">
-        <button class="btn btn-outline-secondary btn-sm edit" type="button" title="Edit task">
-          <i class="fas fa-edit"></i> Edit
-        </button>
-        <button class="btn btn-outline-danger btn-sm delete" type="button" title="Delete task">
-          <i class="fas fa-trash"></i> Delete
-        </button>
-      </div>
-    </li>
-  </template>
+    </main>
 
-  <!-- Footer navigation -->
-  <footer class="footer">
-    <div class="footer-icon" onclick="window.location.href='landing.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
-      </svg>
-    </div>
+    <template id="todoItemTemplate">
+      <li class="todo-item" role="listitem">
+        <div class="todo-content">
+          <div class="d-flex align-items-center gap-2">
+            <input
+              class="form-check-input toggle todo-checkbox"
+              type="checkbox"
+              aria-label="Mark complete"
+            />
+            <span class="todo-text flex-grow-1"></span>
+            <span class="status-emoji ms-2"></span>
+          </div>
+          <div class="todo-meta">
+            <span class="todo-meta-item todo-scheduled"></span>
+            <span class="todo-meta-item todo-desc"></span>
+          </div>
+        </div>
+        <div class="btn-group-actions">
+          <button
+            class="btn btn-outline-secondary btn-sm edit"
+            type="button"
+            title="Edit task"
+          >
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button
+            class="btn btn-outline-danger btn-sm delete"
+            type="button"
+            title="Delete task"
+          >
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </li>
+    </template>
 
-    <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
-        <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
-      </svg>
-    </div>
-
-    <div class="footer-icon" onclick="openSheet()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-      </svg>
-    </div>
-
-    <div class="footer-icon" onclick="window.location.href='statistics.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
-        <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
-      </svg>
-    </div>
-    
-    <div class="footer-icon" onclick="window.location.href='index.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-      </svg>
-    </div>
-  </footer>
-
-  <!-- Bottom sheet (create menu) -->
-  <div id="bottomSheet" class="bottom-sheet">
-    <div class="sheet-content">
-      <button class="close-btn" onclick="closeSheet()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+    <!-- Footer navigation -->
+    <footer class="footer">
+      <div class="footer-icon" onclick="window.location.href='landing.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-map-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"
+          />
         </svg>
-      </button>
+      </div>
 
-      <h5 class="sheet-title">Create</h5>
+      <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-compass-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"
+          />
+        </svg>
+      </div>
 
-      <button class="sheet-btn" onclick="window.location.href='todolist.html'">
-        To-Do List
-      </button>
+      <div class="footer-icon" onclick="openSheet()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-plus-circle-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
+          />
+        </svg>
+      </div>
 
-      <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
-        Group To-Do List
-      </button>
+      <div class="footer-icon" onclick="window.location.href='statistics.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-bar-chart-line-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"
+          />
+        </svg>
+      </div>
 
-      <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
-        Events
-      </button>
+      <div class="footer-icon" onclick="window.location.href='index.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-person-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+          />
+        </svg>
+      </div>
+    </footer>
+
+    <!-- Bottom sheet (create menu) -->
+    <div id="bottomSheet" class="bottom-sheet">
+      <div class="sheet-content">
+        <button class="close-btn" onclick="closeSheet()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-x-lg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+            />
+          </svg>
+        </button>
+
+        <h5 class="sheet-title">Create</h5>
+
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='todolist.html'"
+        >
+          To-Do List
+        </button>
+
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='groupTodoList.html'"
+        >
+          Group To-Do List
+        </button>
+
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='launchevent.html'"
+        >
+          Events
+        </button>
+      </div>
     </div>
-  </div>
 
-  <script type="module">
-    // --- To-do app with Firebase + Notifications ---
+    <script type="module">
+      // --- To-do app with Firebase + Notifications ---
 
-    import { auth, db } from './src/firebaseConfig.js';
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-    import {
-      collection,
-      addDoc,
-      serverTimestamp,
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc,
-      increment,
-      deleteDoc,
-      getDocs,
-      query,
-      where
-    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+      import { auth, db } from "./src/firebaseConfig.js";
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+      import {
+        collection,
+        addDoc,
+        serverTimestamp,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        increment,
+        deleteDoc,
+        getDocs,
+        query,
+        where,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-    let currentUser = null; // set via onAuthStateChanged
+      let currentUser = null; // set via onAuthStateChanged
 
-    // 🔔 Helper: create a notification document for the current user
-    async function createNotification(message, type = "todo") {
-      try {
-        if (!currentUser) {
-          console.log("No logged-in user, skipping notification.");
-          return;
-        }
-
-        await addDoc(collection(db, "notifications"), {
-          userUid: currentUser.uid,
-          message,
-          type,                 // e.g. "todo_created", "todo_completed"
-          createdAt: serverTimestamp(),
-          read: false
-        });
-
-        console.log("Notification created:", message);
-      } catch (err) {
-        console.error("Failed to create notification:", err);
-      }
-    }
-
-    /**
-     * Storage is namespaced per user: key = `todo:<userId>`
-     */
-    const App = (() => {
-      let userId = 'guest';
-      const els = {
-        addForm: document.getElementById('addForm'),
-        input: document.getElementById('todoInput'),
-        scheduled: document.getElementById('todoScheduled'),
-        description: document.getElementById('todoDescription'),
-        addFormError: document.getElementById('addFormError'),
-        list: document.getElementById('todoList'),
-        template: document.getElementById('todoItemTemplate'),
-        stats: document.getElementById('stats'),
-        filters: document.querySelectorAll('input[name="filter"]'),
-        clearCompleted: document.getElementById('clearCompleted'),
-      };
-
-      let todos = [];
-      let activeFilter = 'all';
-      let currentOnTimeStreak = 0;
-
-      const storageKey = () => `todo:${userId}`;
-      const save = () => localStorage.setItem(storageKey(), JSON.stringify(todos));
-      const load = () => JSON.parse(localStorage.getItem(storageKey()) || '[]');
-      const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
-
-      function celebrateStreakWith3OnTimeCompletions() {
-        console.log('🎉 3 on-time completions in a row! Celebrating with confetti!');
-        currentOnTimeStreak = 0;
+      // 🔔 Helper: create a notification document for the current user
+      async function createNotification(message, type = "todo") {
         try {
-          if (typeof confetti !== 'undefined') {
-            confetti({ particleCount: 200, spread: 100, startVelocity: 30, decay: 0.95, scalar: 1.2 });
-            setTimeout(() => {
-              confetti({ particleCount: 100, spread: 80, startVelocity: 20, decay: 0.9 });
-            }, 300);
+          if (!currentUser) {
+            console.log("No logged-in user, skipping notification.");
+            return;
           }
-        } catch (e) {
-          console.warn('Confetti library not loaded', e);
+
+          await addDoc(collection(db, "notifications"), {
+            userUid: currentUser.uid,
+            message,
+            type, // e.g. "todo_created", "todo_completed"
+            createdAt: serverTimestamp(),
+            read: false,
+          });
+
+          console.log("Notification created:", message);
+        } catch (err) {
+          console.error("Failed to create notification:", err);
         }
-        const banner = document.createElement('div');
-        banner.style.cssText = `
+      }
+
+      /**
+       * Storage is namespaced per user: key = `todo:<userId>`
+       */
+      const App = (() => {
+        let userId = "guest";
+        const els = {
+          addForm: document.getElementById("addForm"),
+          input: document.getElementById("todoInput"),
+          scheduled: document.getElementById("todoScheduled"),
+          description: document.getElementById("todoDescription"),
+          addFormError: document.getElementById("addFormError"),
+          list: document.getElementById("todoList"),
+          template: document.getElementById("todoItemTemplate"),
+          stats: document.getElementById("stats"),
+          filters: document.querySelectorAll('input[name="filter"]'),
+          clearCompleted: document.getElementById("clearCompleted"),
+        };
+
+        let todos = [];
+        let activeFilter = "all";
+        let currentOnTimeStreak = 0;
+
+        const storageKey = () => `todo:${userId}`;
+        const save = () =>
+          localStorage.setItem(storageKey(), JSON.stringify(todos));
+        const load = () =>
+          JSON.parse(localStorage.getItem(storageKey()) || "[]");
+        const uid = () =>
+          `${Date.now().toString(36)}-${Math.random()
+            .toString(36)
+            .slice(2, 8)}`;
+
+        function celebrateStreakWith3OnTimeCompletions() {
+          console.log(
+            "🎉 3 on-time completions in a row! Celebrating with confetti!"
+          );
+          currentOnTimeStreak = 0;
+          try {
+            if (typeof confetti !== "undefined") {
+              confetti({
+                particleCount: 200,
+                spread: 100,
+                startVelocity: 30,
+                decay: 0.95,
+                scalar: 1.2,
+              });
+              setTimeout(() => {
+                confetti({
+                  particleCount: 100,
+                  spread: 80,
+                  startVelocity: 20,
+                  decay: 0.9,
+                });
+              }, 300);
+            }
+          } catch (e) {
+            console.warn("Confetti library not loaded", e);
+          }
+          const banner = document.createElement("div");
+          banner.style.cssText = `
           position: fixed;
           top: 120px;
           left: 50%;
@@ -610,12 +786,12 @@
           z-index: 10000;
           animation: slideDown 0.5s ease, slideUp 0.5s ease 4.5s forwards;
         `;
-        banner.innerHTML = '🎉 Amazing! 3 on-time completions in a row! 🎉';
-        document.body.appendChild(banner);
-        if (!document.getElementById('celebrationStyles')) {
-          const style = document.createElement('style');
-          style.id = 'celebrationStyles';
-          style.textContent = `
+          banner.innerHTML = "🎉 Amazing! 3 on-time completions in a row! 🎉";
+          document.body.appendChild(banner);
+          if (!document.getElementById("celebrationStyles")) {
+            const style = document.createElement("style");
+            style.id = "celebrationStyles";
+            style.textContent = `
             @keyframes slideDown {
               from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
               to   { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -625,483 +801,522 @@
               to   { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             }
           `;
-          document.head.appendChild(style);
+            document.head.appendChild(style);
+          }
+          setTimeout(() => banner.remove(), 5000);
         }
-        setTimeout(() => banner.remove(), 5000);
-      }
 
-      function updateStreakCounter(taskOnTime) {
-        if (taskOnTime) {
-          currentOnTimeStreak++;
-          console.log(`On-time streak: ${currentOnTimeStreak}/3`);
-          if (currentOnTimeStreak === 3) return true;
-        } else {
-          console.log(`Streak broken! Late completion. Resetting to 0.`);
-          currentOnTimeStreak = 0;
+        function updateStreakCounter(taskOnTime) {
+          if (taskOnTime) {
+            currentOnTimeStreak++;
+            console.log(`On-time streak: ${currentOnTimeStreak}/3`);
+            if (currentOnTimeStreak === 3) return true;
+          } else {
+            console.log(`Streak broken! Late completion. Resetting to 0.`);
+            currentOnTimeStreak = 0;
+          }
+          return false;
         }
-        return false;
-      }
 
-      function render() {
-        els.list.innerHTML = '';
-        const frag = document.createDocumentFragment();
-        const filtered = todos.filter(
-          t => activeFilter === 'all'
-            ? !t.done
-            : activeFilter === 'active'
+        function render() {
+          els.list.innerHTML = "";
+          const frag = document.createDocumentFragment();
+          const filtered = todos.filter((t) =>
+            activeFilter === "all"
+              ? !t.done
+              : activeFilter === "active"
               ? !t.done
               : t.done
-        );
+          );
 
-        if (filtered.length === 0) {
-          const emptyMsg = document.createElement('div');
-          emptyMsg.className = 'empty-state';
-          emptyMsg.innerHTML = activeFilter === 'all' 
-            ? '<i class="fas fa-inbox"></i><p>No active tasks. Add one to get started!</p>'
-            : activeFilter === 'active'
-            ? '<i class="fas fa-check-circle"></i><p>All caught up! 🎉</p>'
-            : '<i class="fas fa-list"></i><p>No completed tasks yet.</p>';
-          els.list.appendChild(emptyMsg);
-          updateStats();
-          return;
-        }
-
-        for (const t of filtered) {
-          const li = els.template.content.firstElementChild.cloneNode(true);
-          li.dataset.id = t.id;
-          li.querySelector('.toggle').checked = t.done;
-          const textSpan = li.querySelector('.todo-text');
-          textSpan.textContent = t.text;
-
-          const schedEl = li.querySelector('.todo-scheduled');
-          const descEl = li.querySelector('.todo-desc');
-
-          if (t.scheduled) {
-            const schedDisplay = t.scheduled.replace('T', ' ');
-            schedEl.innerHTML = `<i class="fas fa-clock"></i> ${schedDisplay}`;
-          } else {
-            schedEl.innerHTML = '';
+          if (filtered.length === 0) {
+            const emptyMsg = document.createElement("div");
+            emptyMsg.className = "empty-state";
+            emptyMsg.innerHTML =
+              activeFilter === "all"
+                ? '<i class="fas fa-inbox"></i><p>No active tasks. Add one to get started!</p>'
+                : activeFilter === "active"
+                ? '<i class="fas fa-check-circle"></i><p>All caught up! 🎉</p>'
+                : '<i class="fas fa-list"></i><p>No completed tasks yet.</p>';
+            els.list.appendChild(emptyMsg);
+            updateStats();
+            return;
           }
 
-          if (t.description) {
-            descEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${t.description}`;
-          } else {
-            descEl.innerHTML = '';
-          }
+          for (const t of filtered) {
+            const li = els.template.content.firstElementChild.cloneNode(true);
+            li.dataset.id = t.id;
+            li.querySelector(".toggle").checked = t.done;
+            const textSpan = li.querySelector(".todo-text");
+            textSpan.textContent = t.text;
 
-          if (t.done) li.classList.add('completed');
+            const schedEl = li.querySelector(".todo-scheduled");
+            const descEl = li.querySelector(".todo-desc");
 
-          const statusEl = li.querySelector('.status-emoji');
-          if (t.done && typeof t.onTimeLocal === 'boolean') {
-            statusEl.textContent = t.onTimeLocal ? '✅ On-Time' : '🕒 Late';
-            statusEl.classList.toggle('text-success', t.onTimeLocal);
-            statusEl.classList.toggle('text-warning', !t.onTimeLocal);
-          } else {
-            statusEl.textContent = '';
-          }
-
-          frag.appendChild(li);
-        }
-        els.list.appendChild(frag);
-        updateStats();
-      }
-
-      function updateStats() {
-        const total = todos.length;
-        const remaining = todos.filter(t => !t.done).length;
-        const completed = total - remaining;
-        if (total === 0) {
-          els.stats.innerHTML = '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
-        } else {
-          const percentage = Math.round((completed / total) * 100);
-          els.stats.innerHTML =
-            `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed (${percentage}%) • <strong>${remaining}</strong> remaining`;
-        }
-      }
-
-      // 🔹 When a todo is added, also create a "todo_created" notification
-      async function addTodo(text, scheduled, description) {
-        const newTodo = {
-          id: uid(),
-          text: text.trim(),
-          done: false,
-          created: Date.now(),
-          scheduled: scheduled || '',
-          description: description || ''
-        };
-        todos.push(newTodo);
-        save();
-        render();
-
-        try {
-          if (!currentUser) return;
-          await setDoc(doc(db, 'tasks', newTodo.id), {
-            userUid: currentUser.uid,
-            text: newTodo.text,
-            scheduled: newTodo.scheduled || null,
-            description: newTodo.description || null,
-            done: false,
-            created: serverTimestamp()
-          });
-          console.info('Task persisted', newTodo.id);
-
-          // 🔔 notify user that a task was created
-          await createNotification(`Task created: ${newTodo.text}`, "todo_created");
-        } catch (e) {
-          console.warn('Could not persist task to Firestore', e);
-        }
-      }
-
-      // 🔹 When a todo is completed, also create a "todo_completed" notification
-      async function toggle(id) {
-        const t = todos.find(x => x.id === id);
-        if (!t) return;
-        const wasDone = t.done;
-        t.done = !t.done;
-        save();
-        render();
-
-        if (!wasDone && t.done) {
-          try {
-            if (!currentUser) {
-              console.log('No current user, skipping completion event');
-              return;
-            }
-
-            if (t.completionRecorded) {
-              console.info('Completion already recorded for', t.id);
-              return;
-            }
-
-            const completedISO = new Date().toISOString();
-            let onTime = false;
             if (t.scheduled) {
-              try {
-                const sched = new Date(t.scheduled);
-                onTime = !isNaN(sched.getTime()) && new Date(completedISO) <= sched;
-              } catch (e) { onTime = false; }
+              const schedDisplay = t.scheduled.replace("T", " ");
+              schedEl.innerHTML = `<i class="fas fa-clock"></i> ${schedDisplay}`;
+            } else {
+              schedEl.innerHTML = "";
             }
 
-            await addDoc(collection(db, 'events'), {
+            if (t.description) {
+              descEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${t.description}`;
+            } else {
+              descEl.innerHTML = "";
+            }
+
+            if (t.done) li.classList.add("completed");
+
+            const statusEl = li.querySelector(".status-emoji");
+            if (t.done && typeof t.onTimeLocal === "boolean") {
+              statusEl.textContent = t.onTimeLocal ? "✅ On-Time" : "🕒 Late";
+              statusEl.classList.toggle("text-success", t.onTimeLocal);
+              statusEl.classList.toggle("text-warning", !t.onTimeLocal);
+            } else {
+              statusEl.textContent = "";
+            }
+
+            frag.appendChild(li);
+          }
+          els.list.appendChild(frag);
+          updateStats();
+        }
+
+        function updateStats() {
+          const total = todos.length;
+          const remaining = todos.filter((t) => !t.done).length;
+          const completed = total - remaining;
+          if (total === 0) {
+            els.stats.innerHTML =
+              '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
+          } else {
+            const percentage = Math.round((completed / total) * 100);
+            els.stats.innerHTML = `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed (${percentage}%) • <strong>${remaining}</strong> remaining`;
+          }
+        }
+
+        // 🔹 When a todo is added, also create a "todo_created" notification
+        async function addTodo(text, scheduled, description) {
+          const newTodo = {
+            id: uid(),
+            text: text.trim(),
+            done: false,
+            created: Date.now(),
+            scheduled: scheduled || "",
+            description: description || "",
+          };
+          todos.push(newTodo);
+          save();
+          render();
+
+          try {
+            if (!currentUser) return;
+            await setDoc(doc(db, "tasks", newTodo.id), {
               userUid: currentUser.uid,
-              type: 'completion',
-              timestamp: serverTimestamp(),
-              meta: {
-                taskId: t.id,
-                taskText: t.text,
-                scheduledTime: t.scheduled || null,
-                completedTime: completedISO,
-                onTime,
-                source: 'todoToggle'
-              }
+              text: newTodo.text,
+              scheduled: newTodo.scheduled || null,
+              description: newTodo.description || null,
+              done: false,
+              created: serverTimestamp(),
             });
+            console.info("Task persisted", newTodo.id);
 
-            t.completionRecorded = true;
-            t.completedLocal = completedISO;
-            t.onTimeLocal = onTime;
-            save();
+            // 🔔 notify user that a task was created
+            await createNotification(
+              `Task created: ${newTodo.text}`,
+              "todo_created"
+            );
+          } catch (e) {
+            console.warn("Could not persist task to Firestore", e);
+          }
+        }
 
+        // 🔹 When a todo is completed, also create a "todo_completed" notification
+        async function toggle(id) {
+          const t = todos.find((x) => x.id === id);
+          if (!t) return;
+          const wasDone = t.done;
+          t.done = !t.done;
+          save();
+          render();
+
+          if (!wasDone && t.done) {
             try {
-              await updateDoc(doc(db, 'tasks', t.id), {
-                done: true,
-                completedTime: serverTimestamp(),
-                completedTimeClient: completedISO,
-                onTime: onTime
-              });
-            } catch (e) {
-              console.warn('Could not update task doc with completion', e);
-            }
-
-            const rewardsRef = doc(db, 'userRewards', currentUser.uid);
-            const rSnap = await getDoc(rewardsRef);
-            if (rSnap.exists()) {
-              await updateDoc(rewardsRef, { points: increment(10) });
-            } else {
-              await setDoc(rewardsRef, { points: 10, lastUpdated: serverTimestamp() });
-            }
-
-            if (updateStreakCounter(onTime)) {
-              celebrateStreakWith3OnTimeCompletions();
-            }
-
-            // 🔔 notify user that a task was completed
-            await createNotification(`Task completed: ${t.text}`, "todo_completed");
-
-          } catch (e) {
-            console.error('Failed to record completion event', e);
-          }
-        }
-      }
-
-      async function remove(id) {
-        todos = todos.filter(x => x.id !== id);
-        save();
-        render();
-        try {
-          if (!currentUser) return;
-          await deleteDoc(doc(db, 'tasks', id));
-          console.info('Deleted task from Firestore', id);
-        } catch (e) {
-          console.warn('Could not delete task from Firestore', e);
-        }
-      }
-
-      function edit(id) {
-        const t = todos.find(x => x.id === id);
-        if (!t) return;
-        const li = els.list.querySelector(`[data-id="${id}"]`);
-        if (!li || li.dataset.editing === 'true') return;
-        li.dataset.editing = 'true';
-
-        const textSpan = li.querySelector('.todo-text');
-        const schedSpan = li.querySelector('.todo-scheduled');
-        const descSpan = li.querySelector('.todo-desc');
-
-        const textInput = document.createElement('input');
-        textInput.type = 'text';
-        textInput.className = 'form-control form-control-sm edit-text';
-        textInput.value = t.text;
-
-        const schedInput = document.createElement('input');
-        schedInput.type = 'datetime-local';
-        schedInput.className = 'form-control form-control-sm edit-scheduled mt-1';
-        if (t.scheduled) {
-          try {
-            const dt = new Date(t.scheduled);
-            if (!isNaN(dt.getTime())) {
-              const pad = n => n.toString().padStart(2,'0');
-              const y = dt.getFullYear();
-              const m = pad(dt.getMonth()+1);
-              const d = pad(dt.getDate());
-              const hh = pad(dt.getHours());
-              const mm = pad(dt.getMinutes());
-              schedInput.value = `${y}-${m}-${d}T${hh}:${mm}`;
-            }
-          } catch (e) {}
-        }
-
-        const descInput = document.createElement('input');
-        descInput.type = 'text';
-        descInput.className = 'form-control form-control-sm edit-desc mt-1';
-        descInput.value = t.description || '';
-
-        textSpan.replaceWith(textInput);
-        if (schedSpan) schedSpan.replaceWith(schedInput);
-        if (descSpan) descSpan.replaceWith(descInput);
-
-        const editBtn = li.querySelector('.edit');
-        editBtn.textContent = 'Save';
-        editBtn.classList.add('btn-success');
-
-        const cancelBtn = document.createElement('button');
-        cancelBtn.type = 'button';
-        cancelBtn.className = 'btn btn-outline-secondary btn-sm cancel ms-1';
-        cancelBtn.textContent = 'Cancel';
-        editBtn.after(cancelBtn);
-
-        textInput.focus();
-        textInput.selectionStart = textInput.value.length;
-
-        cancelBtn.addEventListener('click', () => {
-          li.dataset.editing = 'false';
-          render();
-        }, { once: true });
-      }
-
-      async function commitEdit(id, newText) {
-        newText = (newText || '').trim();
-        const t = todos.find(x => x.id === id);
-        if (!t) return;
-        if (!newText) { remove(id); return; }
-
-        const li = els.list.querySelector(`[data-id="${id}"]`);
-        if (li) {
-          const schedInput = li.querySelector('.edit-scheduled');
-          const descInput = li.querySelector('.edit-desc');
-          if (schedInput) t.scheduled = schedInput.value || '';
-          if (descInput) t.description = descInput.value || '';
-        }
-        t.text = newText;
-        save();
-        render();
-
-        try {
-          if (!currentUser) return;
-          await updateDoc(doc(db, 'tasks', id), {
-            text: t.text,
-            scheduled: t.scheduled || null,
-            description: t.description || null,
-          });
-          console.info('Task edits persisted', id);
-        } catch (e) {
-          console.warn('Could not persist task edits', e);
-        }
-      }
-
-      async function clearCompleted() {
-        const toRemove = todos.filter(t => t.done).map(t => t.id);
-        todos = todos.filter(t => !t.done);
-        save();
-        render();
-        if (!currentUser) return;
-        for (const id of toRemove) {
-          try { await deleteDoc(doc(db, 'tasks', id)); }
-          catch (e) { console.warn('Could not delete completed task', id, e); }
-        }
-      }
-
-      function bind() {
-        els.addForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          els.addFormError.classList.add('d-none');
-          document.getElementById('errorText').textContent = '';
-
-          const text = els.input.value.trim();
-          if (!text) {
-            document.getElementById('errorText').textContent = 'Please enter a task name.';
-            els.addFormError.classList.remove('d-none');
-            els.input.focus();
-            return;
-          }
-
-          const sched = els.scheduled.value || '';
-          const desc = els.description.value || '';
-          addTodo(text, sched, desc);
-          els.input.value = '';
-          els.scheduled.value = '';
-          els.description.value = '';
-          els.input.focus();
-        });
-
-        els.input.addEventListener('input', () => {
-          if (els.input.value.trim()) {
-            els.addFormError.classList.add('d-none');
-          }
-        });
-
-        els.list.addEventListener('click', (e) => {
-          const li = e.target.closest('.todo-item');
-          if (!li) return;
-          const id = li.dataset.id;
-          if (e.target.matches('.toggle')) toggle(id);
-          else if (e.target.matches('.delete')) remove(id);
-          else if (e.target.matches('.edit')) {
-            if (li.dataset.editing === 'true') {
-              const textInput = li.querySelector('.edit-text');
-              const newText = textInput ? textInput.value : '';
-              commitEdit(id, newText);
-            } else {
-              edit(id);
-            }
-          } else if (e.target.matches('.cancel')) {
-            li.dataset.editing = 'false';
-            render();
-          }
-        });
-
-        els.list.addEventListener('keydown', (e) => {
-          if (!(e.target instanceof HTMLElement)) return;
-          if (e.target.classList.contains('edit-text')) {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              const li = e.target.closest('.todo-item');
-              const id = li?.dataset?.id;
-              if (id) commitEdit(id, e.target.value);
-            }
-          } else if (e.target.classList.contains('todo-text')) {
-            if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
-          }
-        });
-
-        els.list.addEventListener('focusout', (e) => {
-          if (!(e.target instanceof HTMLElement)) return;
-          if (!e.target.classList.contains('todo-text')) return;
-          const li = e.target.closest('.todo-item');
-          e.target.removeAttribute('contenteditable');
-          commitEdit(li.dataset.id, e.target.textContent || '');
-        });
-
-        els.filters.forEach(r => r.addEventListener('change', () => {
-          activeFilter = document.querySelector('input[name="filter"]:checked').value;
-          render();
-        }));
-
-        els.clearCompleted.addEventListener('click', () => clearCompleted());
-
-        document.addEventListener('keydown', (e) => {
-          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-            const val = els.input.value.trim();
-            if (val) { addTodo(val); els.input.value = ''; }
-          }
-        });
-      }
-
-      async function setUser(newUserId) {
-        userId = newUserId || 'guest';
-        if (userId && userId !== 'guest') {
-          try {
-            const q = query(collection(db, 'tasks'), where('userUid', '==', userId));
-            const snap = await getDocs(q);
-            const fsMap = {};
-            snap.docs.forEach(d => {
-              const data = d.data();
-              fsMap[d.id] = {
-                id: d.id,
-                text: data.text || '',
-                scheduled: data.scheduled || '',
-                description: data.description || '',
-                done: !!data.done,
-                created: data.created?.toMillis ? data.created.toMillis() : Date.now(),
-                completionRecorded: !!data.completedTimeClient,
-                completedLocal: data.completedTimeClient || null,
-                onTimeLocal: data.onTime
-              };
-            });
-
-            const localTodos = load();
-            const merged = { ...fsMap };
-            localTodos.forEach(lt => {
-              if (merged[lt.id]) {
-                merged[lt.id].done = fsMap[lt.id].done;
-                merged[lt.id].onTimeLocal = fsMap[lt.id].onTimeLocal;
-                merged[lt.id].completedLocal = fsMap[lt.id].completedLocal;
-              } else {
-                merged[lt.id] = lt;
+              if (!currentUser) {
+                console.log("No current user, skipping completion event");
+                return;
               }
-            });
 
-            todos = Object.values(merged);
-            save();
-            render();
-            return;
-          } catch (e) {
-            console.warn('Could not load tasks from Firestore', e);
+              if (t.completionRecorded) {
+                console.info("Completion already recorded for", t.id);
+                return;
+              }
+
+              const completedISO = new Date().toISOString();
+              let onTime = false;
+              if (t.scheduled) {
+                try {
+                  const sched = new Date(t.scheduled);
+                  onTime =
+                    !isNaN(sched.getTime()) && new Date(completedISO) <= sched;
+                } catch (e) {
+                  onTime = false;
+                }
+              }
+
+              await addDoc(collection(db, "events"), {
+                userUid: currentUser.uid,
+                type: "completion",
+                timestamp: serverTimestamp(),
+                meta: {
+                  taskId: t.id,
+                  taskText: t.text,
+                  scheduledTime: t.scheduled || null,
+                  completedTime: completedISO,
+                  onTime,
+                  source: "todoToggle",
+                },
+              });
+
+              t.completionRecorded = true;
+              t.completedLocal = completedISO;
+              t.onTimeLocal = onTime;
+              save();
+
+              try {
+                await updateDoc(doc(db, "tasks", t.id), {
+                  done: true,
+                  completedTime: serverTimestamp(),
+                  completedTimeClient: completedISO,
+                  onTime: onTime,
+                });
+              } catch (e) {
+                console.warn("Could not update task doc with completion", e);
+              }
+
+              const rewardsRef = doc(db, "userRewards", currentUser.uid);
+              const rSnap = await getDoc(rewardsRef);
+              if (rSnap.exists()) {
+                await updateDoc(rewardsRef, { points: increment(10) });
+              } else {
+                await setDoc(rewardsRef, {
+                  points: 10,
+                  lastUpdated: serverTimestamp(),
+                });
+              }
+
+              if (updateStreakCounter(onTime)) {
+                celebrateStreakWith3OnTimeCompletions();
+              }
+
+              // 🔔 notify user that a task was completed
+              await createNotification(
+                `Task completed: ${t.text}`,
+                "todo_completed"
+              );
+            } catch (e) {
+              console.error("Failed to record completion event", e);
+            }
           }
         }
-        todos = load();
-        render();
-      }
 
-      function init() {
-        bind();
-        todos = load();
-        render();
-      }
+        async function remove(id) {
+          todos = todos.filter((x) => x.id !== id);
+          save();
+          render();
+          try {
+            if (!currentUser) return;
+            await deleteDoc(doc(db, "tasks", id));
+            console.info("Deleted task from Firestore", id);
+          } catch (e) {
+            console.warn("Could not delete task from Firestore", e);
+          }
+        }
 
-      return { init, setUser };
-    })();
+        function edit(id) {
+          const t = todos.find((x) => x.id === id);
+          if (!t) return;
+          const li = els.list.querySelector(`[data-id="${id}"]`);
+          if (!li || li.dataset.editing === "true") return;
+          li.dataset.editing = "true";
 
-    document.addEventListener('DOMContentLoaded', () => {
-      App.init();
-      onAuthStateChanged(auth, (user) => {
-        currentUser = user || null;
-        App.setUser(user ? user.uid : 'guest');
+          const textSpan = li.querySelector(".todo-text");
+          const schedSpan = li.querySelector(".todo-scheduled");
+          const descSpan = li.querySelector(".todo-desc");
+
+          const textInput = document.createElement("input");
+          textInput.type = "text";
+          textInput.className = "form-control form-control-sm edit-text";
+          textInput.value = t.text;
+
+          const schedInput = document.createElement("input");
+          schedInput.type = "datetime-local";
+          schedInput.className =
+            "form-control form-control-sm edit-scheduled mt-1";
+          if (t.scheduled) {
+            try {
+              const dt = new Date(t.scheduled);
+              if (!isNaN(dt.getTime())) {
+                const pad = (n) => n.toString().padStart(2, "0");
+                const y = dt.getFullYear();
+                const m = pad(dt.getMonth() + 1);
+                const d = pad(dt.getDate());
+                const hh = pad(dt.getHours());
+                const mm = pad(dt.getMinutes());
+                schedInput.value = `${y}-${m}-${d}T${hh}:${mm}`;
+              }
+            } catch (e) {}
+          }
+
+          const descInput = document.createElement("input");
+          descInput.type = "text";
+          descInput.className = "form-control form-control-sm edit-desc mt-1";
+          descInput.value = t.description || "";
+
+          textSpan.replaceWith(textInput);
+          if (schedSpan) schedSpan.replaceWith(schedInput);
+          if (descSpan) descSpan.replaceWith(descInput);
+
+          const editBtn = li.querySelector(".edit");
+          editBtn.textContent = "Save";
+          editBtn.classList.add("btn-success");
+
+          const cancelBtn = document.createElement("button");
+          cancelBtn.type = "button";
+          cancelBtn.className = "btn btn-outline-secondary btn-sm cancel ms-1";
+          cancelBtn.textContent = "Cancel";
+          editBtn.after(cancelBtn);
+
+          textInput.focus();
+          textInput.selectionStart = textInput.value.length;
+
+          cancelBtn.addEventListener(
+            "click",
+            () => {
+              li.dataset.editing = "false";
+              render();
+            },
+            { once: true }
+          );
+        }
+
+        async function commitEdit(id, newText) {
+          newText = (newText || "").trim();
+          const t = todos.find((x) => x.id === id);
+          if (!t) return;
+          if (!newText) {
+            remove(id);
+            return;
+          }
+
+          const li = els.list.querySelector(`[data-id="${id}"]`);
+          if (li) {
+            const schedInput = li.querySelector(".edit-scheduled");
+            const descInput = li.querySelector(".edit-desc");
+            if (schedInput) t.scheduled = schedInput.value || "";
+            if (descInput) t.description = descInput.value || "";
+          }
+          t.text = newText;
+          save();
+          render();
+
+          try {
+            if (!currentUser) return;
+            await updateDoc(doc(db, "tasks", id), {
+              text: t.text,
+              scheduled: t.scheduled || null,
+              description: t.description || null,
+            });
+            console.info("Task edits persisted", id);
+          } catch (e) {
+            console.warn("Could not persist task edits", e);
+          }
+        }
+
+        async function clearCompleted() {
+          const toRemove = todos.filter((t) => t.done).map((t) => t.id);
+          todos = todos.filter((t) => !t.done);
+          save();
+          render();
+          if (!currentUser) return;
+          for (const id of toRemove) {
+            try {
+              await deleteDoc(doc(db, "tasks", id));
+            } catch (e) {
+              console.warn("Could not delete completed task", id, e);
+            }
+          }
+        }
+
+        function bind() {
+          els.addForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            els.addFormError.classList.add("d-none");
+            document.getElementById("errorText").textContent = "";
+
+            const text = els.input.value.trim();
+            if (!text) {
+              document.getElementById("errorText").textContent =
+                "Please enter a task name.";
+              els.addFormError.classList.remove("d-none");
+              els.input.focus();
+              return;
+            }
+
+            const sched = els.scheduled.value || "";
+            const desc = els.description.value || "";
+            addTodo(text, sched, desc);
+            els.input.value = "";
+            els.scheduled.value = "";
+            els.description.value = "";
+            els.input.focus();
+          });
+
+          els.input.addEventListener("input", () => {
+            if (els.input.value.trim()) {
+              els.addFormError.classList.add("d-none");
+            }
+          });
+
+          els.list.addEventListener("click", (e) => {
+            const li = e.target.closest(".todo-item");
+            if (!li) return;
+            const id = li.dataset.id;
+            if (e.target.matches(".toggle")) toggle(id);
+            else if (e.target.matches(".delete")) remove(id);
+            else if (e.target.matches(".edit")) {
+              if (li.dataset.editing === "true") {
+                const textInput = li.querySelector(".edit-text");
+                const newText = textInput ? textInput.value : "";
+                commitEdit(id, newText);
+              } else {
+                edit(id);
+              }
+            } else if (e.target.matches(".cancel")) {
+              li.dataset.editing = "false";
+              render();
+            }
+          });
+
+          els.list.addEventListener("keydown", (e) => {
+            if (!(e.target instanceof HTMLElement)) return;
+            if (e.target.classList.contains("edit-text")) {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                const li = e.target.closest(".todo-item");
+                const id = li?.dataset?.id;
+                if (id) commitEdit(id, e.target.value);
+              }
+            } else if (e.target.classList.contains("todo-text")) {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.target.blur();
+              }
+            }
+          });
+
+          els.list.addEventListener("focusout", (e) => {
+            if (!(e.target instanceof HTMLElement)) return;
+            if (!e.target.classList.contains("todo-text")) return;
+            const li = e.target.closest(".todo-item");
+            e.target.removeAttribute("contenteditable");
+            commitEdit(li.dataset.id, e.target.textContent || "");
+          });
+
+          els.filters.forEach((r) =>
+            r.addEventListener("change", () => {
+              activeFilter = document.querySelector(
+                'input[name="filter"]:checked'
+              ).value;
+              render();
+            })
+          );
+
+          els.clearCompleted.addEventListener("click", () => clearCompleted());
+
+          document.addEventListener("keydown", (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+              const val = els.input.value.trim();
+              if (val) {
+                addTodo(val);
+                els.input.value = "";
+              }
+            }
+          });
+        }
+
+        async function setUser(newUserId) {
+          userId = newUserId || "guest";
+          if (userId && userId !== "guest") {
+            try {
+              const q = query(
+                collection(db, "tasks"),
+                where("userUid", "==", userId)
+              );
+              const snap = await getDocs(q);
+              const fsMap = {};
+              snap.docs.forEach((d) => {
+                const data = d.data();
+                fsMap[d.id] = {
+                  id: d.id,
+                  text: data.text || "",
+                  scheduled: data.scheduled || "",
+                  description: data.description || "",
+                  done: !!data.done,
+                  created: data.created?.toMillis
+                    ? data.created.toMillis()
+                    : Date.now(),
+                  completionRecorded: !!data.completedTimeClient,
+                  completedLocal: data.completedTimeClient || null,
+                  onTimeLocal: data.onTime,
+                };
+              });
+
+              const localTodos = load();
+              const merged = { ...fsMap };
+              localTodos.forEach((lt) => {
+                if (merged[lt.id]) {
+                  merged[lt.id].done = fsMap[lt.id].done;
+                  merged[lt.id].onTimeLocal = fsMap[lt.id].onTimeLocal;
+                  merged[lt.id].completedLocal = fsMap[lt.id].completedLocal;
+                } else {
+                  merged[lt.id] = lt;
+                }
+              });
+
+              todos = Object.values(merged);
+              save();
+              render();
+              return;
+            } catch (e) {
+              console.warn("Could not load tasks from Firestore", e);
+            }
+          }
+          todos = load();
+          render();
+        }
+
+        function init() {
+          bind();
+          todos = load();
+          render();
+        }
+
+        return { init, setUser };
+      })();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        App.init();
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user || null;
+          App.setUser(user ? user.uid : "guest");
+        });
       });
-    });
-  </script>
+    </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Bottom-sheet behaviour -->
-  <script src="/design/bottom-window.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bottom-sheet behaviour -->
+    <script src="/design/bottom-window.js"></script>
+  </body>
 </html>
