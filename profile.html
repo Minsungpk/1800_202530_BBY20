@@ -49,7 +49,32 @@
 
 
     </div>
+    <!-- Send Friend Request Section -->
+    <div id="sendFriendRequestSection" class="mt-4">
+      <h3>Send Friend Request</h3>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="friendRequestInput"
+          class="form-control"
+          placeholder="Enter user's email or ID"
+        />
+        <button class="btn btn-primary" id="sendRequestBtn">Send</button>
+      </div>
+      <p id="sendRequestMessage" class="text-success"></p>
+    </div>
 
+    <!-- Incoming Friend Requests Section -->
+    <div id="incomingFriendRequestsSection" class="mt-4">
+      <h3>Incoming Friend Requests</h3>
+      <ul id="incomingFriendRequestsList" class="list-group"></ul>
+    </div>
+
+    <!-- Sent Friend Requests Section (optional) -->
+    <div id="sentFriendRequestsSection" class="mt-4">
+      <h3>Sent Friend Requests</h3>
+      <ul id="sentFriendRequestsList" class="list-group"></ul>
+    </div>
 
     <footer class="footer">
       <div class="footer-icon" onclick="window.location.href='landing.html'">
@@ -225,8 +250,91 @@
           window.location.href = "login.html";
           return;
         }
+        async function loadFriendRequests() {
+          const userDocRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userDocRef);
+
+          if (!userSnap.exists()) return;
+
+          const data = userSnap.data();
+          const requests = data.friendRequests || [];
+
+          const list = document.getElementById("incomingFriendRequestsList"); // updated ID
+          list.innerHTML = "";
+
+          requests.forEach((requesterId) => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item");
+            li.textContent = "Friend request from: " + requesterId;
+
+            const acceptBtn = document.createElement("button");
+            acceptBtn.textContent = "Accept";
+            acceptBtn.classList.add("btn", "btn-success", "ms-3");
+            acceptBtn.onclick = async () => {
+              await acceptFriendRequest(currentUser.uid, requesterId);
+              loadFriendRequests(); // refresh list
+            };
+
+            const declineBtn = document.createElement("button");
+            declineBtn.textContent = "Decline";
+            declineBtn.classList.add("btn", "btn-danger", "ms-2");
+            declineBtn.onclick = async () => {
+              await declineFriendRequest(currentUser.uid, requesterId);
+              loadFriendRequests(); // refresh list
+            };
+
+            li.appendChild(acceptBtn);
+            li.appendChild(declineBtn);
+            list.appendChild(li);
+          });
+        }
 
         currentUser = user;
+        const friendRequestInput =
+          document.getElementById("friendRequestInput");
+        const sendRequestBtn = document.getElementById("sendRequestBtn");
+        const sendRequestMessage =
+          document.getElementById("sendRequestMessage");
+
+        async function sendFriendRequest() {
+          const targetIdOrEmail = friendRequestInput.value.trim();
+          if (!targetIdOrEmail) {
+            sendRequestMessage.textContent = "Please enter a user ID or email.";
+            return;
+          }
+
+          try {
+            const usersRef = doc(db, "users", targetIdOrEmail); // Use UID
+            const userSnap = await getDoc(usersRef);
+
+            if (!userSnap.exists()) {
+              sendRequestMessage.textContent = "User not found.";
+              return;
+            }
+
+            const targetData = userSnap.data();
+            const targetFriendRequests = targetData.friendRequests || [];
+
+            if (targetFriendRequests.includes(currentUser.uid)) {
+              sendRequestMessage.textContent = "Friend request already sent!";
+              return;
+            }
+
+            await setDoc(
+              usersRef,
+              { friendRequests: [...targetFriendRequests, currentUser.uid] },
+              { merge: true }
+            );
+
+            sendRequestMessage.textContent = "Friend request sent!";
+            friendRequestInput.value = "";
+          } catch (err) {
+            console.error("Error sending friend request:", err);
+            sendRequestMessage.textContent = "Error sending request.";
+          }
+        }
+
+        sendRequestBtn.addEventListener("click", sendFriendRequest);
 
         profileName.textContent = user.displayName || "User Name";
         profileEmail.textContent = "Email: " + (user.email || "Unknown");
@@ -243,6 +351,7 @@
           profilePic.src = DEFAULT_IMG;
           console.log("No photoURL in Firestore, using default image");
         }
+        loadFriendRequests();
       });
 
       profilePic.addEventListener("click", () => {
