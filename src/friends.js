@@ -73,8 +73,9 @@ export const initializeNewUser = async (userId, name, email) => {
 // Send friend request
 // --------------------------------------
 export const sendFriendRequest = async (fromUserId, toUserId) => {
-  const toRef = doc(db, "users", toUserId);
-  await updateDoc(toRef, {
+  const toUserRef = doc(db, "users", toUserId);
+
+  await updateDoc(toUserRef, {
     friendRequests: arrayUnion(fromUserId),
   });
 };
