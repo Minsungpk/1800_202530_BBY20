@@ -52,8 +52,7 @@
       <p id="profileEmail">Email:</p>
       <a href="index.html"
         ><img
-          src="images/logout.png
-        "
+          src="images/logout.png"
           alt="logoutBtn"
           width="100px"
       /></a>
@@ -61,7 +60,7 @@
         <i>Logout</i>
       </caption>
     </div>
-    <!-- Send Friend Request Section -->
+
     <div id="sendFriendRequestSection" class="mt-4">
       <h3>Send Friend Request</h3>
       <div class="input-group mb-3">
@@ -76,13 +75,13 @@
       <p id="sendRequestMessage" class="text-success"></p>
     </div>
 
-    <!-- Incoming Friend Requests Section -->
+ 
     <div id="incomingFriendRequestsSection" class="mt-4">
       <h3>Incoming Friend Requests</h3>
       <ul id="incomingFriendRequestsList" class="list-group"></ul>
     </div>
 
-    <!-- Sent Friend Requests Section (optional) -->
+ 
     <div id="sentFriendRequestsSection" class="mt-4">
       <h3>Sent Friend Requests</h3>
       <ul id="sentFriendRequestsList" class="list-group"></ul>
@@ -100,7 +99,7 @@
         >
           <path
             fill-rule="evenodd"
-            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"
+            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 1 .196 0L11 1.91v12.98l-.5.1z"
           />
         </svg>
       </div>
@@ -166,7 +165,7 @@
       </div>
     </footer>
 
-    <!-- Bottom sheet (create menu) -->
+    
     <div id="bottomSheet" class="bottom-sheet">
       <div class="sheet-content">
         <button class="close-btn" onclick="closeSheet()">
@@ -210,52 +209,31 @@
     </div>
 
     <script type="module">
-      import { sendFriendRequest as sendFriendRequestToDB } from "./src/friends.js";
-
       import {
-        acceptFriendRequest,
-        declineFriendRequest,
-      } from "./src/friends.js";
-
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-      import {
-        getFirestore,
         doc,
         getDoc,
         setDoc,
-        updateDoc,
         collection,
         query,
         where,
         getDocs,
-        onSnapshot,
-      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
       import {
-        getAuth,
-        onAuthStateChanged,
-      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-      import {
-        getStorage,
         ref,
         uploadBytes,
         getDownloadURL,
-      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js";
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
-        authDomain: "group-project-8a6ee.firebaseapp.com",
-        projectId: "group-project-8a6ee",
-        storageBucket: "group-project-8a6ee.firebasestorage.app",
-        messagingSenderId: "922685674876",
-        appId: "1:922685674876:web:6edeac0ff4fb485db780f9",
-        measurementId: "G-1LCVJ62HEL",
-      };
+      import { db, auth, storage } from "./src/firebaseConfig.js";
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const auth = getAuth(app);
-      const storage = getStorage(app);
+      import {
+        sendFriendRequest as sendFriendRequestToDB,
+        acceptFriendRequest,
+        declineFriendRequest,
+      } from "./src/friends.js";
 
       const profilePic = document.getElementById("profilePic");
       const imagePicker = document.getElementById("imagePicker");
@@ -271,6 +249,9 @@
           window.location.href = "login.html";
           return;
         }
+
+        currentUser = user;
+
         async function loadFriendRequests() {
           const userDocRef = doc(db, "users", currentUser.uid);
           const userSnap = await getDoc(userDocRef);
@@ -280,7 +261,7 @@
           const data = userSnap.data();
           const requests = data.friendRequests || [];
 
-          const list = document.getElementById("incomingFriendRequestsList"); // updated ID
+          const list = document.getElementById("incomingFriendRequestsList");
           list.innerHTML = "";
 
           requests.forEach((requesterId) => {
@@ -293,7 +274,7 @@
             acceptBtn.classList.add("btn", "btn-success", "ms-3");
             acceptBtn.onclick = async () => {
               await acceptFriendRequest(currentUser.uid, requesterId);
-              loadFriendRequests(); // refresh list
+              loadFriendRequests();
             };
 
             const declineBtn = document.createElement("button");
@@ -301,7 +282,7 @@
             declineBtn.classList.add("btn", "btn-danger", "ms-2");
             declineBtn.onclick = async () => {
               await declineFriendRequest(currentUser.uid, requesterId);
-              loadFriendRequests(); // refresh list
+              loadFriendRequests();
             };
 
             li.appendChild(acceptBtn);
@@ -310,7 +291,6 @@
           });
         }
 
-        currentUser = user;
         const friendRequestInput =
           document.getElementById("friendRequestInput");
         const sendRequestBtn = document.getElementById("sendRequestBtn");
@@ -379,6 +359,7 @@
           profilePic.src = DEFAULT_IMG;
           console.log("No photoURL in Firestore, using default image");
         }
+
         loadFriendRequests();
       });
 
@@ -428,7 +409,7 @@
       });
     </script>
 
-    <!-- Bottom-sheet behaviour -->
+   
     <script src="/design/bottom-window.js"></script>
   </body>
 </html>
