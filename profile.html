@@ -25,7 +25,11 @@
         />
       </a>
       <a href="notifications.html">
-        <img src="images/alarm-alert-attention-bell-notification-ring-svgrepo-com.png" class="setting" alt="Settings" />
+        <img
+          src="images/alarm-alert-attention-bell-notification-ring-svgrepo-com.png"
+          class="setting"
+          alt="Settings"
+        />
       </a>
     </div>
 
@@ -219,7 +223,14 @@
         doc,
         getDoc,
         setDoc,
+        updateDoc,
+        collection,
+        query,
+        where,
+        getDocs,
+        onSnapshot,
       } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+
       import {
         getAuth,
         onAuthStateChanged,
@@ -317,36 +328,37 @@
             let toUserId;
 
             if (targetIdOrEmail.includes("@")) {
-              // Input is email → query Firestore
               const q = query(
                 collection(db, "users"),
                 where("email", "==", targetIdOrEmail)
               );
               const querySnapshot = await getDocs(q);
-
               if (querySnapshot.empty) {
                 sendRequestMessage.textContent = "User not found.";
                 return;
               }
-
-              toUserId = querySnapshot.docs[0].id; // UID
+              toUserId = querySnapshot.docs[0].id;
             } else {
-              // Input is UID
-              const userSnap = await getDoc(doc(db, "users", targetIdOrEmail));
+              toUserId = targetIdOrEmail;
+              const userSnap = await getDoc(doc(db, "users", toUserId));
               if (!userSnap.exists()) {
                 sendRequestMessage.textContent = "User not found.";
                 return;
               }
-              toUserId = targetIdOrEmail;
+            }
+
+            if (toUserId === currentUser.uid) {
+              sendRequestMessage.textContent = "You cannot add yourself.";
+              return;
             }
 
             await sendFriendRequestToDB(currentUser.uid, toUserId);
-
             sendRequestMessage.textContent = "Friend request sent!";
             friendRequestInput.value = "";
           } catch (err) {
-            console.error("Error sending friend request:", err);
-            sendRequestMessage.textContent = "Error sending request.";
+            console.error(err);
+            sendRequestMessage.textContent =
+              err.message || "Error sending request.";
           }
         }
 
