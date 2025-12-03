@@ -24,6 +24,13 @@
           alt="Settings"
         />
       </a>
+      <a href="notifications.html">
+        <img
+          src="images/alarm-alert-attention-bell-notification-ring-svgrepo-com.png"
+          class="setting"
+          alt="Settings"
+        />
+      </a>
     </div>
 
     <div id="profile">
@@ -43,6 +50,41 @@
 
       <p id="profileName">Username</p>
       <p id="profileEmail">Email:</p>
+      <a href="index.html"
+        ><img
+          src="images/logout.png"
+          alt="logoutBtn"
+          width="100px"
+      /></a>
+      <caption>
+        <i>Logout</i>
+      </caption>
+    </div>
+
+    <div id="sendFriendRequestSection" class="mt-4">
+      <h3>Send Friend Request</h3>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="friendRequestInput"
+          class="form-control"
+          placeholder="Enter user's email or ID"
+        />
+        <button class="btn btn-info" id="sendRequestBtn">Send</button>
+      </div>
+      <p id="sendRequestMessage" class="text-success"></p>
+    </div>
+
+ 
+    <div id="incomingFriendRequestsSection" class="mt-4">
+      <h3>Incoming Friend Requests</h3>
+      <ul id="incomingFriendRequestsList" class="list-group"></ul>
+    </div>
+
+ 
+    <div id="sentFriendRequestsSection" class="mt-4">
+      <h3>Sent Friend Requests</h3>
+      <ul id="sentFriendRequestsList" class="list-group"></ul>
     </div>
 
     <footer class="footer">
@@ -57,11 +99,10 @@
         >
           <path
             fill-rule="evenodd"
-            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"
+            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 1 .196 0L11 1.91v12.98l-.5.1z"
           />
         </svg>
       </div>
-
 
       <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
         <svg
@@ -77,7 +118,6 @@
           />
         </svg>
       </div>
-
 
       <div class="footer-icon" onclick="openSheet()">
         <svg
@@ -125,65 +165,75 @@
       </div>
     </footer>
 
-    <!-- Bottom sheet (create menu) -->
+    
     <div id="bottomSheet" class="bottom-sheet">
       <div class="sheet-content">
         <button class="close-btn" onclick="closeSheet()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-x-lg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+            />
           </svg>
         </button>
 
         <h5 class="sheet-title">Create</h5>
 
-        <button class="sheet-btn" onclick="window.location.href='todolist.html'">
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='todolist.html'"
+        >
           To-Do List
         </button>
 
-        <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='groupTodoList.html'"
+        >
           Group To-Do List
         </button>
 
-        <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='launchevent.html'"
+        >
           Events
         </button>
       </div>
     </div>
 
     <script type="module">
- 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
       import {
-        getFirestore,
         doc,
         getDoc,
         setDoc,
-      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+        collection,
+        query,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
       import {
-        getAuth,
-        onAuthStateChanged,
-      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
-      import {
-        getStorage,
         ref,
         uploadBytes,
         getDownloadURL,
-      } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js";
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
-        authDomain: "group-project-8a6ee.firebaseapp.com",
-        projectId: "group-project-8a6ee",
-        storageBucket: "group-project-8a6ee.firebasestorage.app",
-        messagingSenderId: "922685674876",
-        appId: "1:922685674876:web:6edeac0ff4fb485db780f9",
-        measurementId: "G-1LCVJ62HEL",
-      };
+      import { db, auth, storage } from "./src/firebaseConfig.js";
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const auth = getAuth(app);
-      const storage = getStorage(app);
+      import {
+        sendFriendRequest as sendFriendRequestToDB,
+        acceptFriendRequest,
+        declineFriendRequest,
+      } from "./src/friends.js";
 
       const profilePic = document.getElementById("profilePic");
       const imagePicker = document.getElementById("imagePicker");
@@ -202,6 +252,98 @@
 
         currentUser = user;
 
+        async function loadFriendRequests() {
+          const userDocRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userDocRef);
+
+          if (!userSnap.exists()) return;
+
+          const data = userSnap.data();
+          const requests = data.friendRequests || [];
+
+          const list = document.getElementById("incomingFriendRequestsList");
+          list.innerHTML = "";
+
+          requests.forEach((requesterId) => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item");
+            li.textContent = "Friend request from: " + requesterId;
+
+            const acceptBtn = document.createElement("button");
+            acceptBtn.textContent = "Accept";
+            acceptBtn.classList.add("btn", "btn-success", "ms-3");
+            acceptBtn.onclick = async () => {
+              await acceptFriendRequest(currentUser.uid, requesterId);
+              loadFriendRequests();
+            };
+
+            const declineBtn = document.createElement("button");
+            declineBtn.textContent = "Decline";
+            declineBtn.classList.add("btn", "btn-danger", "ms-2");
+            declineBtn.onclick = async () => {
+              await declineFriendRequest(currentUser.uid, requesterId);
+              loadFriendRequests();
+            };
+
+            li.appendChild(acceptBtn);
+            li.appendChild(declineBtn);
+            list.appendChild(li);
+          });
+        }
+
+        const friendRequestInput =
+          document.getElementById("friendRequestInput");
+        const sendRequestBtn = document.getElementById("sendRequestBtn");
+        const sendRequestMessage =
+          document.getElementById("sendRequestMessage");
+
+        async function sendFriendRequest() {
+          const targetIdOrEmail = friendRequestInput.value.trim();
+          if (!targetIdOrEmail) {
+            sendRequestMessage.textContent = "Please enter a user ID or email.";
+            return;
+          }
+
+          try {
+            let toUserId;
+
+            if (targetIdOrEmail.includes("@")) {
+              const q = query(
+                collection(db, "users"),
+                where("email", "==", targetIdOrEmail)
+              );
+              const querySnapshot = await getDocs(q);
+              if (querySnapshot.empty) {
+                sendRequestMessage.textContent = "User not found.";
+                return;
+              }
+              toUserId = querySnapshot.docs[0].id;
+            } else {
+              toUserId = targetIdOrEmail;
+              const userSnap = await getDoc(doc(db, "users", toUserId));
+              if (!userSnap.exists()) {
+                sendRequestMessage.textContent = "User not found.";
+                return;
+              }
+            }
+
+            if (toUserId === currentUser.uid) {
+              sendRequestMessage.textContent = "You cannot add yourself.";
+              return;
+            }
+
+            await sendFriendRequestToDB(currentUser.uid, toUserId);
+            sendRequestMessage.textContent = "Friend request sent!";
+            friendRequestInput.value = "";
+          } catch (err) {
+            console.error(err);
+            sendRequestMessage.textContent =
+              err.message || "Error sending request.";
+          }
+        }
+
+        sendRequestBtn.addEventListener("click", sendFriendRequest);
+
         profileName.textContent = user.displayName || "User Name";
         profileEmail.textContent = "Email: " + (user.email || "Unknown");
 
@@ -217,6 +359,8 @@
           profilePic.src = DEFAULT_IMG;
           console.log("No photoURL in Firestore, using default image");
         }
+
+        loadFriendRequests();
       });
 
       profilePic.addEventListener("click", () => {
@@ -264,8 +408,8 @@
         }
       });
     </script>
-    
-    <!-- Bottom-sheet behaviour -->
-  <script src="/design/bottom-window.js"></script>
+
+   
+    <script src="/design/bottom-window.js"></script>
   </body>
 </html>
