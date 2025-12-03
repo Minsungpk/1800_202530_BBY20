@@ -3,7 +3,7 @@
   <head>
     <link rel="stylesheet" href="/styles/joinevent.css"/>
     <title>Event List</title>
-    <!-- <link rel="stylesheet" href="./styles/style.css" /> -->
+    <link rel="stylesheet" href="./styles/style.css" />
   </head>
   <body>
     <div class="dashboard-container">
@@ -18,8 +18,33 @@
 
     <div id="eventsList">Loading image</div>
 
-     <!-- Footer navigation -->
-  <footer class="footer">
+
+     <div id="bottomSheet" class="bottom-sheet">
+    <div class="sheet-content">
+      <button class="close-btn" onclick="closeSheet()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+        </svg>
+      </button>
+
+      <h5 class="sheet-title">Create</h5>
+
+      <button class="sheet-btn" onclick="window.location.href='todolist.html'">
+        To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
+        Group To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
+        Events
+      </button>
+    </div>
+  </div>
+  
+    <!-- Footer navigation -->
+    <footer class="footer">
     <div class="footer-icon" onclick="window.location.href='landing.html'">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
@@ -50,7 +75,12 @@
       </svg>
     </div>
   </footer>
-   <!--Footer section-->
+
+
+    <!--Footer section-->
     <script type="module" src="/src/joinevent.js"></script>
+
+    <!-- Bottom-sheet behaviour -->
+    <script src="/design/bottom-window.js"></script>
   </body>
 </html>

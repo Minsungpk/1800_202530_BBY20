@@ -38,18 +38,34 @@ html, body {
   z-index: 1;
 }
 
-/* footer */
+/* FOOTER (MATCHES FIRST CSS FILE) */
 footer.footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
+  min-height: 0px; 
+  max-height: 80px;
   background-color: #7796cb;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1rem 0;
+  padding: 12px 0; 
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+footer.footer-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 0px; 
+  background-color: #7796cb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 12px 0; 
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
@@ -58,21 +74,44 @@ footer.footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
   border-radius: 50%;
   cursor: pointer;
   transition: transform 0.2s ease;
+  min-height: 150px; 
+  padding-top: 20px;
 }
 
 .footer-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 52px; 
+  height: 52px;
   color: white;
+  padding-bottom: 30px; 
 }
 
 .footer-icon:hover {
-  transform: scale(1.15);
+  transform: scale(1.05);
+}
+
+.footer-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  min-height: 150px; 
+  padding-top: 20px;
+}
+
+.footer-icon-container svg {
+  width: 52px; 
+  height: 52px;
+  color: white;
+  padding-bottom: 30px; 
+}
+
+.footer-icon-container:hover {
+  transform: scale(1.05);
 }
 
 /* Bottom Sheet */
@@ -86,7 +125,7 @@ footer.footer {
   justify-content: center;
   align-items: flex-end;
   transition: bottom 0.35s ease;
-  z-index: 2000;
+  z-index: 0;
 }
 
 .bottom-sheet.open {
@@ -121,22 +160,21 @@ footer.footer {
   font-size: 22px;
 }
 
-
 #nav {
   display: flex;
-  justify-content: flex-start; /* keeps items on the left */
+  justify-content: flex-start;
   align-items: center;
   padding: 10px;
 }
-.setting{
+
+.setting {
   width: 60px;
 }
 
-#profile{
+#profile {
   text-align: center;
   font-size: 50px;
 }
-
 
 .profilepicture {
   width: 200px;
