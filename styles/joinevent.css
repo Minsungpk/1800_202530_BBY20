@@ -50,22 +50,22 @@
 }
 
 .dashboard-header h1 {
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
   font-family: Rubik;
 }
 
-@media (max-width: 480px){
+/* @media (max-width: 480px){
   .dashboard-header h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
 }
 
 @media (max-width: 360px){
   .dashboard-header h1 {
-    font-size: 2rem;
+    font-size: 2.6rem;
   }
-}
+} */
 
 .notif-icon {
   width: 28px;
@@ -155,39 +155,79 @@ footer.footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  background-color: #7796cb; /* landing page color */
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 80px; /* ← increased height so it NEVER shrinks */
+  background-color: #7796cb;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding: 12px 0; /* extra padding to keep it tall */
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  padding: 1rem 0;
 }
+
 
 .footer-icon {
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  align-items: center;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #495057;
-}
-
-.footer-icon:hover {
-  background: rgba(13, 110, 253, 0.1);
-  color: #0d6efd;
+  transition: transform 0.2s ease;
+  min-height: 150px;
+  
 }
 
 .footer-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 52px;
+  height: 52px;
+  color: white;
+  padding-bottom: 30px;
 }
 
-.footer-icon.active {
-  background: #0d6efd;
-  color: #fff;
+
+
+/* Bottom Sheet */
+.bottom-sheet {
+  position: fixed;
+  bottom: -40%;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transition: bottom 0.35s ease;
+  z-index: 2000;
+}
+
+.bottom-sheet.open {
+  bottom: 0;
+}
+
+.sheet-content {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  box-shadow: 0 -4px 18px rgba(0,0,0,0.25);
+}
+
+.sheet-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  background: #eee;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
 }
