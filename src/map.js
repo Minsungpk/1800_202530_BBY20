@@ -7,10 +7,11 @@ import {
   getFirestore,
   doc,
   setDoc,
-  collection,
   onSnapshot,
   Timestamp,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+
 import {
   getAuth,
   onAuthStateChanged,
@@ -111,76 +112,97 @@ async function sendMyLocationToFirebase(position) {
 }
 
 // ======================================================================
-// 6. LISTEN FOR ALL USERS' LOCATIONS (real-time map updates)
+// 6. LISTEN ONLY TO MYSELF + MY FRIENDS' LOCATIONS
 // ======================================================================
 const markers = {}; // one marker per userId
 
-function startLocationsListener() {
-  onSnapshot(collection(db, "locations"), (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const otherUserId = change.doc.id;
-      const data = change.doc.data();
+// Helper: create/move/remove marker for a single user
+function updateMarkerForUser(uid, data, isMe = false) {
+  if (!data || data.lat == null || data.lng == null) return;
 
-      // Skip invalid data
-      if (data.lat == null || data.lng == null) return;
+  const popupText =
+    (isMe ? "(You) " : "") +
+    (data.displayName || data.userDisplayName || uid);
 
-      const isMe = otherUserId === userId;
+  if (markers[uid]) {
+    // Move existing marker + update popup text
+    markers[uid].setLngLat([data.lng, data.lat]);
+    const popup = markers[uid].getPopup();
+    if (popup) popup.setText(popupText);
+    return;
+  }
 
-      // Text to show in popup (name/email/uid)
-      const popupText = data.displayName || data.userDisplayName || otherUserId;
+  // Create custom icon element
+  const iconUrl = isMe ? "./images/pin.png" : "./images/otherpin.png";
 
-      // ADDED or MODIFIED → create or move marker
-      if (change.type === "added" || change.type === "modified") {
-        if (markers[otherUserId]) {
-          // Move existing marker
-          markers[otherUserId].setLngLat([data.lng, data.lat]);
+  const el = document.createElement("img");
+  el.src = iconUrl;
+  el.alt = popupText;
+  el.style.width = "40px";
+  el.style.height = "40px";
+  el.style.borderRadius = "50%";
+  el.style.objectFit = "cover";
 
-          // Update popup text if popup exists
-          const existingPopup = markers[otherUserId].getPopup();
-          if (existingPopup) {
-            existingPopup.setText(popupText);
-          }
-        } else {
-          // ---------------------------------------------
-          // Create custom icon element (image marker)
-          // ---------------------------------------------
-          const iconUrl = "./images/otherpin.png"; // 🔹 other users' icon
-          // ? "./images/pin.png"     // 🔹 your icon
+  const popup = new maplibregl.Popup({ offset: 25 }).setText(popupText);
 
-          const el = document.createElement("img");
-          el.src = iconUrl;
-          el.alt = popupText;
-          el.style.width = "40px";
-          el.style.height = "40px";
-          el.style.borderRadius = "50%"; // optional: make it circular
-          el.style.objectFit = "cover";
+  markers[uid] = new maplibregl.Marker({ element: el })
+    .setLngLat([data.lng, data.lat])
+    .setPopup(popup)
+    .addTo(map);
 
-          // Create popup
-          const popup = new maplibregl.Popup({ offset: 25 }).setText(popupText);
-
-          // Create new marker with custom element + popup
-          markers[otherUserId] = new maplibregl.Marker({
-            element: el,
-          })
-            .setLngLat([data.lng, data.lat])
-            .setPopup(popup)
-            .addTo(map);
-
-          // Automatically show popup
-          markers[otherUserId].togglePopup();
-        }
-      }
-
-      // REMOVED → delete marker
-      if (change.type === "removed") {
-        if (markers[otherUserId]) {
-          markers[otherUserId].remove();
-          delete markers[otherUserId];
-        }
-      }
-    });
-  });
+  markers[uid].togglePopup();
 }
+
+// Listen to ONE location document (either me or a friend)
+function listenToLocationDoc(uid, isMe = false) {
+  const locRef = doc(db, "locations", uid);
+
+  onSnapshot(
+    locRef,
+    (snap) => {
+      if (!snap.exists()) {
+        if (markers[uid]) {
+          markers[uid].remove();
+          delete markers[uid];
+        }
+        return;
+      }
+      updateMarkerForUser(uid, snap.data(), isMe);
+    },
+    (err) => {
+      console.error("Location listener error for", uid, err);
+    }
+  );
+}
+
+// Load my friends and start listeners
+async function startFriendsLocationsListener() {
+  if (!userId) return;
+
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    let friends = [];
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+      friends = Array.isArray(data.friends) ? data.friends : [];
+    }
+
+    // Always listen to my own location
+    listenToLocationDoc(userId, true);
+
+    // Listen to each friend's location
+    friends.forEach((friendId) => {
+      listenToLocationDoc(friendId, false);
+    });
+
+    console.log("Started location listeners for friends:", friends);
+  } catch (err) {
+    console.error("Error starting friends listeners:", err);
+  }
+}
+
 
 // ======================================================================
 // 7. AUTH STATE LISTENER – START EVERYTHING AFTER LOGIN
@@ -204,8 +226,9 @@ onAuthStateChanged(auth, (user) => {
       console.error("Geolocation is not supported on this device.");
     }
 
-    // Start listening to all users' locations
-    startLocationsListener();
+    // Start listening only to my friends' locations (and myself)
+    startFriendsLocationsListener();
+
   } else {
     // ❌ No user logged in → redirect to login page
     console.log("No user logged in. Redirecting to login...");
