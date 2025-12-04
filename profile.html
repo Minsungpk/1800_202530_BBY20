@@ -28,7 +28,7 @@
 <body class="bg-light">
     <div id="nav">
       <a href="settingspage.html">
-        <img src="images/gear-svgrepo-com.png" class="setting" alt="Settings" />
+        <img src="images/logout-svgrepo-com.png" class="setting" alt="Settings" />
       </a>
       <a href="userevents.html">
         <img
@@ -87,18 +87,23 @@
       </div>
       <p id="sendRequestMessage" class="text-success"></p>
     </div>
-
  
-    <div id="incomingFriendRequestsSection" class="mt-4">
-      <h3>Incoming Friend Requests</h3>
-      <ul id="incomingFriendRequestsList" class="list-group"></ul>
+    <!-- Incoming Friend Requests Card -->
+    <div class="container">
+      <div class="friends-card mt-4">
+        <h4>Incoming Friend Requests</h4>
+        <ul id="incomingFriendRequestsList" class="list-group list-group-flush"></ul>
+      </div>
     </div>
 
- 
-    <div id="sentFriendRequestsSection" class="mt-4">
-      <h3>Sent Friend Requests</h3>
-      <ul id="sentFriendRequestsList" class="list-group"></ul>
+    <!-- Sent Friend Requests Card -->
+    <div class="container">
+      <div class="friends-card mt-4">
+        <h4>Sent Friend Requests</h4>
+        <ul id="sentFriendRequestsList" class="list-group list-group-flush"></ul>
+      </div>
     </div>
+
 
   <!-- Footer navigation -->
   <footer class="footer">
