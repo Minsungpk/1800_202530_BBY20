@@ -2,13 +2,12 @@
 
 body {
   background: #f5f6fa;
-  font-family: "Inter", sans-serif;
+  font-family: Rubik;
   color: #222;
   margin: 0;
   padding: 0;
 }
 
-/* 2. Top Navigation Icons */
 #nav {
   display: flex;
   justify-content: flex-end;
@@ -16,7 +15,8 @@ body {
   padding: 16px;
 }
 
-#nav .setting {
+#nav img,
+.logout {
   width: 26px;
   height: 26px;
   opacity: 0.6;
@@ -31,6 +31,10 @@ body {
 #profile {
   text-align: center;
   margin-top: 10px;
+}
+
+#profileName p{
+  font-size: 52px;
 }
 
 .profilepicture {
@@ -55,7 +59,6 @@ body {
   margin-bottom: 12px;
 }
 
-/* 4. Send Friend Request Section */
 #sendFriendRequestSection {
   margin-top: 25px;
   background: white;
@@ -74,6 +77,21 @@ body {
   text-align: center;
 }
 
+.send-request-btn {
+  background-color: #A3BCF9; 
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.send-request-btn:hover {
+  background-color: #7f9be0; 
+}
+
+
 .input-group .form-control {
   border-radius: 10px !important;
 }
@@ -82,7 +100,6 @@ body {
   border-radius: 10px;
 }
 
-/* 5. Friend Requests Cards */
 .friends-card {
   background: white;
   border-radius: 18px;
@@ -114,20 +131,3 @@ body {
   margin-left: 6px;
 }
 
-
-/* 8. Responsive */
-@media (max-width: 480px) {
-  .friends-card, #sendFriendRequestSection {
-    width: 95%;
-  }
-
-  .footer-icon {
-    width: 42px;
-    height: 42px;
-  }
-
-  .footer-icon svg {
-    width: 22px;
-    height: 22px;
-  }
-}

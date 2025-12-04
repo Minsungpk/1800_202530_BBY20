@@ -107,9 +107,10 @@ async function loadEvents() {
 
     const joinedSnap = await getDoc(participantDocRef);
     if (joinedSnap.exists()) {
-      joinButton.textContent = "Joined";
-      joinButton.disabled = true;
-      joinBadge.style.display = "inline-block";
+      // joinButton.textContent = "Joined";
+      // joinButton.disabled = true;
+      // joinBadge.style.display = "inline-block";
+      joinButton.style.display = "none";
       card.classList.add("joined-card");
     }
 
@@ -126,9 +127,10 @@ async function loadEvents() {
           joinedAt: new Date(),
         });
 
-        joinButton.textContent = "Joined";
-        joinButton.disabled = true;
-        joinBadge.style.display = "inline-block";
+        // joinButton.textContent = "Joined";
+        // joinButton.disabled = true;
+        // joinBadge.style.display = "inline-block";
+        joinButton.style.display = "none";
         card.classList.add("joined-card");
 
         const updatedSnap = await getDocs(participantsColRef);
