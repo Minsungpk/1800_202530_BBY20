@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard</title>
+  <title>Timely – Map</title>
 
   <!-- Bootstrap CSS -->
   <link
@@ -20,22 +20,19 @@
   />
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="./styles/joinevent.css" />
   <link rel="stylesheet" href="./styles/style.css" />
+  <link rel="stylesheet" href="/styles/userevents.css" />
 
+  
 </head>
 
 <body class="bg-light">
 
-  <div class="dashboard-container">
-    <!-- Header -->
-    <h1>Dashboard</h1>
-    
-    <!-- Cards -->
-    <div id="joinedEventsContainer" class="cards-container"></div>
-
-    <div id="eventsList">Loading image</div>
+  <div class="container">
+      <h2>My Joined Events</h2>
+      <div id="joinedEventsList"></div>
   </div>
+
   <!-- Footer navigation -->
   <footer class="footer">
     <div class="footer-icon" onclick="window.location.href='landing.html'">
@@ -44,36 +41,17 @@
       </svg>
     </div>
 
-      <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-compass-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"
-          />
-        </svg>
-      </div>
+    <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
+        <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
+      </svg>
+    </div>
 
-
-      <div class="footer-icon" onclick="openSheet()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-plus-circle-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
-          />
-        </svg>
-      </div>
+    <div class="footer-icon" onclick="openSheet()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+      </svg>
+    </div>
 
     <div class="footer-icon" onclick="window.location.href='statistics.html'">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
@@ -112,8 +90,10 @@
       </button>
     </div>
   </div>
-  <script type="module" src="/src/joinEvent.js"></script>
+
+  <!-- Bottom-sheet behaviour -->
   <script src="./design/bottom-window.js"></script>
+  <script type="module" src="/src/userevents.js"></script>
 
 </body>
 </html>

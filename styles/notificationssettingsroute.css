@@ -1,0 +1,109 @@
+@import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
+
+.text {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: auto;
+  padding: 6px 10px;
+  border: 2px solid grey;
+  border-radius: 20px;
+  margin: 8px;
+  background-color: white;
+  color: black;
+  font-size: 50px;
+  text-align: center;
+  align-content: center;
+  font-family: Rubik;
+}
+
+.notificationicons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.icon {
+  width: 250px;
+  height: 250px;
+}
+
+.toggle-wrapper {
+  position: relative;
+  width: 250px;
+  height: 250px;
+}
+
+.toggle-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 250px;
+  transition: opacity 0.4s ease;
+}
+
+#image1 {
+  opacity: 1;
+  z-index: 2;
+}
+#image2 {
+  opacity: 0;
+  z-index: 1;
+}
+
+#image1.hide {
+  opacity: 0;
+  z-index: 1;
+}
+#image2.show {
+  opacity: 1;
+  z-index: 2;
+}
+
+.icon {
+  width: 250px;
+  height: 250px;
+}
+
+.notificationicons .notificationrow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notification-row .text {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: auto;
+  padding: 6px 10px;
+  border: 2px solid grey;
+  border-radius: 20px;
+  background-color: white;
+  color: black;
+  font-size: 40px;
+  text-align: center;
+  align-content: center;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  font-family: Rubik;
+}
+
+#backbutton {
+  align-self: flex-end;
+  padding-right: 20px;
+}
+
+.returnicon {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: auto;
+  width: 250px;
+  height: 250px;
+  float: right;
+}
+
+.returnicon:hover {
+  background-color: lightgray;
+  transform: scale(1);
+}

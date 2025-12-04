@@ -3,12 +3,10 @@ import {
   getFirestore,
   collection,
   addDoc,
-  doc,
-  setDoc,
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-let firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
   projectId: "group-project-8a6ee",
@@ -18,65 +16,86 @@ let firebaseConfig = {
   measurementId: "G-1LCVJ62HEL",
 };
 
-let app = initializeApp(firebaseConfig);
-let db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-console.log("Firebase initialized. Project ID:", app.options.projectId);
-console.log("Firestore DB object:", db);
+console.log("Firebase initialized:", app.options.projectId);
 
-async function createEvent(event) {
-  event.preventDefault();
-  console.log("Form submitted");
-  console.log("createEvent handler running");
+const input = document.getElementById("search-container");
+const resultsList = document.getElementById("autocomplete-results");
+let selectedCoordinates = null;
 
-  try {
-    let name = document.getElementById("eventname").value.trim();
-    let description = document.getElementById("eventdescription").value.trim();
-    let dateValue = document.getElementById("eventdate").value;
-    let location = document.getElementById("eventlocation").value.trim();
-    // let friendsInput = document.getElementById("invitefriends").value;
-    // let friends = friendsInput
-    //   ? friendsInput.split(",").map((f) => f.trim())
-    //   : [];
+const API_KEY = "710361f6-69e6-410f-8299-244cc2fecf5f";
 
-    console.log("Form values:", {
-      name,
-      description,
-      dateValue,
-      location,
-      // friends,
-    });
-
-    if (!dateValue) {
-      alert("Please select a date and time for your event.");
-      return;
-    }
-
-    let dateObj = new Date(dateValue);
-    if (isNaN(dateObj)) {
-      console.error("Invalid date:", dateValue);
-      alert("Invalid date. Please check your input.");
-      return;
-    }
-
-    let date = Timestamp.fromDate(dateObj);
-    console.log("Converted Firestore Timestamp:", date);
-
-    let docRef = await addDoc(collection(db, "testEvents"), {
-      name,
-      description,
-      date,
-      location,
-      createdAt: Timestamp.fromDate(new Date()),
-      // attendees: friends,
-    });
-
-    console.log("Event created successfully! ID:", docRef.id);
-    alert("Event created successfully!");
-  } catch (error) {
-    console.error("Error creating event:", error);
-    alert("Error creating event. Check console for details.");
-  }
+async function searchStadia(query) {
+  const url = `https://api.stadiamaps.com/geocoding/v1/search?text=${encodeURIComponent(
+    query
+  )}&api_key=${API_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.features || [];
 }
 
-document.getElementById("eventForm").addEventListener("submit", createEvent);
+input.addEventListener("input", async () => {
+  const query = input.value.trim();
+  if (query.length < 3) {
+    resultsList.innerHTML = "";
+    return;
+  }
+
+  const results = await searchStadia(query);
+  resultsList.innerHTML = "";
+
+  results.forEach((place) => {
+    const li = document.createElement("li");
+    li.textContent = place.properties.label;
+
+    li.addEventListener("click", () => {
+      input.value = place.properties.label;
+      resultsList.innerHTML = "";
+      selectedCoordinates = place.geometry.coordinates; // store [lng, lat]
+    });
+
+    resultsList.appendChild(li);
+  });
+});
+
+document.getElementById("eventForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("eventname").value.trim();
+  const description = document.getElementById("eventdescription").value.trim();
+  const dateValue = document.getElementById("eventdate").value;
+  const locationName = document.getElementById("search-container").value.trim();
+
+  if (!name || !description || !dateValue || !locationName) {
+    alert("Please fill out all fields!");
+    return;
+  }
+
+  const dateObj = new Date(dateValue);
+  if (isNaN(dateObj)) {
+    alert("Invalid date!");
+    return;
+  }
+
+  try {
+    const docRef = await addDoc(collection(db, "testEvents"), {
+      name,
+      description,
+      date: Timestamp.fromDate(dateObj),
+      location: {
+        name: locationName,
+        coordinates: selectedCoordinates,
+      },
+      createdAt: Timestamp.fromDate(new Date()),
+    });
+
+    alert(`Event "${name}" created successfully! ID: ${docRef.id}`);
+    e.target.reset();
+    selectedCoordinates = null;
+  } catch (err) {
+    console.error("Error creating event:", err);
+    alert("Error creating event. Check console.");
+  }
+});
