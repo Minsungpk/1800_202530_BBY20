@@ -23,12 +23,9 @@
   <link rel="stylesheet" href="./styles/profile.css" />
   <link rel="stylesheet" href="./styles/style.css" />
 
-  <!-- MapLibre CSS + JS -->
 </head>
 
 <body class="bg-light">
-
-    <body>
     <div id="nav">
       <a href="settingspage.html">
         <img src="images/gear-svgrepo-com.png" class="setting" alt="Settings" />
@@ -36,6 +33,13 @@
       <a href="userevents.html">
         <img
           src="images/calendar-exclamation-svgrepo-com.png"
+          class="setting"
+          alt="Settings"
+        />
+      </a>
+      <a href="notifications.html">
+        <img
+          src="images/alarm-alert-attention-bell-notification-ring-svgrepo-com.png"
           class="setting"
           alt="Settings"
         />
@@ -59,6 +63,41 @@
 
       <p id="profileName">Username</p>
       <p id="profileEmail">Email:</p>
+      <a href="index.html"
+        ><img
+          src="images/logout.png"
+          alt="logoutBtn"
+          width="100px"
+      /></a>
+      <caption>
+        <i>Logout</i>
+      </caption>
+    </div>
+
+    <div id="sendFriendRequestSection" class="mt-4">
+      <h3>Send Friend Request</h3>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="friendRequestInput"
+          class="form-control"
+          placeholder="Enter user's email or ID"
+        />
+        <button class="btn btn-info" id="sendRequestBtn">Send</button>
+      </div>
+      <p id="sendRequestMessage" class="text-success"></p>
+    </div>
+
+ 
+    <div id="incomingFriendRequestsSection" class="mt-4">
+      <h3>Incoming Friend Requests</h3>
+      <ul id="incomingFriendRequestsList" class="list-group"></ul>
+    </div>
+
+ 
+    <div id="sentFriendRequestsSection" class="mt-4">
+      <h3>Sent Friend Requests</h3>
+      <ul id="sentFriendRequestsList" class="list-group"></ul>
     </div>
 
   <!-- Footer navigation -->
@@ -120,5 +159,209 @@
   </div>
   <script src="./design/bottom-window.js"></script>
 
+
+    <script type="module">
+      import {
+        doc,
+        getDoc,
+        setDoc,
+        collection,
+        query,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+      import {
+        ref,
+        uploadBytes,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+
+      import { db, auth, storage } from "./src/firebaseConfig.js";
+
+      import {
+        sendFriendRequest as sendFriendRequestToDB,
+        acceptFriendRequest,
+        declineFriendRequest,
+      } from "./src/friends.js";
+
+      const profilePic = document.getElementById("profilePic");
+      const imagePicker = document.getElementById("imagePicker");
+      const profileName = document.getElementById("profileName");
+      const profileEmail = document.getElementById("profileEmail");
+
+      const DEFAULT_IMG = "images/Profile.avif";
+      let currentUser = null;
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          console.log("No user logged in, redirecting to login...");
+          window.location.href = "login.html";
+          return;
+        }
+
+        currentUser = user;
+
+        async function loadFriendRequests() {
+          const userDocRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userDocRef);
+
+          if (!userSnap.exists()) return;
+
+          const data = userSnap.data();
+          const requests = data.friendRequests || [];
+
+          const list = document.getElementById("incomingFriendRequestsList");
+          list.innerHTML = "";
+
+          requests.forEach((requesterId) => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item");
+            li.textContent = "Friend request from: " + requesterId;
+
+            const acceptBtn = document.createElement("button");
+            acceptBtn.textContent = "Accept";
+            acceptBtn.classList.add("btn", "btn-success", "ms-3");
+            acceptBtn.onclick = async () => {
+              await acceptFriendRequest(currentUser.uid, requesterId);
+              loadFriendRequests();
+            };
+
+            const declineBtn = document.createElement("button");
+            declineBtn.textContent = "Decline";
+            declineBtn.classList.add("btn", "btn-danger", "ms-2");
+            declineBtn.onclick = async () => {
+              await declineFriendRequest(currentUser.uid, requesterId);
+              loadFriendRequests();
+            };
+
+            li.appendChild(acceptBtn);
+            li.appendChild(declineBtn);
+            list.appendChild(li);
+          });
+        }
+
+        const friendRequestInput =
+          document.getElementById("friendRequestInput");
+        const sendRequestBtn = document.getElementById("sendRequestBtn");
+        const sendRequestMessage =
+          document.getElementById("sendRequestMessage");
+
+        async function sendFriendRequest() {
+          const targetIdOrEmail = friendRequestInput.value.trim();
+          if (!targetIdOrEmail) {
+            sendRequestMessage.textContent = "Please enter a user ID or email.";
+            return;
+          }
+
+          try {
+            let toUserId;
+
+            if (targetIdOrEmail.includes("@")) {
+              const q = query(
+                collection(db, "users"),
+                where("email", "==", targetIdOrEmail)
+              );
+              const querySnapshot = await getDocs(q);
+              if (querySnapshot.empty) {
+                sendRequestMessage.textContent = "User not found.";
+                return;
+              }
+              toUserId = querySnapshot.docs[0].id;
+            } else {
+              toUserId = targetIdOrEmail;
+              const userSnap = await getDoc(doc(db, "users", toUserId));
+              if (!userSnap.exists()) {
+                sendRequestMessage.textContent = "User not found.";
+                return;
+              }
+            }
+
+            if (toUserId === currentUser.uid) {
+              sendRequestMessage.textContent = "You cannot add yourself.";
+              return;
+            }
+
+            await sendFriendRequestToDB(currentUser.uid, toUserId);
+            sendRequestMessage.textContent = "Friend request sent!";
+            friendRequestInput.value = "";
+          } catch (err) {
+            console.error(err);
+            sendRequestMessage.textContent =
+              err.message || "Error sending request.";
+          }
+        }
+
+        sendRequestBtn.addEventListener("click", sendFriendRequest);
+
+        profileName.textContent = user.displayName || "User Name";
+        profileEmail.textContent = "Email: " + (user.email || "Unknown");
+
+        const userDocRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userDocRef);
+
+        console.log("Fetched user doc:", userSnap.exists(), userSnap.data());
+        if (userSnap.exists() && userSnap.data().photoURL) {
+          const url = userSnap.data().photoURL;
+          profilePic.src = url;
+          console.log("Using saved photoURL:", url);
+        } else {
+          profilePic.src = DEFAULT_IMG;
+          console.log("No photoURL in Firestore, using default image");
+        }
+
+        loadFriendRequests();
+      });
+
+      profilePic.addEventListener("click", () => {
+        imagePicker.click();
+      });
+
+      imagePicker.addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+        if (!currentUser) {
+          alert("You must be logged in to change your picture.");
+          return;
+        }
+
+        const localUrl = URL.createObjectURL(file);
+        profilePic.src = localUrl;
+
+        try {
+          const storageRef = ref(storage, `profileImages/${currentUser.uid}`);
+          await uploadBytes(storageRef, file);
+          console.log("Upload success");
+
+          const downloadURL = await getDownloadURL(storageRef);
+          console.log("Download URL:", downloadURL);
+
+          const userDocRef = doc(db, "users", currentUser.uid);
+          await setDoc(
+            userDocRef,
+            {
+              photoURL: downloadURL,
+              displayName:
+                currentUser.displayName || currentUser.email || "Anonymous",
+            },
+            { merge: true }
+          );
+          console.log("Firestore updated for user:", currentUser.uid);
+
+          profilePic.src = downloadURL;
+
+          console.log("Profile picture updated!");
+        } catch (err) {
+          console.error("Error uploading/saving profile image:", err);
+          alert("Could not upload image. Check console for details.");
+        }
+      });
+    </script>
+
+   
+    <script src="/design/bottom-window.js"></script>
 </body>
 </html>
