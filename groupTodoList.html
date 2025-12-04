@@ -1,1272 +1,1456 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Group To-Do List | Timely</title>
-  <!-- Bootstrap 5 CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-  rel="stylesheet"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timely – Map</title>
 
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous"
+  />
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./styles/style.css" />
+
   <style>
-    :root {
-      --primary: #0d6efd;
-      --success: #198754;
-      --warning: #ffc107;
-      --danger: #dc3545;
-      --info: #0dcaf0;
-      --light-bg: #f8f9fa;
-      --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+      :root {
+        --primary: #0d6efd;
+        --success: #198754;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --info: #0dcaf0;
+        --light-bg: #f8f9fa;
+        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
 
-    body {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    main { padding-top: 100px; }
-
-    .page-header {
-      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-      color: white;
-      border-radius: 12px;
-      padding: 2rem 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--card-shadow);
-    }
-
-    .page-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .page-header .subtitle {
-      font-size: 0.95rem;
-      opacity: 0.95;
-      margin-top: 0.5rem;
-    }
-
-    .group-info-card {
-      background: white;
-      border: none;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-    }
-
-    .group-info-card h5 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #212529;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .group-info-card p {
-      margin: 0.5rem 0;
-      color: #6c757d;
-      font-size: 0.95rem;
-    }
-
-    .add-form-card {
-      background: white;
-      border: none;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 2rem;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .add-form-card:focus-within {
-      box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
-    }
-
-    .add-form-card .card-body { padding: 1.5rem; }
-
-    .form-control {
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 0.75rem;
-      font-size: 0.95rem;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-    }
-
-    .filters-bar {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn-group .btn {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .btn-group .btn-check:checked + .btn {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-
-    .btn-outline-danger {
-      border-radius: 8px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .btn-light {
-      background: white;
-      border: 2px solid white;
-      color: #495057;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
-      transition: all 0.2s;
-    }
-
-    .btn-light:hover {
-      background: rgba(255,255,255,0.9);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .todo-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .todo-item {
-      background: white;
-      border: 1px solid #e9ecef;
-      border-radius: 8px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .todo-item:hover {
-      box-shadow: var(--card-shadow);
-      transform: translateY(-2px);
-      border-color: #dee2e6;
-    }
-
-    .todo-item.completed {
-      background: #f8f9fa;
-      border-color: #dee2e6;
-      opacity: 0.85;
-    }
-
-    .todo-item.completed .todo-text {
-      text-decoration: line-through;
-      color: #6c757d;
-    }
-
-    .todo-checkbox {
-      width: 1.5rem;
-      height: 1.5rem;
-      margin-top: 0.15rem;
-      cursor: pointer;
-      accent-color: var(--success);
-      flex-shrink: 0;
-    }
-
-    .todo-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .todo-text {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #212529;
-      word-break: break-word;
-    }
-
-    .todo-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      font-size: 0.85rem;
-    }
-
-    .todo-assignee {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      background: #e7f1ff;
-      border: 1px solid #b6d7ff;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .btn-group-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .btn-group-actions .btn {
-      border-radius: 6px;
-      font-size: 0.85rem;
-      padding: 0.5rem 0.75rem;
-      transition: all 0.2s;
-    }
-
-    .btn-outline-secondary:hover {
-      background: #6c757d;
-      border-color: #6c757d;
-      color: white;
-    }
-
-    .btn-outline-danger:hover {
-      background: var(--danger);
-      border-color: var(--danger);
-      color: white;
-    }
-
-    .stats-footer {
-      text-align: center;
-      padding: 1rem;
-      background: white;
-      border-radius: 8px;
-      margin-top: 2rem;
-      font-weight: 600;
-      color: #495057;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #6c757d;
-    }
-
-    .empty-state i { font-size: 3rem; opacity: 0.3; margin-bottom: 1rem; }
-
-    /* Groups View Specific Styles */
-    #groupsView {
-      display: block;
-    }
-
-    #groupsView.loading {
-      display: none;
-    }
-
-    #groupsView .groups-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0.5rem 0 2rem;
-    }
-
-    #groupList {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.25rem;
-    }
-
-    #groupsView .group-card {
-      position: relative;
-      background: radial-gradient(circle at 30% 20%, #ffffff 0%, #f6f8fa 60%, #eef1f4 100%);
-      border-radius: 16px;
-      padding: 1.25rem 1.25rem 1.15rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-      cursor: pointer;
-      border: 1px solid #d0d7de;
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    #groupsView .group-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.15);
-      border-color: #6ea8fe;
-    }
-
-    #groupsView .group-card .group-icon {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #6ea8fe 0%, #1d6fd8 100%);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.55rem;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25), 0 4px 10px rgba(109, 152, 255, 0.4);
-    }
-
-    #groupsView .group-card .group-details h4 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin: 0 0 0.35rem;
-      color: #0a2540;
-      letter-spacing: .3px;
-    }
-
-    #groupsView .group-card .group-meta {
-      color: #5d6b7c;
-      font-size: 0.72rem;
-      font-weight: 500;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.85rem 1.1rem;
-      margin-top: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-    }
-
-    #groupsView .group-card .group-meta span i { opacity: .6; }
-
-    #groupsView .group-card .actions-overlay {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      gap: .4rem;
-      z-index: 2;
-    }
-
-    #groupsView .group-card .actions-overlay button {
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(255,255,255,0.9);
-      padding: .45rem .65rem;
-      font-size: .7rem;
-      color: #0a2540;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: .35rem;
-      font-weight: 600;
-      transition: all .2s;
-    }
-
-    #groupsView .group-card .actions-overlay button:hover {
-      background: #0d6efd;
-      color: #fff;
-      border-color: #0d6efd;
-      box-shadow: 0 4px 10px rgba(13,110,253,.3);
-    }
-
-    #groupsView .group-card .badge-strip {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      display: flex;
-      gap: .4rem;
-      padding: .55rem .8rem;
-      background: linear-gradient(90deg, rgba(13,110,253,.08) 0%, rgba(13,110,253,.02) 100%);
-      border-top: 1px solid #d0d7de;
-      font-size: .65rem;
-      letter-spacing: .5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: #1d4b82;
-    }
-
-    #groupsView .group-card .badge-strip span {
-      display: inline-flex;
-      align-items: center;
-      gap: .25rem;
-      background: rgba(255,255,255,0.8);
-      padding: .25rem .55rem;
-      border-radius: 6px;
-      border: 1px solid #e2e6ea;
-      box-shadow: 0 2px 5px rgba(0,0,0,.05);
-    }
-
-    #groupsView .empty-groups {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-    }
-
-    #groupsView .empty-groups i {
-      font-size: 4rem;
-      color: #dee2e6;
-      margin-bottom: 1.5rem;
-    }
-
-    #groupsView .empty-groups h4 {
-      color: #495057;
-      margin-bottom: 1rem;
-    }
-
-    #groupsView .empty-groups p {
-      color: #6c757d;
-      margin-bottom: 2rem;
-    }
-
-    /* Tasks View Specific Styles */
-    #tasksView {
-      display: none;
-    }
-
-    #tasksView .tasks-header {
-      background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
-      color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--card-shadow);
-    }
-
-    #tasksView .tasks-header h3 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    #tasksView .tasks-header .group-meta-info {
-      opacity: 0.9;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    #tasksView .back-btn {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      font-weight: 600;
-    }
-
-    #tasksView .back-btn:hover {
-      background: rgba(255,255,255,0.3);
-      border-color: rgba(255,255,255,0.5);
-      color: white;
-    }
-
-    @media (max-width: 768px) {
       body {
-        font-size: 14px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
+
       main {
-        padding-top: 65px !important;
-        padding-bottom: 2rem;
+        padding-top: 100px;
       }
-      .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
+
+      .page-header {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--card-shadow);
       }
-      .page-header { 
-        padding: 1.25rem 1rem;
-        margin-bottom: 1.25rem;
-        border-radius: 10px;
+
+      .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
       }
-      .page-header h1 { 
-        font-size: 1.4rem;
-        flex-wrap: wrap;
-        justify-content: center;
+
+      .page-header .subtitle {
+        font-size: 0.95rem;
+        opacity: 0.95;
+        margin-top: 0.5rem;
+      }
+
+      .group-info-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+      }
+
+      .group-info-card h5 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
         gap: 0.5rem;
       }
-      .page-header .subtitle {
-        font-size: 0.9rem;
-      }
-      .group-info-card {
-        padding: 1.25rem;
-        margin-bottom: 1.5rem;
-        border-radius: 10px;
-      }
-      .group-info-card h5 {
-        font-size: 1.05rem;
-        margin-bottom: 0.75rem;
-      }
+
       .group-info-card p {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-      }
-      .member-badge {
-        font-size: 0.8rem;
-        padding: 0.35rem 0.7rem;
-        margin: 0.25rem;
-      }
-      .add-form-card .card-body { 
-        padding: 1.25rem;
-      }
-      .form-control, .form-select {
-        font-size: 0.9rem;
-        padding: 0.65rem 0.75rem;
-        border-radius: 6px;
-      }
-      textarea.form-control {
-        min-height: 70px;
-      }
-      .btn-primary, .btn-success {
-        padding: 0.65rem 1rem;
-        font-size: 0.9rem;
-        border-radius: 6px;
-      }
-      .filters-bar {
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
-      }
-      .btn-group .btn {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
-      }
-      .btn-outline-danger {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
-      }
-      .todo-item {
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        border-radius: 8px;
-      }
-      .todo-checkbox {
-        width: 1.4rem;
-        height: 1.4rem;
-      }
-      .todo-text {
+        margin: 0.5rem 0;
+        color: #6c757d;
         font-size: 0.95rem;
       }
-      .todo-meta {
-        font-size: 0.8rem;
-        gap: 0.75rem;
-        margin-top: 0.75rem;
+
+      .add-form-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+        transition: box-shadow 0.3s ease;
       }
-      .btn-group-actions {
-        gap: 0.5rem;
-        margin-top: 0.75rem;
+
+      .add-form-card:focus-within {
+        box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
       }
-      .btn-group-actions .btn {
-        font-size: 0.8rem;
-        padding: 0.5rem 0.75rem;
+
+      .add-form-card .card-body {
+        padding: 1.5rem;
       }
-      .stats-footer {
-        padding: 1rem;
-        margin-top: 1.25rem;
-        font-size: 0.9rem;
+
+      .form-control {
+        border: 1px solid #dee2e6;
         border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
       }
+
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+      }
+
+      .filters-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .btn-group .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+
+      .btn-group .btn-check:checked + .btn {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
+
+      .btn-outline-danger {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+
+      .btn-light {
+        background: white;
+        border: 2px solid white;
+        color: #495057;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.2s;
+      }
+
+      .btn-light:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .todo-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .todo-item {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .todo-item:hover {
+        box-shadow: var(--card-shadow);
+        transform: translateY(-2px);
+        border-color: #dee2e6;
+      }
+
+      .todo-item.completed {
+        background: #f8f9fa;
+        border-color: #dee2e6;
+        opacity: 0.85;
+      }
+
+      .todo-item.completed .todo-text {
+        text-decoration: line-through;
+        color: #6c757d;
+      }
+
+      .todo-checkbox {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-top: 0.15rem;
+        cursor: pointer;
+        accent-color: var(--success);
+        flex-shrink: 0;
+      }
+
+      .todo-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .todo-text {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #212529;
+        word-break: break-word;
+      }
+
+      .todo-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.85rem;
+      }
+
+      .todo-assignee {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: #e7f1ff;
+        border: 1px solid #b6d7ff;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn-group-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-group-actions .btn {
+        border-radius: 6px;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s;
+      }
+
+      .btn-outline-secondary:hover {
+        background: #6c757d;
+        border-color: #6c757d;
+        color: white;
+      }
+
+      .btn-outline-danger:hover {
+        background: var(--danger);
+        border-color: var(--danger);
+        color: white;
+      }
+
+      .stats-footer {
+        text-align: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        margin-top: 2rem;
+        font-weight: 600;
+        color: #495057;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
       .empty-state {
-        padding: 2.5rem 1rem;
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
       }
+
       .empty-state i {
-        font-size: 2.5rem;
+        font-size: 3rem;
+        opacity: 0.3;
         margin-bottom: 1rem;
       }
-      .empty-state h3 {
-        font-size: 1.1rem;
-      }
-      .empty-state p {
-        font-size: 0.9rem;
-      }
-    }
 
-    @media (max-width: 576px) {
-      body {
-        font-size: 13px;
+      /* Groups View Specific Styles */
+      #groupsView {
+        display: block;
       }
-      main {
-        padding-top: 60px !important;
-      }
-      .page-header { 
-        padding: 1rem 0.75rem;
-      }
-      .page-header h1 { 
-        font-size: 1.2rem;
-      }
-      .page-header .subtitle {
-        font-size: 0.85rem;
-      }
-      .group-info-card {
-        padding: 1rem;
-      }
-      .group-info-card h5 {
-        font-size: 1rem;
-      }
-      .group-info-card p {
-        font-size: 0.85rem;
-      }
-      .member-badge {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.6rem;
-      }
-      .add-form-card .card-body { 
-        padding: 1rem;
-      }
-      .d-flex.gap-2 {
-        gap: 0.5rem !important;
-      }
-      .form-control, .form-select {
-        font-size: 0.85rem;
-        padding: 0.6rem;
-      }
-      .btn-primary, .btn-success {
-        font-size: 0.85rem;
-        padding: 0.6rem 0.85rem;
-      }
-      .todo-item {
-        padding: 0.85rem;
-      }
-      .todo-text {
-        font-size: 0.9rem;
-      }
-      .btn-group-actions .btn {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.6rem;
-      }
-      .filters-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.5rem;
-      }
-      .btn-group {
-        width: 100%;
-      }
-      .btn-group .btn {
-        flex: 1;
-      }
-      .btn-outline-danger {
-        width: 100%;
-      }
-      .navbar-brand {
-        font-size: 1rem;
-      }
-      .nav-link {
-        font-size: 0.9rem;
-        padding: 0.5rem 0.75rem;
-      }
-    }
 
-    @media (max-width: 400px) {
-      .container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
+      #groupsView.loading {
+        display: none;
       }
-      .page-header {
-        padding: 0.85rem;
+
+      #groupsView .groups-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0.5rem 0 2rem;
       }
-      .page-header h1 {
-        font-size: 1.1rem;
+
+      #groupList {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.25rem;
       }
-      .group-info-card {
-        padding: 0.85rem;
+
+      #groupsView .group-card {
+        position: relative;
+        background: radial-gradient(
+          circle at 30% 20%,
+          #ffffff 0%,
+          #f6f8fa 60%,
+          #eef1f4 100%
+        );
+        border-radius: 16px;
+        padding: 1.25rem 1.25rem 1.15rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease,
+          border-color 0.25s ease;
+        cursor: pointer;
+        border: 1px solid #d0d7de;
+        overflow: hidden;
+        isolation: isolate;
       }
-      .add-form-card .card-body {
-        padding: 0.85rem;
+
+      #groupsView .group-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+        border-color: #6ea8fe;
       }
-      .todo-item {
-        padding: 0.75rem;
+
+      #groupsView .group-card .group-icon {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(135deg, #6ea8fe 0%, #1d6fd8 100%);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.55rem;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+          0 4px 10px rgba(109, 152, 255, 0.4);
       }
-      .todo-text {
-        font-size: 0.85rem;
+
+      #groupsView .group-card .group-details h4 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin: 0 0 0.35rem;
+        color: #0a2540;
+        letter-spacing: 0.3px;
       }
-      .btn-group-actions .btn {
+
+      #groupsView .group-card .group-meta {
+        color: #5d6b7c;
+        font-size: 0.72rem;
+        font-weight: 500;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem 1.1rem;
+        margin-top: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }
+
+      #groupsView .group-card .group-meta span i {
+        opacity: 0.6;
+      }
+
+      #groupsView .group-card .actions-overlay {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 0.4rem;
+        z-index: 2;
+      }
+
+      #groupsView .group-card .actions-overlay button {
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        padding: 0.45rem 0.65rem;
         font-size: 0.7rem;
-        padding: 0.35rem 0.5rem;
+        color: #0a2540;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-weight: 600;
+        transition: all 0.2s;
       }
-      .member-badge {
-        font-size: 0.7rem;
-        padding: 0.25rem 0.5rem;
+
+      #groupsView .group-card .actions-overlay button:hover {
+        background: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
       }
-    }
-  </style>
 
+      #groupsView .group-card .badge-strip {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        gap: 0.4rem;
+        padding: 0.55rem 0.8rem;
+        background: linear-gradient(
+          90deg,
+          rgba(13, 110, 253, 0.08) 0%,
+          rgba(13, 110, 253, 0.02) 100%
+        );
+        border-top: 1px solid #d0d7de;
+        font-size: 0.65rem;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #1d4b82;
+      }
 
+      #groupsView .group-card .badge-strip span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 0.25rem 0.55rem;
+        border-radius: 6px;
+        border: 1px solid #e2e6ea;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
 
+      #groupsView .empty-groups {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+      }
 
+      #groupsView .empty-groups i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1.5rem;
+      }
 
-    <link rel="stylesheet" href="./styles/style.css" />
+      #groupsView .empty-groups h4 {
+        color: #495057;
+        margin-bottom: 1rem;
+      }
 
+      #groupsView .empty-groups p {
+        color: #6c757d;
+        margin-bottom: 2rem;
+      }
+
+      /* Tasks View Specific Styles */
+      #tasksView {
+        display: none;
+      }
+
+      #tasksView .tasks-header {
+        background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--card-shadow);
+      }
+
+      #tasksView .tasks-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      #tasksView .tasks-header .group-meta-info {
+        opacity: 0.9;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      #tasksView .back-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-weight: 600;
+      }
+
+      #tasksView .back-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          font-size: 14px;
+        }
+        main {
+          padding-top: 65px !important;
+          padding-bottom: 2rem;
+        }
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+        .page-header {
+          padding: 1.25rem 1rem;
+          margin-bottom: 1.25rem;
+          border-radius: 10px;
+        }
+        .page-header h1 {
+          font-size: 1.4rem;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.5rem;
+        }
+        .page-header .subtitle {
+          font-size: 0.9rem;
+        }
+        .group-info-card {
+          padding: 1.25rem;
+          margin-bottom: 1.5rem;
+          border-radius: 10px;
+        }
+        .group-info-card h5 {
+          font-size: 1.05rem;
+          margin-bottom: 0.75rem;
+        }
+        .group-info-card p {
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+        }
+        .member-badge {
+          font-size: 0.8rem;
+          padding: 0.35rem 0.7rem;
+          margin: 0.25rem;
+        }
+        .add-form-card .card-body {
+          padding: 1.25rem;
+        }
+        .form-control,
+        .form-select {
+          font-size: 0.9rem;
+          padding: 0.65rem 0.75rem;
+          border-radius: 6px;
+        }
+        textarea.form-control {
+          min-height: 70px;
+        }
+        .btn-primary,
+        .btn-success {
+          padding: 0.65rem 1rem;
+          font-size: 0.9rem;
+          border-radius: 6px;
+        }
+        .filters-bar {
+          gap: 0.75rem;
+          margin-bottom: 1.25rem;
+        }
+        .btn-group .btn {
+          font-size: 0.8rem;
+          padding: 0.5rem 0.75rem;
+        }
+        .btn-outline-danger {
+          font-size: 0.8rem;
+          padding: 0.5rem 0.75rem;
+        }
+        .todo-item {
+          padding: 1rem;
+          margin-bottom: 0.75rem;
+          border-radius: 8px;
+        }
+        .todo-checkbox {
+          width: 1.4rem;
+          height: 1.4rem;
+        }
+        .todo-text {
+          font-size: 0.95rem;
+        }
+        .todo-meta {
+          font-size: 0.8rem;
+          gap: 0.75rem;
+          margin-top: 0.75rem;
+        }
+        .btn-group-actions {
+          gap: 0.5rem;
+          margin-top: 0.75rem;
+        }
+        .btn-group-actions .btn {
+          font-size: 0.8rem;
+          padding: 0.5rem 0.75rem;
+        }
+        .stats-footer {
+          padding: 1rem;
+          margin-top: 1.25rem;
+          font-size: 0.9rem;
+          border-radius: 8px;
+        }
+        .empty-state {
+          padding: 2.5rem 1rem;
+        }
+        .empty-state i {
+          font-size: 2.5rem;
+          margin-bottom: 1rem;
+        }
+        .empty-state h3 {
+          font-size: 1.1rem;
+        }
+        .empty-state p {
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        body {
+          font-size: 13px;
+        }
+        main {
+          padding-top: 60px !important;
+        }
+        .page-header {
+          padding: 1rem 0.75rem;
+        }
+        .page-header h1 {
+          font-size: 1.2rem;
+        }
+        .page-header .subtitle {
+          font-size: 0.85rem;
+        }
+        .group-info-card {
+          padding: 1rem;
+        }
+        .group-info-card h5 {
+          font-size: 1rem;
+        }
+        .group-info-card p {
+          font-size: 0.85rem;
+        }
+        .member-badge {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.6rem;
+        }
+        .add-form-card .card-body {
+          padding: 1rem;
+        }
+        .d-flex.gap-2 {
+          gap: 0.5rem !important;
+        }
+        .form-control,
+        .form-select {
+          font-size: 0.85rem;
+          padding: 0.6rem;
+        }
+        .btn-primary,
+        .btn-success {
+          font-size: 0.85rem;
+          padding: 0.6rem 0.85rem;
+        }
+        .todo-item {
+          padding: 0.85rem;
+        }
+        .todo-text {
+          font-size: 0.9rem;
+        }
+        .btn-group-actions .btn {
+          font-size: 0.75rem;
+          padding: 0.4rem 0.6rem;
+        }
+        .filters-bar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.5rem;
+        }
+        .btn-group {
+          width: 100%;
+        }
+        .btn-group .btn {
+          flex: 1;
+        }
+        .btn-outline-danger {
+          width: 100%;
+        }
+        .navbar-brand {
+          font-size: 1rem;
+        }
+        .nav-link {
+          font-size: 0.9rem;
+          padding: 0.5rem 0.75rem;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .container {
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+        }
+        .page-header {
+          padding: 0.85rem;
+        }
+        .page-header h1 {
+          font-size: 1.1rem;
+        }
+        .group-info-card {
+          padding: 0.85rem;
+        }
+        .add-form-card .card-body {
+          padding: 0.85rem;
+        }
+        .todo-item {
+          padding: 0.75rem;
+        }
+        .todo-text {
+          font-size: 0.85rem;
+        }
+        .btn-group-actions .btn {
+          font-size: 0.7rem;
+          padding: 0.35rem 0.5rem;
+        }
+        .member-badge {
+          font-size: 0.7rem;
+          padding: 0.25rem 0.5rem;
+        }
+      }
+    </style>
 </head>
 
-<body>
-  
+<body class="bg-light">
 
   <main class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-10">
-        <!-- Page Header -->
-        <div class="page-header">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-            <div>
-              <h1>
-                <i class="fas fa-users"></i>
-                Group To-Do List
-              </h1>
-              <div class="subtitle">Collaborate with your team and track shared tasks</div>
-            </div>
-            <button id="createGroupBtn" class="btn btn-light"><i class="fas fa-plus me-2"></i>Create Group</button>
-          </div>
-        </div>
-
-        <!-- Groups View -->
-        <div id="groupsView">
-          <div class="d-flex align-items-center justify-content-end mb-3">
-            <button id="deleteAllGroupsBtn" class="btn btn-outline-danger btn-sm">
-              <i class="fas fa-trash-alt me-2"></i>Delete All My Groups
-            </button>
-          </div>
-          <div class="groups-container">
-            <div id="groupList"></div>
-          </div>
-        </div>
-
-        <!-- Tasks View -->
-        <div id="tasksView">
-          <!-- Tasks Header -->
-          <div class="tasks-header">
-            <div class="d-flex justify-content-between align-items-start">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+          <!-- Page Header -->
+          <div class="page-header">
+            <div
+              class="d-flex justify-content-between align-items-start flex-wrap gap-2"
+            >
               <div>
-                <h3><i class="fas fa-list-check me-2"></i><span id="selectedGroupName"></span></h3>
-                <div class="group-meta-info">
-                  <i class="fas fa-users me-1"></i><span id="selectedGroupMembers"></span>
+                <h1>
+                  <i class="fas fa-users"></i>
+                  Group To-Do List
+                </h1>
+                <div class="subtitle">
+                  Collaborate with your team and track shared tasks
                 </div>
               </div>
+              <button id="createGroupBtn" class="btn btn-light">
+                <i class="fas fa-plus me-2"></i>Create Group
+              </button>
+            </div>
+          </div>
+
+          <!-- Groups View -->
+          <div id="groupsView">
+            <div class="d-flex align-items-center justify-content-end mb-3">
+              <button
+                id="deleteAllGroupsBtn"
+                class="btn btn-outline-danger btn-sm"
+              >
+                <i class="fas fa-trash-alt me-2"></i>Delete All My Groups
+              </button>
+            </div>
+            <div class="groups-container">
+              <div id="groupList"></div>
+            </div>
+          </div>
+
+          <!-- Tasks View -->
+          <div id="tasksView">
+            <!-- Tasks Header -->
+            <div class="tasks-header">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h3>
+                    <i class="fas fa-list-check me-2"></i
+                    ><span id="selectedGroupName"></span>
+                  </h3>
+                  <div class="group-meta-info">
+                    <i class="fas fa-users me-1"></i
+                    ><span id="selectedGroupMembers"></span>
+                  </div>
+                </div>
+                <div class="d-flex gap-2">
+                  <button
+                    id="deleteCurrentGroupBtn"
+                    class="btn btn-danger"
+                    title="Delete this group"
+                  >
+                    <i class="fas fa-trash me-2"></i>Delete Group
+                  </button>
+                  <button id="backToGroupsBtn" class="btn back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Groups
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add form -->
+            <form
+              id="addForm"
+              class="card add-form-card"
+              autocomplete="off"
+              novalidate
+            >
+              <div class="card-body">
+                <div
+                  id="addFormError"
+                  class="alert alert-danger d-none mb-3"
+                  role="alert"
+                >
+                  <i class="fas fa-exclamation-circle me-2"></i>
+                  <span id="errorText"></span>
+                </div>
+                <div class="d-flex gap-2 flex-column flex-lg-row">
+                  <input
+                    id="todoInput"
+                    class="form-control"
+                    type="text"
+                    placeholder="✏️ What needs to be done?"
+                  />
+                  <input
+                    id="todoAssignee"
+                    class="form-control"
+                    type="text"
+                    placeholder="👤 Assign to (optional)"
+                  />
+                  <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-plus me-2"></i>Add
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Filters + actions -->
+            <div class="filters-bar" id="filtersBar">
+              <div class="btn-group" role="group" aria-label="Task filters">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="filter"
+                  id="filter-all"
+                  value="all"
+                  checked
+                />
+                <label class="btn btn-outline-secondary" for="filter-all"
+                  ><i class="fas fa-list me-2"></i>All Tasks</label
+                >
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="filter"
+                  id="filter-active"
+                  value="active"
+                />
+                <label class="btn btn-outline-secondary" for="filter-active"
+                  ><i class="fas fa-circle-notch me-2"></i>Active</label
+                >
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="filter"
+                  id="filter-completed"
+                  value="completed"
+                />
+                <label class="btn btn-outline-secondary" for="filter-completed"
+                  ><i class="fas fa-check-circle me-2"></i>Completed</label
+                >
+              </div>
+              <button
+                id="clearCompleted"
+                class="btn btn-outline-danger btn-sm ms-auto"
+              >
+                <i class="fas fa-trash me-2"></i>Clear Completed
+              </button>
+            </div>
+
+            <!-- List -->
+            <ul id="todoList" class="todo-list" role="list"></ul>
+
+            <!-- Stats Footer -->
+            <div class="stats-footer" id="statsContainer">
+              <span id="stats"
+                ><i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to
+                get started!</span
+              >
+            </div>
+          </div>
+
+          <!-- Create Group Modal -->
+          <div
+            id="createGroupModal"
+            style="
+              display: none;
+              position: fixed;
+              inset: 0;
+              background: rgba(0, 0, 0, 0.4);
+              z-index: 1050;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <div
+              style="
+                background: #fff;
+                border-radius: 12px;
+                width: min(400px, 96vw);
+                margin: auto;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+                padding: 2rem;
+              "
+            >
+              <h5 class="mb-3"><i class="fas fa-users"></i> Create Group</h5>
+              <div class="mb-3">
+                <label for="groupNameInput" class="form-label"
+                  >Group Name</label
+                >
+                <input
+                  type="text"
+                  id="groupNameInput"
+                  class="form-control"
+                  placeholder="e.g. Study Buddies"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="groupMembersInput" class="form-label"
+                  >Members (comma-separated emails)</label
+                >
+                <input
+                  type="text"
+                  id="groupMembersInput"
+                  class="form-control"
+                  placeholder="friend1@example.com, friend2@example.com"
+                />
+                <div
+                  id="groupMembersError"
+                  class="form-text text-danger d-none"
+                ></div>
+              </div>
               <div class="d-flex gap-2">
-                <button id="deleteCurrentGroupBtn" class="btn btn-danger" title="Delete this group">
-                  <i class="fas fa-trash me-2"></i>Delete Group
+                <button id="saveGroupBtn" class="btn btn-primary">
+                  Save Group
                 </button>
-                <button id="backToGroupsBtn" class="btn back-btn">
-                  <i class="fas fa-arrow-left me-2"></i>Back to Groups
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  onclick="document.getElementById('createGroupModal').style.display='none'"
+                >
+                  Cancel
                 </button>
               </div>
             </div>
           </div>
-
-          <!-- Add form -->
-          <form id="addForm" class="card add-form-card" autocomplete="off" novalidate>
-            <div class="card-body">
-              <div id="addFormError" class="alert alert-danger d-none mb-3" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <span id="errorText"></span>
-              </div>
-              <div class="d-flex gap-2 flex-column flex-lg-row">
-                <input id="todoInput" class="form-control" type="text" placeholder="✏️ What needs to be done?" />
-                <input id="todoAssignee" class="form-control" type="text" placeholder="👤 Assign to (optional)" />
-                <button class="btn btn-primary" type="submit"><i class="fas fa-plus me-2"></i>Add</button>
-              </div>
-            </div>
-          </form>
-
-          <!-- Filters + actions -->
-          <div class="filters-bar" id="filtersBar">
-            <div class="btn-group" role="group" aria-label="Task filters">
-              <input type="radio" class="btn-check" name="filter" id="filter-all" value="all" checked>
-              <label class="btn btn-outline-secondary" for="filter-all"><i class="fas fa-list me-2"></i>All Tasks</label>
-              <input type="radio" class="btn-check" name="filter" id="filter-active" value="active">
-              <label class="btn btn-outline-secondary" for="filter-active"><i class="fas fa-circle-notch me-2"></i>Active</label>
-              <input type="radio" class="btn-check" name="filter" id="filter-completed" value="completed">
-              <label class="btn btn-outline-secondary" for="filter-completed"><i class="fas fa-check-circle me-2"></i>Completed</label>
-            </div>
-            <button id="clearCompleted" class="btn btn-outline-danger btn-sm ms-auto"><i class="fas fa-trash me-2"></i>Clear Completed</button>
-          </div>
-
-          <!-- List -->
-          <ul id="todoList" class="todo-list" role="list"></ul>
-
-          <!-- Stats Footer -->
-          <div class="stats-footer" id="statsContainer">
-            <span id="stats"><i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!</span>
-          </div>
-        </div>
-
-        <!-- Create Group Modal -->
-        <div id="createGroupModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1050; align-items:center; justify-content:center;">
-          <div style="background:#fff; border-radius:12px; width:min(400px, 96vw); margin:auto; box-shadow:0 8px 24px rgba(0,0,0,0.2); padding:2rem;">
-            <h5 class="mb-3"><i class="fas fa-users"></i> Create Group</h5>
-            <div class="mb-3">
-              <label for="groupNameInput" class="form-label">Group Name</label>
-              <input type="text" id="groupNameInput" class="form-control" placeholder="e.g. Study Buddies" />
-            </div>
-            <div class="mb-3">
-              <label for="groupMembersInput" class="form-label">Members (comma-separated emails)</label>
-              <input type="text" id="groupMembersInput" class="form-control" placeholder="friend1@example.com, friend2@example.com" />
-              <div id="groupMembersError" class="form-text text-danger d-none"></div>
-            </div>
-            <div class="d-flex gap-2">
-              <button id="saveGroupBtn" class="btn btn-primary">Save Group</button>
-              <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('createGroupModal').style.display='none'">Cancel</button>
-            </div>
-          </div>
         </div>
       </div>
+    </main>
+
+    <template id="todoItemTemplate">
+      <li class="todo-item" role="listitem">
+        <div class="todo-content">
+          <div class="d-flex align-items-center gap-2">
+            <input
+              class="form-check-input toggle todo-checkbox"
+              type="checkbox"
+              aria-label="Mark complete"
+            />
+            <span class="todo-text flex-grow-1"></span>
+          </div>
+          <div class="todo-meta">
+            <span class="todo-assignee"></span>
+          </div>
+        </div>
+        <div class="btn-group-actions">
+          <button
+            class="btn btn-outline-secondary btn-sm delete"
+            type="button"
+            title="Delete task"
+          >
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </li>
+    </template>
+
+
+  <!-- Footer navigation -->
+  <footer class="footer">
+    <div class="footer-icon" onclick="window.location.href='landing.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
+      </svg>
     </div>
-  </main>
 
-  
-
-  <template id="todoItemTemplate">
-    <li class="todo-item" role="listitem">
-      <div class="todo-content">
-        <div class="d-flex align-items-center gap-2">
-          <input class="form-check-input toggle todo-checkbox" type="checkbox" aria-label="Mark complete" />
-          <span class="todo-text flex-grow-1"></span>
-        </div>
-        <div class="todo-meta">
-          <span class="todo-assignee"></span>
-        </div>
-      </div>
-      <div class="btn-group-actions">
-        <button class="btn btn-outline-secondary btn-sm delete" type="button" title="Delete task">
-          <i class="fas fa-trash"></i> Delete
-        </button>
-      </div>
-    </li>
-  </template>
-    <footer class="footer">
-      <div class="footer-icon" onclick="window.location.href='landing.html'">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-map-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"
-          />
-        </svg>
-      </div>
-
-
-      <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-compass-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"
-          />
-        </svg>
-      </div>
-
-
-      <div class="footer-icon" onclick="openSheet()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-plus-circle-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
-          />
-        </svg>
-      </div>
-
-      <div class="footer-icon" onclick="window.location.href='statistics.html'">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-bar-chart-line-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"
-          />
-        </svg>
-      </div>
-
-      <div class="footer-icon" onclick="window.location.href='profile.html'">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-person-fill"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
-          />
-        </svg>
-      </div>
-    </footer>
-
-    <!-- Bottom sheet (create menu) -->
-    <div id="bottomSheet" class="bottom-sheet">
-      <div class="sheet-content">
-        <button class="close-btn" onclick="closeSheet()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-          </svg>
-        </button>
-
-        <h5 class="sheet-title">Create</h5>
-
-        <button class="sheet-btn" onclick="window.location.href='todolist.html'">
-          To-Do List
-        </button>
-
-        <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
-          Group To-Do List
-        </button>
-
-        <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
-          Events
-        </button>
-      </div>
+    <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill" viewBox="0 0 16 16">
+        <path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/>
+      </svg>
     </div>
-   
-  
+
+    <div class="footer-icon" onclick="openSheet()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+      </svg>
+    </div>
+
+    <div class="footer-icon" onclick="window.location.href='statistics.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
+        <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"/>
+      </svg>
+    </div>
+    
+    <div class="footer-icon" onclick="window.location.href='profile.html'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+      </svg>
+    </div>
+  </footer>
+
+  <!-- Bottom sheet (create menu) -->
+  <div id="bottomSheet" class="bottom-sheet">
+    <div class="sheet-content">
+      <button class="close-btn" onclick="closeSheet()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+        </svg>
+      </button>
+
+      <h5 class="sheet-title">Create</h5>
+
+      <button class="sheet-btn" onclick="window.location.href='todolist.html'">
+        To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='groupTodoList.html'">
+        Group To-Do List
+      </button>
+
+      <button class="sheet-btn" onclick="window.location.href='launchevent.html'">
+        Events
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom-sheet behaviour -->
+  <script src="./design/bottom-window.js"></script>
+  <script type="module" src="./src/groupTodo.js"></script>
   <script type="module">
-    import { auth, db } from './src/firebaseConfig.js';
-  import { onAuthStateChanged, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-  import { collection, addDoc, serverTimestamp, doc, getDoc, setDoc, updateDoc, deleteDoc, getDocs, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+      import { auth, db } from "./src/firebaseConfig.js";
+      import {
+        onAuthStateChanged,
+        fetchSignInMethodsForEmail,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+      import {
+        collection,
+        addDoc,
+        serverTimestamp,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        deleteDoc,
+        getDocs,
+        query,
+        where,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-    let currentUser = null;
+      let currentUser = null;
 
-    const App = (() => {
-      let groupId = null;
-      const els = {
-        addForm: document.getElementById('addForm'),
-        input: document.getElementById('todoInput'),
-        assignee: document.getElementById('todoAssignee'),
-        addFormError: document.getElementById('addFormError'),
-        list: document.getElementById('todoList'),
-        template: document.getElementById('todoItemTemplate'),
-        stats: document.getElementById('stats'),
-        filters: document.querySelectorAll('input[name="filter"]'),
-        clearCompleted: document.getElementById('clearCompleted'),
-        groupList: document.getElementById('groupList'),
-        deleteAllGroupsBtn: document.getElementById('deleteAllGroupsBtn'),
-        createGroupBtn: document.getElementById('createGroupBtn'),
-        createGroupModal: document.getElementById('createGroupModal'),
-        groupNameInput: document.getElementById('groupNameInput'),
-        groupMembersInput: document.getElementById('groupMembersInput'),
-        saveGroupBtn: document.getElementById('saveGroupBtn'),
-        selectedGroupName: document.getElementById('selectedGroupName'),
-        selectedGroupMembers: document.getElementById('selectedGroupMembers'),
-        backToGroupsBtn: document.getElementById('backToGroupsBtn'),
-  groupMembersError: document.getElementById('groupMembersError'),
-  deleteCurrentGroupBtn: document.getElementById('deleteCurrentGroupBtn'),
-        groupsView: document.getElementById('groupsView'),
-        tasksView: document.getElementById('tasksView'),
-        filtersBar: document.getElementById('filtersBar'),
-        statsContainer: document.getElementById('statsContainer'),
-      };
+      const App = (() => {
+        let groupId = null;
+        const els = {
+          addForm: document.getElementById("addForm"),
+          input: document.getElementById("todoInput"),
+          assignee: document.getElementById("todoAssignee"),
+          addFormError: document.getElementById("addFormError"),
+          list: document.getElementById("todoList"),
+          template: document.getElementById("todoItemTemplate"),
+          stats: document.getElementById("stats"),
+          filters: document.querySelectorAll('input[name="filter"]'),
+          clearCompleted: document.getElementById("clearCompleted"),
+          groupList: document.getElementById("groupList"),
+          deleteAllGroupsBtn: document.getElementById("deleteAllGroupsBtn"),
+          createGroupBtn: document.getElementById("createGroupBtn"),
+          createGroupModal: document.getElementById("createGroupModal"),
+          groupNameInput: document.getElementById("groupNameInput"),
+          groupMembersInput: document.getElementById("groupMembersInput"),
+          saveGroupBtn: document.getElementById("saveGroupBtn"),
+          selectedGroupName: document.getElementById("selectedGroupName"),
+          selectedGroupMembers: document.getElementById("selectedGroupMembers"),
+          backToGroupsBtn: document.getElementById("backToGroupsBtn"),
+          groupMembersError: document.getElementById("groupMembersError"),
+          deleteCurrentGroupBtn: document.getElementById(
+            "deleteCurrentGroupBtn"
+          ),
+          groupsView: document.getElementById("groupsView"),
+          tasksView: document.getElementById("tasksView"),
+          filtersBar: document.getElementById("filtersBar"),
+          statsContainer: document.getElementById("statsContainer"),
+        };
 
-  let todos = [];
-  let activeFilter = 'all';
-  let groups = [];
-  let unsubscribeGroups = null;
-  let isLoadingGroups = false;
+        let todos = [];
+        let activeFilter = "all";
+        let groups = [];
+        let unsubscribeGroups = null;
+        let isLoadingGroups = false;
 
-      // We don't use localStorage for group tasks - always use Firestore
-      const storageKey = () => `groupTodo:${groupId}`;
-      const save = () => {}; // No-op: we save directly to Firestore
-      const load = () => []; // No-op: we load from Firestore
+        // We don't use localStorage for group tasks - always use Firestore
+        const storageKey = () => `groupTodo:${groupId}`;
+        const save = () => {}; // No-op: we save directly to Firestore
+        const load = () => []; // No-op: we load from Firestore
 
-      const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+        const uid = () =>
+          `${Date.now().toString(36)}-${Math.random()
+            .toString(36)
+            .slice(2, 8)}`;
 
-      function render() {
-        els.list.innerHTML = '';
-        const frag = document.createDocumentFragment();
-        const filtered = todos.filter(t => activeFilter === 'all' ? !t.done : activeFilter === 'active' ? !t.done : t.done);
-        
-        console.log(`Rendering with filter "${activeFilter}": ${filtered.length} tasks (total: ${todos.length})`);
-        
-        if (filtered.length === 0) {
-          const emptyMsg = document.createElement('div');
-          emptyMsg.className = 'empty-state';
-          emptyMsg.innerHTML = activeFilter === 'all' 
-            ? '<i class="fas fa-inbox"></i><p>No active tasks. Add one to get started!</p>'
-            : activeFilter === 'active'
-            ? '<i class="fas fa-check-circle"></i><p>All caught up! 🎉</p>'
-            : '<i class="fas fa-list"></i><p>No completed tasks yet.</p>';
-          els.list.appendChild(emptyMsg);
-          updateStats();
-          return;
-        }
+        function render() {
+          els.list.innerHTML = "";
+          const frag = document.createDocumentFragment();
+          const filtered = todos.filter((t) =>
+            activeFilter === "all"
+              ? !t.done
+              : activeFilter === "active"
+              ? !t.done
+              : t.done
+          );
 
-        for (const t of filtered) {
-          const li = els.template.content.firstElementChild.cloneNode(true);
-          li.dataset.id = t.id;
-          li.querySelector('.toggle').checked = t.done;
-          const textSpan = li.querySelector('.todo-text');
-          textSpan.textContent = t.text;
-          
-          const assigneeEl = li.querySelector('.todo-assignee');
-          if (t.assignee && t.assignee !== 'Unassigned') {
-            assigneeEl.innerHTML = `<i class="fas fa-user-circle me-1"></i>${t.assignee}`;
-          } else {
-            assigneeEl.innerHTML = '<i class="fas fa-user-circle me-1"></i>Unassigned';
-          }
-          
-          if (t.done) li.classList.add('completed');
-          frag.appendChild(li);
-        }
-        els.list.appendChild(frag);
-        updateStats();
-      }
+          console.log(
+            `Rendering with filter "${activeFilter}": ${filtered.length} tasks (total: ${todos.length})`
+          );
 
-      function updateStats() {
-        const total = todos.length;
-        const remaining = todos.filter(t => !t.done).length;
-        const completed = total - remaining;
-        if (total === 0) {
-          els.stats.innerHTML = '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
-        } else {
-          const percentage = Math.round((completed / total) * 100);
-          els.stats.innerHTML = `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed (${percentage}%) • <strong>${remaining}</strong> remaining`;
-        }
-      }
-
-      // Email parsing & validation
-      function parseEmails(input) {
-        const raw = (input || '').split(',')
-          .map(s => s.trim().toLowerCase())
-          .filter(Boolean);
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const valid = [];
-        const invalid = [];
-        const seen = new Set();
-        for (const e of raw) {
-          if (!emailRegex.test(e)) {
-            invalid.push(e);
-            continue;
-          }
-          if (!seen.has(e)) {
-            seen.add(e);
-            valid.push(e);
-          }
-        }
-        return { valid, invalid };
-      }
-
-      async function addTodo(text, assignee) {
-        const newTodo = { id: uid(), text: text.trim(), assignee: assignee.trim() || 'Unassigned', done: false, created: Date.now() };
-        todos.push(newTodo);
-        render(); // Render immediately for UI feedback
-        
-        try {
-          if (!currentUser || !groupId) {
-            console.error('Cannot add task: no user or group selected');
-            console.error('currentUser:', currentUser);
-            console.error('groupId:', groupId);
-            alert('Cannot add task: Please make sure you are logged in and have selected a group.');
-            todos = todos.filter(t => t.id !== newTodo.id); // Remove from local array
-            render();
+          if (filtered.length === 0) {
+            const emptyMsg = document.createElement("div");
+            emptyMsg.className = "empty-state";
+            emptyMsg.innerHTML =
+              activeFilter === "all"
+                ? '<i class="fas fa-inbox"></i><p>No active tasks. Add one to get started!</p>'
+                : activeFilter === "active"
+                ? '<i class="fas fa-check-circle"></i><p>All caught up! 🎉</p>'
+                : '<i class="fas fa-list"></i><p>No completed tasks yet.</p>';
+            els.list.appendChild(emptyMsg);
+            updateStats();
             return;
           }
-          
-          console.log('Attempting to save task to Firestore...');
-          console.log('Group ID:', groupId);
-          console.log('User ID:', currentUser.uid);
-          console.log('Task:', newTodo);
-          
-          await setDoc(doc(db, 'groupTasks', newTodo.id), {
-            groupId: groupId,
-            createdBy: currentUser.uid,
-            text: newTodo.text,
-            assignee: newTodo.assignee,
-            done: false,
-            created: serverTimestamp()
-          });
-          console.info('✓ Group task saved to Firestore:', newTodo.id);
-        } catch (e) {
-          console.error('ERROR: Could not persist group task to Firestore');
-          console.error('Error details:', e);
-          console.error('Error code:', e.code);
-          console.error('Error message:', e.message);
-          
-          // Remove the task from local array since it failed to save
-          todos = todos.filter(t => t.id !== newTodo.id);
-          render();
-          
-          if (e.code === 'permission-denied') {
-            alert('Failed to save task: Permission denied.\n\nPlease add Firestore security rules for the "groupTasks" collection:\n\nmatch /groupTasks/{taskId} {\n  allow read, write: if request.auth != null;\n}');
+
+          for (const t of filtered) {
+            const li = els.template.content.firstElementChild.cloneNode(true);
+            li.dataset.id = t.id;
+            li.querySelector(".toggle").checked = t.done;
+            const textSpan = li.querySelector(".todo-text");
+            textSpan.textContent = t.text;
+
+            const assigneeEl = li.querySelector(".todo-assignee");
+            if (t.assignee && t.assignee !== "Unassigned") {
+              assigneeEl.innerHTML = `<i class="fas fa-user-circle me-1"></i>${t.assignee}`;
+            } else {
+              assigneeEl.innerHTML =
+                '<i class="fas fa-user-circle me-1"></i>Unassigned';
+            }
+
+            if (t.done) li.classList.add("completed");
+            frag.appendChild(li);
+          }
+          els.list.appendChild(frag);
+          updateStats();
+        }
+
+        function updateStats() {
+          const total = todos.length;
+          const remaining = todos.filter((t) => !t.done).length;
+          const completed = total - remaining;
+          if (total === 0) {
+            els.stats.innerHTML =
+              '<i class="fas fa-info-circle me-2"></i>No tasks yet. Add one to get started!';
           } else {
-            alert('Failed to save task. Please try again.\n\nError: ' + e.message);
+            const percentage = Math.round((completed / total) * 100);
+            els.stats.innerHTML = `<i class="fas fa-chart-pie me-2"></i><strong>${completed}/${total}</strong> completed (${percentage}%) • <strong>${remaining}</strong> remaining`;
           }
         }
-      }
 
-      async function toggle(id) {
-        const t = todos.find(x => x.id === id); if (!t) return;
-        t.done = !t.done;
-        console.log(`Toggled task ${id}: done=${t.done}`);
-        render(); // Render immediately for UI feedback
-        
-        try {
+        // Email parsing & validation
+        function parseEmails(input) {
+          const raw = (input || "")
+            .split(",")
+            .map((s) => s.trim().toLowerCase())
+            .filter(Boolean);
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          const valid = [];
+          const invalid = [];
+          const seen = new Set();
+          for (const e of raw) {
+            if (!emailRegex.test(e)) {
+              invalid.push(e);
+              continue;
+            }
+            if (!seen.has(e)) {
+              seen.add(e);
+              valid.push(e);
+            }
+          }
+          return { valid, invalid };
+        }
+
+        async function addTodo(text, assignee) {
+          const newTodo = {
+            id: uid(),
+            text: text.trim(),
+            assignee: assignee.trim() || "Unassigned",
+            done: false,
+            created: Date.now(),
+          };
+          todos.push(newTodo);
+          render(); // Render immediately for UI feedback
+
+          try {
+            if (!currentUser || !groupId) {
+              console.error("Cannot add task: no user or group selected");
+              console.error("currentUser:", currentUser);
+              console.error("groupId:", groupId);
+              alert(
+                "Cannot add task: Please make sure you are logged in and have selected a group."
+              );
+              todos = todos.filter((t) => t.id !== newTodo.id); // Remove from local array
+              render();
+              return;
+            }
+
+            console.log("Attempting to save task to Firestore...");
+            console.log("Group ID:", groupId);
+            console.log("User ID:", currentUser.uid);
+            console.log("Task:", newTodo);
+
+            await setDoc(doc(db, "groupTasks", newTodo.id), {
+              groupId: groupId,
+              createdBy: currentUser.uid,
+              text: newTodo.text,
+              assignee: newTodo.assignee,
+              done: false,
+              created: serverTimestamp(),
+            });
+            console.info("✓ Group task saved to Firestore:", newTodo.id);
+          } catch (e) {
+            console.error("ERROR: Could not persist group task to Firestore");
+            console.error("Error details:", e);
+            console.error("Error code:", e.code);
+            console.error("Error message:", e.message);
+
+            // Remove the task from local array since it failed to save
+            todos = todos.filter((t) => t.id !== newTodo.id);
+            render();
+
+            if (e.code === "permission-denied") {
+              alert(
+                'Failed to save task: Permission denied.\n\nPlease add Firestore security rules for the "groupTasks" collection:\n\nmatch /groupTasks/{taskId} {\n  allow read, write: if request.auth != null;\n}'
+              );
+            } else {
+              alert(
+                "Failed to save task. Please try again.\n\nError: " + e.message
+              );
+            }
+          }
+        }
+
+        async function toggle(id) {
+          const t = todos.find((x) => x.id === id);
+          if (!t) return;
+          t.done = !t.done;
+          console.log(`Toggled task ${id}: done=${t.done}`);
+          render(); // Render immediately for UI feedback
+
+          try {
+            if (!currentUser) return;
+            await updateDoc(doc(db, "groupTasks", id), {
+              done: t.done,
+              completedBy: t.done ? currentUser.uid : null,
+              completedAt: t.done ? serverTimestamp() : null,
+            });
+            console.log(`✓ Group task updated in Firestore`);
+          } catch (e) {
+            console.warn("Could not update group task in Firestore", e);
+          }
+        }
+
+        async function remove(id) {
+          todos = todos.filter((x) => x.id !== id);
+          render(); // Render immediately for UI feedback
+
+          try {
+            if (!currentUser) return;
+            await deleteDoc(doc(db, "groupTasks", id));
+            console.info("Deleted group task from Firestore", id);
+          } catch (e) {
+            console.warn("Could not delete group task from Firestore", e);
+          }
+        }
+
+        async function clearCompleted() {
+          const toRemove = todos.filter((t) => t.done).map((t) => t.id);
+          todos = todos.filter((t) => !t.done);
+          render(); // Render immediately for UI feedback
+
           if (!currentUser) return;
-          await updateDoc(doc(db, 'groupTasks', id), {
-            done: t.done,
-            completedBy: t.done ? currentUser.uid : null,
-            completedAt: t.done ? serverTimestamp() : null
+          for (const id of toRemove) {
+            try {
+              await deleteDoc(doc(db, "groupTasks", id));
+              console.info("Deleted completed task from Firestore", id);
+            } catch (e) {
+              console.warn("Could not delete completed task", id, e);
+            }
+          }
+        }
+
+        async function loadGroups() {
+          // fallback one-time load (used rarely now)
+          if (!currentUser || isLoadingGroups) return;
+          isLoadingGroups = true;
+          try {
+            console.log("[Groups] One-time load start");
+            const qRef = query(
+              collection(db, "groups"),
+              where("members", "array-contains", currentUser.email)
+            );
+            const snap = await getDocs(qRef);
+            applyGroupSnapshot(snap);
+            console.log("[Groups] One-time load complete");
+          } catch (e) {
+            console.warn("[Groups] One-time load error", e);
+          } finally {
+            isLoadingGroups = false;
+          }
+        }
+
+        function applyGroupSnapshot(snap) {
+          const seen = new Set();
+          const next = [];
+          snap.docs.forEach((d) => {
+            if (!seen.has(d.id)) {
+              seen.add(d.id);
+              next.push({ id: d.id, ...d.data() });
+            }
           });
-          console.log(`✓ Group task updated in Firestore`);
-        } catch (e) {
-          console.warn('Could not update group task in Firestore', e);
-        }
-      }
-
-      async function remove(id) {
-        todos = todos.filter(x => x.id !== id); 
-        render(); // Render immediately for UI feedback
-        
-        try {
-          if (!currentUser) return;
-          await deleteDoc(doc(db, 'groupTasks', id));
-          console.info('Deleted group task from Firestore', id);
-        } catch (e) {
-          console.warn('Could not delete group task from Firestore', e);
-        }
-      }
-
-      async function clearCompleted() {
-        const toRemove = todos.filter(t => t.done).map(t => t.id);
-        todos = todos.filter(t => !t.done); 
-        render(); // Render immediately for UI feedback
-        
-        if (!currentUser) return;
-        for (const id of toRemove) {
-          try { 
-            await deleteDoc(doc(db, 'groupTasks', id)); 
-            console.info('Deleted completed task from Firestore', id);
-          } catch (e) { 
-            console.warn('Could not delete completed task', id, e); 
-          }
-        }
-      }
-
-      async function loadGroups() { // fallback one-time load (used rarely now)
-        if (!currentUser || isLoadingGroups) return;
-        isLoadingGroups = true;
-        try {
-          console.log('[Groups] One-time load start');
-          const qRef = query(collection(db, 'groups'), where('members', 'array-contains', currentUser.email));
-          const snap = await getDocs(qRef);
-          applyGroupSnapshot(snap);
-          console.log('[Groups] One-time load complete');
-        } catch (e) {
-          console.warn('[Groups] One-time load error', e);
-        } finally {
-          isLoadingGroups = false;
-        }
-      }
-
-      function applyGroupSnapshot(snap) {
-        const seen = new Set();
-        const next = [];
-        snap.docs.forEach(d => {
-          if (!seen.has(d.id)) {
-            seen.add(d.id);
-            next.push({ id: d.id, ...d.data() });
-          }
-        });
-        groups = next;
-        console.log(`[Groups] Snapshot docs=${snap.docs.length} stored=${groups.length}`, groups.map(g => `${g.name}(${g.members?.length || 0})`));
-        renderGroups();
-      }
-
-      function subscribeGroups() {
-        if (!currentUser) return;
-        if (unsubscribeGroups) {
-          unsubscribeGroups();
-          unsubscribeGroups = null;
-        }
-        // Clear stale groups and show loading state briefly
-        groups = [];
-        renderGroups(); // Show empty state immediately
-        els.groupsView.classList.add('loading');
-        console.log('[Groups] Subscribing real-time');
-        const qRef = query(collection(db, 'groups'), where('members', 'array-contains', currentUser.email));
-        unsubscribeGroups = onSnapshot(qRef, (snap) => {
-          console.log('[Groups] Real-time update received');
-          applyGroupSnapshot(snap);
-          // Show the view now that data is ready
-          els.groupsView.classList.remove('loading');
-        }, (err) => {
-          console.error('[Groups] Real-time listener error', err);
-          els.groupsView.classList.remove('loading');
-          // Even on error, ensure empty state is visible
+          groups = next;
+          console.log(
+            `[Groups] Snapshot docs=${snap.docs.length} stored=${groups.length}`,
+            groups.map((g) => `${g.name}(${g.members?.length || 0})`)
+          );
           renderGroups();
-        });
-      }
+        }
 
-      function renderGroups() {
-        els.groupList.innerHTML = '';
-        console.log(`[Render] Total groups=${groups.length}`);
-        
-        if (groups.length === 0) {
-          els.groupList.innerHTML = `
+        function subscribeGroups() {
+          if (!currentUser) return;
+          if (unsubscribeGroups) {
+            unsubscribeGroups();
+            unsubscribeGroups = null;
+          }
+          // Clear stale groups and show loading state briefly
+          groups = [];
+          renderGroups(); // Show empty state immediately
+          els.groupsView.classList.add("loading");
+          console.log("[Groups] Subscribing real-time");
+          const qRef = query(
+            collection(db, "groups"),
+            where("members", "array-contains", currentUser.email)
+          );
+          unsubscribeGroups = onSnapshot(
+            qRef,
+            (snap) => {
+              console.log("[Groups] Real-time update received");
+              applyGroupSnapshot(snap);
+              // Show the view now that data is ready
+              els.groupsView.classList.remove("loading");
+            },
+            (err) => {
+              console.error("[Groups] Real-time listener error", err);
+              els.groupsView.classList.remove("loading");
+              // Even on error, ensure empty state is visible
+              renderGroups();
+            }
+          );
+        }
+
+        function renderGroups() {
+          els.groupList.innerHTML = "";
+          console.log(`[Render] Total groups=${groups.length}`);
+
+          if (groups.length === 0) {
+            els.groupList.innerHTML = `
             <div class="empty-groups">
               <i class="fas fa-users"></i>
               <h4>No Groups Yet</h4>
               <p>Create your first group to get started with collaborative tasks</p>
             </div>
           `;
-          return;
-        }
-        
-        const frag = document.createDocumentFragment();
-        for (const g of groups) {
-          const div = document.createElement('div');
-          div.className = 'group-card';
-          const membersCount = new Set((g.members || []).map(m => (m||'').toLowerCase())).size;
-          const initial = (g.name || '?').trim().charAt(0).toUpperCase() || '?';
-          const hue = Math.abs(((g.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)) % 360);
-          div.innerHTML = `
+            return;
+          }
+
+          const frag = document.createDocumentFragment();
+          for (const g of groups) {
+            const div = document.createElement("div");
+            div.className = "group-card";
+            const membersCount = new Set(
+              (g.members || []).map((m) => (m || "").toLowerCase())
+            ).size;
+            const initial =
+              (g.name || "?").trim().charAt(0).toUpperCase() || "?";
+            const hue = Math.abs(
+              (g.name || "")
+                .split("")
+                .reduce((a, c) => a + c.charCodeAt(0), 0) % 360
+            );
+            div.innerHTML = `
             <div class="actions-overlay">
-              <button class="delete-group-btn" data-group-id="${g.id}"><i class="fas fa-trash"></i> Delete</button>
+              <button class="delete-group-btn" data-group-id="${
+                g.id
+              }"><i class="fas fa-trash"></i> Delete</button>
             </div>
             <div class="d-flex align-items-center gap-3">
-              <div class="group-icon" style="background: linear-gradient(135deg, hsl(${hue}, 85%, 65%) 0%, hsl(${(hue+40)%360}, 85%, 52%) 100%);">
+              <div class="group-icon" style="background: linear-gradient(135deg, hsl(${hue}, 85%, 65%) 0%, hsl(${
+              (hue + 40) % 360
+            }, 85%, 52%) 100%);">
                 <span>${initial}</span>
               </div>
               <div class="group-details flex-grow-1">
                 <h4>${g.name}</h4>
                 <div class="group-meta">
-                  <span><i class="fas fa-user me-1"></i>${membersCount} member${membersCount !== 1 ? 's' : ''}</span>
-                  <span><i class="fas fa-calendar-plus me-1"></i>Created ${formatDate(g.created)}</span>
+                  <span><i class="fas fa-user me-1"></i>${membersCount} member${
+              membersCount !== 1 ? "s" : ""
+            }</span>
+                  <span><i class="fas fa-calendar-plus me-1"></i>Created ${formatDate(
+                    g.created
+                  )}</span>
                 </div>
               </div>
               <i class="fas fa-chevron-right text-muted"></i>
@@ -1276,359 +1460,425 @@
               <span><i class="fas fa-users"></i> Group</span>
             </div>
           `;
-          
-          // Click on card to select group
-          div.addEventListener('click', (e) => {
-            if (!e.target.closest('.delete-group-btn')) {
-              App.setGroup(g.id);
+
+            // Click on card to select group
+            div.addEventListener("click", (e) => {
+              if (!e.target.closest(".delete-group-btn")) {
+                App.setGroup(g.id);
+              }
+            });
+
+            // Delete button
+            div
+              .querySelector(".delete-group-btn")
+              .addEventListener("click", async (e) => {
+                e.stopPropagation();
+                if (
+                  confirm(
+                    `Are you sure you want to delete the group "${g.name}"? This will also delete all tasks in this group.`
+                  )
+                ) {
+                  await deleteGroup(g.id);
+                }
+              });
+
+            frag.appendChild(div);
+          }
+          els.groupList.appendChild(frag);
+        }
+
+        function formatDate(timestamp) {
+          if (!timestamp) return "recently";
+          try {
+            const date = timestamp.toDate
+              ? timestamp.toDate()
+              : new Date(timestamp);
+            const now = new Date();
+            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            if (diffDays === 0) return "today";
+            if (diffDays === 1) return "yesterday";
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            return date.toLocaleDateString();
+          } catch (e) {
+            return "recently";
+          }
+        }
+
+        async function createGroup(name, members) {
+          if (!currentUser) return;
+          try {
+            // Build unique, normalized member list including creator
+            const inputMembers = (members || [])
+              .map((m) => (m || "").trim().toLowerCase())
+              .filter(Boolean);
+            const creator = (currentUser.email || "").trim().toLowerCase();
+            const uniqueMembers = Array.from(
+              new Set([creator, ...inputMembers])
+            );
+
+            const newGroup = {
+              name: name.trim(),
+              members: uniqueMembers,
+              created: serverTimestamp(),
+              createdBy: currentUser.uid,
+            };
+            const docRef = await addDoc(collection(db, "groups"), newGroup);
+            console.log("Group created with ID:", docRef.id);
+            // No manual load; real-time listener will push update
+          } catch (e) {
+            console.error("Error creating group:", e);
+          }
+        }
+
+        async function deleteGroup(groupIdToDelete) {
+          if (!currentUser) return;
+          try {
+            // Delete the group document
+            await deleteDoc(doc(db, "groups", groupIdToDelete));
+            console.log("Group deleted:", groupIdToDelete);
+
+            // Delete all tasks in this group
+            const q = query(
+              collection(db, "groupTasks"),
+              where("groupId", "==", groupIdToDelete)
+            );
+            const snap = await getDocs(q);
+            const deletePromises = snap.docs.map((d) =>
+              deleteDoc(doc(db, "groupTasks", d.id))
+            );
+            await Promise.all(deletePromises);
+            console.log("Deleted", snap.docs.length, "tasks from group");
+
+            // If this was the selected group, clear selection and switch views
+            if (groupId === groupIdToDelete) {
+              groupId = null;
+              todos = [];
+              els.groupsView.style.display = "block";
+              els.tasksView.style.display = "none";
+              render();
             }
-          });
-          
-          // Delete button
-          div.querySelector('.delete-group-btn').addEventListener('click', async (e) => {
-            e.stopPropagation();
-            if (confirm(`Are you sure you want to delete the group "${g.name}"? This will also delete all tasks in this group.`)) {
-              await deleteGroup(g.id);
+
+            // Refresh group list
+            await loadGroups();
+          } catch (e) {
+            console.error("Error deleting group:", e);
+            alert("Could not delete group. Please try again.");
+          }
+        }
+
+        async function deleteAllMyGroups() {
+          if (!currentUser) return;
+          const confirmed = confirm(
+            "⚠️ DELETE ALL YOUR GROUPS?\n\nThis will permanently delete ALL groups where you are a member and ALL their tasks. This cannot be undone.\n\nType YES in the next prompt to confirm."
+          );
+          if (!confirmed) return;
+
+          const doubleCheck = prompt(
+            "Type YES to confirm deletion of all your groups:"
+          );
+          if (doubleCheck !== "YES") {
+            alert("Deletion cancelled.");
+            return;
+          }
+
+          try {
+            console.log("[Delete All] Starting bulk delete...");
+            // Get all groups where user is a member
+            const q = query(
+              collection(db, "groups"),
+              where("members", "array-contains", currentUser.email)
+            );
+            const snap = await getDocs(q);
+
+            for (const groupDoc of snap.docs) {
+              const groupId = groupDoc.id;
+              console.log("[Delete All] Deleting group:", groupId);
+
+              // Delete all tasks in this group
+              const tasksQuery = query(
+                collection(db, "groupTasks"),
+                where("groupId", "==", groupId)
+              );
+              const tasksSnap = await getDocs(tasksQuery);
+              const taskDeletes = tasksSnap.docs.map((d) =>
+                deleteDoc(doc(db, "groupTasks", d.id))
+              );
+              await Promise.all(taskDeletes);
+              console.log(
+                `[Delete All] Deleted ${tasksSnap.docs.length} tasks from group ${groupId}`
+              );
+
+              // Delete the group
+              await deleteDoc(doc(db, "groups", groupId));
             }
-          });
-          
-          frag.appendChild(div);
-        }
-        els.groupList.appendChild(frag);
-      }
 
-      function formatDate(timestamp) {
-        if (!timestamp) return 'recently';
-        try {
-          const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-          const now = new Date();
-          const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-          if (diffDays === 0) return 'today';
-          if (diffDays === 1) return 'yesterday';
-          if (diffDays < 7) return `${diffDays} days ago`;
-          if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-          return date.toLocaleDateString();
-        } catch (e) {
-          return 'recently';
-        }
-      }
+            console.log(
+              `[Delete All] Completed. Deleted ${snap.docs.length} groups.`
+            );
+            alert(
+              `✓ Successfully deleted ${snap.docs.length} group(s) and all their tasks.`
+            );
 
-      async function createGroup(name, members) {
-        if (!currentUser) return;
-        try {
-          // Build unique, normalized member list including creator
-          const inputMembers = (members || []).map(m => (m || '').trim().toLowerCase()).filter(Boolean);
-          const creator = (currentUser.email || '').trim().toLowerCase();
-          const uniqueMembers = Array.from(new Set([creator, ...inputMembers]));
-
-          const newGroup = {
-            name: name.trim(),
-            members: uniqueMembers,
-            created: serverTimestamp(),
-            createdBy: currentUser.uid
-          };
-          const docRef = await addDoc(collection(db, 'groups'), newGroup);
-          console.log('Group created with ID:', docRef.id);
-          // No manual load; real-time listener will push update
-        } catch (e) {
-          console.error('Error creating group:', e);
-        }
-      }
-
-      async function deleteGroup(groupIdToDelete) {
-        if (!currentUser) return;
-        try {
-          // Delete the group document
-          await deleteDoc(doc(db, 'groups', groupIdToDelete));
-          console.log('Group deleted:', groupIdToDelete);
-          
-          // Delete all tasks in this group
-          const q = query(collection(db, 'groupTasks'), where('groupId', '==', groupIdToDelete));
-          const snap = await getDocs(q);
-          const deletePromises = snap.docs.map(d => deleteDoc(doc(db, 'groupTasks', d.id)));
-          await Promise.all(deletePromises);
-          console.log('Deleted', snap.docs.length, 'tasks from group');
-          
-          // If this was the selected group, clear selection and switch views
-          if (groupId === groupIdToDelete) {
+            // Clear UI
             groupId = null;
             todos = [];
-            els.groupsView.style.display = 'block';
-            els.tasksView.style.display = 'none';
-            render();
-          }
-          
-          // Refresh group list
-          await loadGroups();
-        } catch (e) {
-          console.error('Error deleting group:', e);
-          alert('Could not delete group. Please try again.');
-        }
-      }
-
-      async function deleteAllMyGroups() {
-        if (!currentUser) return;
-        const confirmed = confirm('⚠️ DELETE ALL YOUR GROUPS?\n\nThis will permanently delete ALL groups where you are a member and ALL their tasks. This cannot be undone.\n\nType YES in the next prompt to confirm.');
-        if (!confirmed) return;
-        
-        const doubleCheck = prompt('Type YES to confirm deletion of all your groups:');
-        if (doubleCheck !== 'YES') {
-          alert('Deletion cancelled.');
-          return;
-        }
-
-        try {
-          console.log('[Delete All] Starting bulk delete...');
-          // Get all groups where user is a member
-          const q = query(collection(db, 'groups'), where('members', 'array-contains', currentUser.email));
-          const snap = await getDocs(q);
-          
-          for (const groupDoc of snap.docs) {
-            const groupId = groupDoc.id;
-            console.log('[Delete All] Deleting group:', groupId);
-            
-            // Delete all tasks in this group
-            const tasksQuery = query(collection(db, 'groupTasks'), where('groupId', '==', groupId));
-            const tasksSnap = await getDocs(tasksQuery);
-            const taskDeletes = tasksSnap.docs.map(d => deleteDoc(doc(db, 'groupTasks', d.id)));
-            await Promise.all(taskDeletes);
-            console.log(`[Delete All] Deleted ${tasksSnap.docs.length} tasks from group ${groupId}`);
-            
-            // Delete the group
-            await deleteDoc(doc(db, 'groups', groupId));
-          }
-          
-          console.log(`[Delete All] Completed. Deleted ${snap.docs.length} groups.`);
-          alert(`✓ Successfully deleted ${snap.docs.length} group(s) and all their tasks.`);
-          
-          // Clear UI
-          groupId = null;
-          todos = [];
-          groups = [];
-          els.groupsView.style.display = 'block';
-          els.tasksView.style.display = 'none';
-          renderGroups();
-        } catch (e) {
-          console.error('[Delete All] Error:', e);
-          alert('Error deleting groups. Please try again or check console.');
-        }
-      }
-
-      function bind() {
-        els.addForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          els.addFormError.classList.add('d-none');
-          document.getElementById('errorText').textContent = '';
-          
-          const text = els.input.value.trim();
-          if (!text) {
-            document.getElementById('errorText').textContent = 'Please enter a task.';
-            els.addFormError.classList.remove('d-none');
-            els.input.focus();
-            return;
-          }
-          
-          const assignee = els.assignee.value || '';
-          addTodo(text, assignee);
-          els.input.value = '';
-          els.assignee.value = '';
-          els.input.focus();
-        });
-
-        els.input.addEventListener('input', () => {
-          if (els.input.value.trim()) {
-            els.addFormError.classList.add('d-none');
-          }
-        });
-
-        els.list.addEventListener('click', (e) => {
-          const li = e.target.closest('.todo-item'); if (!li) return;
-          const id = li.dataset.id;
-          if (e.target.matches('.toggle')) toggle(id);
-          else if (e.target.matches('.delete')) remove(id);
-        });
-
-        els.filters.forEach(r => r.addEventListener('change', () => {
-          activeFilter = document.querySelector('input[name="filter"]:checked').value;
-          render();
-        }));
-
-        els.clearCompleted.addEventListener('click', () => clearCompleted());
-
-        els.createGroupBtn.addEventListener('click', () => {
-          els.createGroupModal.style.display = 'flex';
-          els.groupNameInput.value = '';
-          els.groupMembersInput.value = '';
-        });
-
-        // Delete current group from within tasks view
-        els.deleteCurrentGroupBtn.addEventListener('click', async () => {
-          if (!groupId) return;
-          const confirmed = confirm('Delete this group and all its tasks? This cannot be undone.');
-          if (!confirmed) return;
-          await deleteGroup(groupId);
-        });
-
-        // Helper: check which emails are registered in Firebase Auth
-        async function filterRegisteredEmails(emails) {
-          const existing = [];
-          const missing = [];
-          // Run lookups in parallel (client SDK fetchSignInMethodsForEmail)
-          await Promise.all(emails.map(async (email) => {
-            try {
-              const methods = await fetchSignInMethodsForEmail(auth, email);
-              if (methods && methods.length > 0) existing.push(email); else missing.push(email);
-            } catch (err) {
-              console.warn('Email check failed for', email, err);
-              // Treat failures as missing so user is informed
-              missing.push(email);
-            }
-          }));
-          return { existing, missing };
-        }
-
-        els.saveGroupBtn.addEventListener('click', async () => {
-          els.groupMembersError.classList.add('d-none');
-          els.groupMembersError.textContent = '';
-          const name = els.groupNameInput.value.trim();
-          const { valid, invalid } = parseEmails(els.groupMembersInput.value);
-          if (!name) {
-            els.groupMembersError.textContent = 'Please provide a group name.';
-            els.groupMembersError.classList.remove('d-none');
-            return;
-          }
-          if (valid.length === 0) {
-            els.groupMembersError.textContent = 'Enter at least one valid email.';
-            els.groupMembersError.classList.remove('d-none');
-            return;
-          }
-          if (invalid.length > 0) {
-            els.groupMembersError.textContent = `Ignoring invalid: ${invalid.join(', ')}`;
-            els.groupMembersError.classList.remove('d-none');
-          }
-          // Cross-check against Firebase Auth
-          const { existing, missing } = await filterRegisteredEmails(valid);
-          if (existing.length === 0) {
-            els.groupMembersError.textContent = 'None of the provided emails are registered users.';
-            els.groupMembersError.classList.remove('d-none');
-            return;
-          }
-          if (missing.length > 0) {
-            const prior = els.groupMembersError.textContent;
-            const msg = `Excluded unregistered: ${missing.join(', ')}`;
-            els.groupMembersError.textContent = prior ? prior + ' | ' + msg : msg;
-            els.groupMembersError.classList.remove('d-none');
-          }
-          await createGroup(name, existing);
-          els.createGroupModal.style.display = 'none';
-        });
-
-        // Close modal on outside click
-        window.addEventListener('click', (e) => {
-          if (e.target === els.createGroupModal) {
-            els.createGroupModal.style.display = 'none';
-          }
-        });
-
-        // Back to groups button
-        els.backToGroupsBtn.addEventListener('click', () => {
-          setGroup(null);
-        });
-
-        // Delete all groups button
-        if (els.deleteAllGroupsBtn) {
-          els.deleteAllGroupsBtn.addEventListener('click', async () => {
-            await deleteAllMyGroups();
-          });
-        }
-      }
-
-      async function setGroup(newGroupId) {
-        groupId = newGroupId;
-        if (groupId && groupId !== 'none') {
-          try {
-            const groupSnap = await getDoc(doc(db, 'groups', groupId));
-            if (groupSnap.exists()) {
-              const groupData = groupSnap.data();
-              
-              // Switch to tasks view
-              els.groupsView.style.display = 'none';
-              els.tasksView.style.display = 'block';
-              
-              // Update selected group header
-              els.selectedGroupName.textContent = groupData.name || 'Unnamed Group';
-              els.selectedGroupMembers.textContent = `${(groupData.members || []).length} member${(groupData.members || []).length !== 1 ? 's' : ''}`;
-
-              // Always load group tasks fresh from Firestore
-              const q = query(collection(db, 'groupTasks'), where('groupId', '==', groupId));
-              const snap = await getDocs(q);
-              todos = snap.docs.map(d => {
-                const data = d.data();
-                return {
-                  id: d.id,
-                  text: data.text || '',
-                  assignee: data.assignee || 'Unassigned',
-                  done: !!data.done,
-                  created: data.created?.toMillis ? data.created.toMillis() : Date.now()
-                };
-              });
-              console.log('✓ Loaded group tasks from Firestore:', todos.length, 'tasks');
-            }
+            groups = [];
+            els.groupsView.style.display = "block";
+            els.tasksView.style.display = "none";
+            renderGroups();
           } catch (e) {
-            console.error('ERROR loading group tasks:', e);
+            console.error("[Delete All] Error:", e);
+            alert("Error deleting groups. Please try again or check console.");
           }
-        } else {
-          // Switch to groups view
-          els.groupsView.style.display = 'block';
-          els.tasksView.style.display = 'none';
-          todos = [];
         }
-        render();
-      }
 
-      function init() {
-        bind();
-        // Start with groups view
-        groupId = null;
-        els.groupsView.style.display = 'block';
-        els.tasksView.style.display = 'none';
-        render();
-        // Don't load groups here - auth listener will handle subscription
-      }
+        function bind() {
+          els.addForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            els.addFormError.classList.add("d-none");
+            document.getElementById("errorText").textContent = "";
 
-      return { init, setGroup };
-    })();
+            const text = els.input.value.trim();
+            if (!text) {
+              document.getElementById("errorText").textContent =
+                "Please enter a task.";
+              els.addFormError.classList.remove("d-none");
+              els.input.focus();
+              return;
+            }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      App.init();
-      onAuthStateChanged(auth, (user) => {
-        currentUser = user || null;
-        console.log('[Auth] User changed, email=', currentUser?.email);
-        // Clear any stale groups from previous session or state
-        groups = [];
-        if (currentUser) {
-          subscribeGroups(); // will clear and render before subscribing
-        } else {
-          // User not logged in - always show empty state
-          els.groupsView.classList.remove('loading');
-          renderGroups(); // show empty state
-          if (unsubscribeGroups) { unsubscribeGroups(); unsubscribeGroups = null; }
+            const assignee = els.assignee.value || "";
+            addTodo(text, assignee);
+            els.input.value = "";
+            els.assignee.value = "";
+            els.input.focus();
+          });
+
+          els.input.addEventListener("input", () => {
+            if (els.input.value.trim()) {
+              els.addFormError.classList.add("d-none");
+            }
+          });
+
+          els.list.addEventListener("click", (e) => {
+            const li = e.target.closest(".todo-item");
+            if (!li) return;
+            const id = li.dataset.id;
+            if (e.target.matches(".toggle")) toggle(id);
+            else if (e.target.matches(".delete")) remove(id);
+          });
+
+          els.filters.forEach((r) =>
+            r.addEventListener("change", () => {
+              activeFilter = document.querySelector(
+                'input[name="filter"]:checked'
+              ).value;
+              render();
+            })
+          );
+
+          els.clearCompleted.addEventListener("click", () => clearCompleted());
+
+          els.createGroupBtn.addEventListener("click", () => {
+            els.createGroupModal.style.display = "flex";
+            els.groupNameInput.value = "";
+            els.groupMembersInput.value = "";
+          });
+
+          // Delete current group from within tasks view
+          els.deleteCurrentGroupBtn.addEventListener("click", async () => {
+            if (!groupId) return;
+            const confirmed = confirm(
+              "Delete this group and all its tasks? This cannot be undone."
+            );
+            if (!confirmed) return;
+            await deleteGroup(groupId);
+          });
+
+          // Helper: check which emails are registered in Firebase Auth
+          async function filterRegisteredEmails(emails) {
+            const existing = [];
+            const missing = [];
+            // Run lookups in parallel (client SDK fetchSignInMethodsForEmail)
+            await Promise.all(
+              emails.map(async (email) => {
+                try {
+                  const methods = await fetchSignInMethodsForEmail(auth, email);
+                  if (methods && methods.length > 0) existing.push(email);
+                  else missing.push(email);
+                } catch (err) {
+                  console.warn("Email check failed for", email, err);
+                  // Treat failures as missing so user is informed
+                  missing.push(email);
+                }
+              })
+            );
+            return { existing, missing };
+          }
+
+          els.saveGroupBtn.addEventListener("click", async () => {
+            els.groupMembersError.classList.add("d-none");
+            els.groupMembersError.textContent = "";
+            const name = els.groupNameInput.value.trim();
+            const { valid, invalid } = parseEmails(els.groupMembersInput.value);
+            if (!name) {
+              els.groupMembersError.textContent =
+                "Please provide a group name.";
+              els.groupMembersError.classList.remove("d-none");
+              return;
+            }
+            if (valid.length === 0) {
+              els.groupMembersError.textContent =
+                "Enter at least one valid email.";
+              els.groupMembersError.classList.remove("d-none");
+              return;
+            }
+            if (invalid.length > 0) {
+              els.groupMembersError.textContent = `Ignoring invalid: ${invalid.join(
+                ", "
+              )}`;
+              els.groupMembersError.classList.remove("d-none");
+            }
+            // Cross-check against Firebase Auth
+            const { existing, missing } = await filterRegisteredEmails(valid);
+            if (existing.length === 0) {
+              els.groupMembersError.textContent =
+                "None of the provided emails are registered users.";
+              els.groupMembersError.classList.remove("d-none");
+              return;
+            }
+            if (missing.length > 0) {
+              const prior = els.groupMembersError.textContent;
+              const msg = `Excluded unregistered: ${missing.join(", ")}`;
+              els.groupMembersError.textContent = prior
+                ? prior + " | " + msg
+                : msg;
+              els.groupMembersError.classList.remove("d-none");
+            }
+            await createGroup(name, existing);
+            els.createGroupModal.style.display = "none";
+          });
+
+          // Close modal on outside click
+          window.addEventListener("click", (e) => {
+            if (e.target === els.createGroupModal) {
+              els.createGroupModal.style.display = "none";
+            }
+          });
+
+          // Back to groups button
+          els.backToGroupsBtn.addEventListener("click", () => {
+            setGroup(null);
+          });
+
+          // Delete all groups button
+          if (els.deleteAllGroupsBtn) {
+            els.deleteAllGroupsBtn.addEventListener("click", async () => {
+              await deleteAllMyGroups();
+            });
+          }
         }
+
+        async function setGroup(newGroupId) {
+          groupId = newGroupId;
+          if (groupId && groupId !== "none") {
+            try {
+              const groupSnap = await getDoc(doc(db, "groups", groupId));
+              if (groupSnap.exists()) {
+                const groupData = groupSnap.data();
+
+                // Switch to tasks view
+                els.groupsView.style.display = "none";
+                els.tasksView.style.display = "block";
+
+                // Update selected group header
+                els.selectedGroupName.textContent =
+                  groupData.name || "Unnamed Group";
+                els.selectedGroupMembers.textContent = `${
+                  (groupData.members || []).length
+                } member${(groupData.members || []).length !== 1 ? "s" : ""}`;
+
+                // Always load group tasks fresh from Firestore
+                const q = query(
+                  collection(db, "groupTasks"),
+                  where("groupId", "==", groupId)
+                );
+                const snap = await getDocs(q);
+                todos = snap.docs.map((d) => {
+                  const data = d.data();
+                  return {
+                    id: d.id,
+                    text: data.text || "",
+                    assignee: data.assignee || "Unassigned",
+                    done: !!data.done,
+                    created: data.created?.toMillis
+                      ? data.created.toMillis()
+                      : Date.now(),
+                  };
+                });
+                console.log(
+                  "✓ Loaded group tasks from Firestore:",
+                  todos.length,
+                  "tasks"
+                );
+              }
+            } catch (e) {
+              console.error("ERROR loading group tasks:", e);
+            }
+          } else {
+            // Switch to groups view
+            els.groupsView.style.display = "block";
+            els.tasksView.style.display = "none";
+            todos = [];
+          }
+          render();
+        }
+
+        function init() {
+          bind();
+          // Start with groups view
+          groupId = null;
+          els.groupsView.style.display = "block";
+          els.tasksView.style.display = "none";
+          render();
+          // Don't load groups here - auth listener will handle subscription
+        }
+
+        return { init, setGroup };
+      })();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        App.init();
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user || null;
+          console.log("[Auth] User changed, email=", currentUser?.email);
+          // Clear any stale groups from previous session or state
+          groups = [];
+          if (currentUser) {
+            subscribeGroups(); // will clear and render before subscribing
+          } else {
+            // User not logged in - always show empty state
+            els.groupsView.classList.remove("loading");
+            renderGroups(); // show empty state
+            if (unsubscribeGroups) {
+              unsubscribeGroups();
+              unsubscribeGroups = null;
+            }
+          }
+        });
       });
-    });
 
-    document.addEventListener('groupSelected', (e) => {
-      const groupId = e.detail.groupId;
-      App.setGroup(groupId);
-    });
-  </script>
+      document.addEventListener("groupSelected", (e) => {
+        const groupId = e.detail.groupId;
+        App.setGroup(groupId);
+      });
+    </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="module">
-    import { logout } from './src/logout.js';
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-  </script>
-  <script type="module" src="./src/groupTodo.js"></script>
-   <script src="/design/bottom-window.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+      import { logout } from "./src/logout.js";
+      document.getElementById("logoutBtn").addEventListener("click", logout);
+    </script>
 </body>
 </html>
