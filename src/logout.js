@@ -4,7 +4,7 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-aut
 export function logout() {
   signOut(auth)
     .then(() => {
-      window.location.href = "login.html";
+      window.location.href = "index.html";
     })
     .catch((error) => {
       alert("Logout failed");

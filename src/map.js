@@ -189,7 +189,8 @@ onAuthStateChanged(auth, (user) => {
     }
     startFriendsLocationsListener();
   } else {
-    window.location.href = "login.html";
+    console.log("No user logged in. Redirecting to login...");
+    window.location.href = "index.html";
   }
 });
 

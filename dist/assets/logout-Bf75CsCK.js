@@ -1,1 +1,0 @@
-import{a as t}from"./firebaseConfig-xSN_xHYb.js";import{signOut as r}from"https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";function l(){r(t).then(()=>{window.location.href="login.html"}).catch(o=>{alert("Logout failed"),console.error(o)})}export{l};
