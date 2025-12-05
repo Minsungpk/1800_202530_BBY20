@@ -1,0 +1,1 @@
+import{a as s}from"./firebaseConfig-xSN_xHYb.js";import{signInWithEmailAndPassword as n,createUserWithEmailAndPassword as o,updateProfile as e}from"https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";async function m(a,r,t){const i=await o(s,a,r);return await e(i.user,{displayName:t}),i}function c(a,r){return n(s,a,r)}export{c as l,m as s};

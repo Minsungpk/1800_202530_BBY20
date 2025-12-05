@@ -17,3 +17,4 @@ onAuthStateChanged(auth, async (user) => {
     }
   }
 });
+
