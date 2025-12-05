@@ -41,10 +41,12 @@ let userDisplayName = null;
 // ======================================================================
 // 3. CREATE THE MAP USING MAPLIBRE
 // ======================================================================
+
+const API_KEY = "87b3526b-21eb-4cdd-a643-e3060a8a93e9";
 const map = new maplibregl.Map({
   container: "map",
-  style:
-    "https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=tdthCswjV8GNYleNLj1C",
+  // style: `https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=${API_KEY}`,
+  style: "https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=tdthCswjV8GNYleNLj1C",
   center: [-123.0016, 49.2532], // Burnaby campus area
   zoom: 13,
   pitch: 0,
