@@ -34,8 +34,8 @@ let userDisplayName = null;
 //map creation
 const map = new maplibregl.Map({
   container: "map",
-  style:
-    "https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=tdthCswjV8GNYleNLj1C",
+  // style: `https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=${API_KEY}`,
+  style: "https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=tdthCswjV8GNYleNLj1C",
   center: [-123.0016, 49.2532], // Burnaby campus area
   zoom: 13,
   pitch: 0,
@@ -84,8 +84,6 @@ async function sendMyLocationToFirebase(position) {
       },
       { merge: true }
     );
-
-    console.log("Updated my location in Firestore:", lat, lng);
   } catch (err) {
     console.error("Error updating location:", err);
   }
@@ -170,8 +168,6 @@ async function startFriendsLocationsListener() {
     friends.forEach((friendId) => {
       listenToLocationDoc(friendId, false);
     });
-
-    console.log("Started location listeners for friends:", friends);
   } catch (err) {
     console.error("Error starting friends listeners:", err);
   }
@@ -182,8 +178,6 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     userId = user.uid;
     userDisplayName = user.displayName || user.email || "Anonymous";
-
-    console.log("Logged in as:", userId, userDisplayName);
     if ("geolocation" in navigator) {
       navigator.geolocation.watchPosition(
         sendMyLocationToFirebase,

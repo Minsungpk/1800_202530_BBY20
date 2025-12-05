@@ -21,398 +21,9 @@
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="./styles/style.css" />
-<script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
-    <style>
-      @import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
-
-      :root {
-        --primary: #0d6efd;
-        --success: #198754;
-        --warning: #ffc107;
-        --danger: #dc3545;
-        --light-bg: #f8f9fa;
-        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      body {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        min-height: 100vh;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      main {
-        padding-top: 100px;
-      }
-
-      .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 45px;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-bottom: 10px;
-      }
-
-      .page-header h1 {
-        font-size: 3rem;
-        font-weight: bold;
-        font-family: Rubik;
-      }
-
-      .badge {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-      }
-
-      .add-form-card {
-        background: white;
-        border: none;
-        border-radius: 12px;
-        box-shadow: var(--card-shadow);
-        margin-bottom: 2rem;
-        margin-left: 20px;
-        margin-right: 20px;
-        transition: box-shadow 0.3s ease;
-      }
-
-      .add-form-card:focus-within {
-        box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
-      }
-
-      .add-form-card .card-body {
-        padding: 1rem;
-      }
-
-      .form-control {
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 0.75rem;
-        font-size: 0.95rem;
-        transition: border-color 0.3s, box-shadow 0.3s;
-      }
-
-      .form-control:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-      }
-
-      /* Box icon no active tasks */
-      .filters-bar {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-
-      .btn-group .btn {
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.2s;
-      }
-
-      .btn-group .btn-check:checked + .btn {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: white;
-      }
-
-      .btn-outline-danger {
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.2s;
-      }
-
-      .todo-list {
-        list-style: none;
-        padding: 0;
-      }
-
-      .todo-item {
-        background: white;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      }
-
-      .todo-item:hover {
-        box-shadow: var(--card-shadow);
-        transform: translateY(-2px);
-        border-color: #dee2e6;
-      }
-
-      .todo-item.completed {
-        background: #f8f9fa;
-        border-color: #dee2e6;
-        opacity: 0.85;
-      }
-
-      .todo-item.completed .todo-text {
-        text-decoration: line-through;
-        color: #6c757d;
-      }
-
-      .todo-checkbox {
-        width: 1.5rem;
-        height: 1.5rem;
-        margin-top: 0.15rem;
-        cursor: pointer;
-        accent-color: var(--success);
-        flex-shrink: 0;
-      }
-
-      .todo-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .todo-text {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #212529;
-        word-break: break-word;
-      }
-
-      .todo-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        font-size: 0.85rem;
-        color: #6c757d;
-      }
-
-      .todo-meta-item {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-      }
-
-      .todo-meta-item i {
-        color: var(--primary);
-      }
-
-      .status-emoji {
-        font-size: 1rem;
-        font-weight: 700;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        background: #f0f0f0;
-      }
-
-      .status-emoji.text-success {
-        background: #d1e7dd;
-      }
-      .status-emoji.text-warning {
-        background: #fff3cd;
-      }
-
-      .btn-group-actions {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .btn-group-actions .btn {
-        border-radius: 6px;
-        font-size: 0.85rem;
-        padding: 0.5rem 0.75rem;
-        transition: all 0.2s;
-      }
-
-      .btn-outline-secondary:hover {
-        background: #6c757d;
-        border-color: #6c757d;
-        color: white;
-      }
-
-      .btn-outline-danger:hover {
-        background: var(--danger);
-        border-color: var(--danger);
-        color: white;
-      }
-
-      .edit-input {
-        border-radius: 6px;
-        border: 2px solid var(--primary);
-        padding: 0.5rem;
-        font-size: 0.95rem;
-      }
-
-      .edit-input:focus {
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-      }
-
-      .stats-footer {
-        text-align: center;
-        padding: 1rem;
-        background: white;
-        border-radius: 8px;
-        margin-top: 2rem;
-        font-weight: 600;
-        color: #495057;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      }
-
-      .empty-state {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: #6c757d;
-      }
-
-      /* Footer Styling */
-      footer.footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 60px;
-        background-color: #7796cb; /* landing page color */
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        z-index: 1000;
-        padding: 1rem 0;
-      }
-
-      .footer-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        color: #495057;
-      }
-
-      .footer-icon:hover {
-        background: rgba(13, 110, 253, 0.1);
-        color: #0d6efd;
-      }
-
-      .footer-icon svg {
-        width: 24px;
-        height: 24px;
-      }
-
-      .footer-icon.active {
-        background: #0d6efd;
-        color: #fff;
-      }
-
-      /* Bottom Sheet */
-      .bottom-sheet {
-        position: fixed;
-        left: 0;
-        bottom: -40%;
-        width: 100%;
-        height: 40%;
-        background: rgba(0, 0, 0, 0);
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        transition: bottom 0.35s ease;
-        z-index: 2000;
-      }
-
-      /* The window itself */
-      .sheet-content {
-        width: 100%;
-        height: 100%;
-        background: #fff;
-        border-radius: 20px 20px 0 0;
-        box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        text-align: center;
-        position: relative; /* allows X button */
-      }
-
-      .sheet-title {
-        margin-top: 10px;
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      /* Close X button */
-      .close-btn {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 6px;
-        z-index: 10;
-      }
-
-      .close-btn svg {
-        pointer-events: none;
-      }
-
-      /* Buttons in window */
-      .sheet-btn {
-        width: 100%;
-        padding: 14px;
-        margin-top: 12px;
-        background: #eee;
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        cursor: pointer;
-      }
-
-      .sheet-btn:hover {
-        background: #e0e0e0;
-      }
-
-      .bottom-sheet.open {
-        bottom: 0;
-      }
-      .empty-state i {
-        font-size: 3rem;
-        opacity: 0.3;
-        margin-bottom: 1rem;
-      }
-
-      @media (max-width: 480px) {
-        .page-header h1 {
-          font-size: 2.5rem;
-        }
-      }
-
-      @media (max-width: 360px) {
-        .page-header h1 {
-          font-size: 2rem;
-        }
-      }
-    </style>
+  <link rel="stylesheet" href="./styles/todolist.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
 </head>
 
 <body class="bg-light">
@@ -423,7 +34,6 @@
           <!-- Page Header -->
           <div class="page-header">
             <h1>My To-Do List</h1>
-            <!-- <div class="subtitle">Stay organized and on top of your tasks</div> -->
           </div>
 
           <!-- Add form -->
@@ -687,9 +297,6 @@
             .slice(2, 8)}`;
 
         function celebrateStreakWith3OnTimeCompletions() {
-          console.log(
-            "🎉 3 on-time completions in a row! Celebrating with confetti!"
-          );
           currentOnTimeStreak = 0;
           try {
             if (typeof confetti !== "undefined") {
@@ -729,7 +336,7 @@
           z-index: 10000;
           animation: slideDown 0.5s ease, slideUp 0.5s ease 4.5s forwards;
         `;
-          banner.innerHTML = "🎉 Amazing! 3 on-time completions in a row! 🎉";
+          banner.innerHTML = "Amazing! 3 on-time completions in a row!";
           document.body.appendChild(banner);
           if (!document.getElementById("celebrationStyles")) {
             const style = document.createElement("style");
@@ -779,7 +386,7 @@
               activeFilter === "all"
                 ? '<i class="fas fa-inbox"></i><p>No active tasks. Add one to get started!</p>'
                 : activeFilter === "active"
-                ? '<i class="fas fa-check-circle"></i><p>All caught up! 🎉</p>'
+                ? '<i class="fas fa-check-circle"></i><p>All caught up!</p>'
                 : '<i class="fas fa-list"></i><p>No completed tasks yet.</p>';
             els.list.appendChild(emptyMsg);
             updateStats();
@@ -813,7 +420,7 @@
 
             const statusEl = li.querySelector(".status-emoji");
             if (t.done && typeof t.onTimeLocal === "boolean") {
-              statusEl.textContent = t.onTimeLocal ? "✅ On-Time" : "🕒 Late";
+              statusEl.textContent = t.onTimeLocal ? "On-Time" : "Late";
               statusEl.classList.toggle("text-success", t.onTimeLocal);
               statusEl.classList.toggle("text-warning", !t.onTimeLocal);
             } else {
@@ -839,7 +446,7 @@
           }
         }
 
-        // 🔹 When a todo is added, also create a "todo_created" notification
+        // When a todo is added, also create a "todo_created" notification
         async function addTodo(text, scheduled, description) {
           const newTodo = {
             id: uid(),
@@ -865,7 +472,7 @@
             });
             console.info("Task persisted", newTodo.id);
 
-            // 🔔 notify user that a task was created
+            // notify user that a task was created
             await createNotification(
               `Task created: ${newTodo.text}`,
               "todo_created"

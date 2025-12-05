@@ -524,10 +524,7 @@ els.clearActivityBtn?.addEventListener("click", async () => {
       collection(db, "events"),
       where("userUid", "==", currentUser.uid)
     );
-
-    console.log("Querying events for user:", currentUser.uid);
     const snap = await getDocs(q);
-    console.log("Found", snap.docs.length, "events to delete");
     let deleted = 0;
     let failed = 0;
 
@@ -544,9 +541,7 @@ els.clearActivityBtn?.addEventListener("click", async () => {
 
     console.info(`Successfully deleted ${deleted} events, ${failed} failed`);
     await new Promise((resolve) => setTimeout(resolve, 500));
-    console.log("Reloading stats...");
     await loadStats(currentUser.uid);
-    console.log("Stats reloaded");
     els.clearActivityBtn.disabled = false;
     els.clearActivityBtn.textContent = "🗑 Clear Activity";
 

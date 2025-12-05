@@ -43,7 +43,6 @@ onAuthStateChanged(auth, async (user) => {
         createdAt: new Date(),
         email: currentUser.email,
       });
-      console.log("User document created for:", currentUser.uid);
     }
 
     loadEvents();

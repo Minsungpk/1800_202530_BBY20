@@ -1,41 +1,57 @@
-# Elmo Hikes
+# Timely
 
 ## Overview
 
-Elmo Hikes is a client-side JavaScript web application that helps users discover and explore hiking trails. The app displays a curated list of hike trails, each with details such as name, location, difficulty, and an image. Users can browse the list and mark their favorite trails for easy access later.
+Our team BBY20 is developing Timely, a mobile application to help students and adults improve their time management when they plan to meet up with their friends and peers with a system that tracks each other’s progress to prepare for any shared schedule. 
 
-Developed for the COMP 1800 course, this project applies User-Centred Design practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.
+Developed for the COMP 1800 course, this project applies User-Centred Dmesign practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.
+
 
 ---
+
 
 ## Features
 
-- Browse a list of curated hiking trails with images and details
-- Mark and unmark trails as favorites
-- View a personalized list of favorite hikes
-- Responsive design for desktop and mobile
+- View you and your friends live locations on the map
+- Create personal and group to-do lists to help you and your friends stay on top of upcoming tasks
+- Host an event and invite others to join
+- Check you task completion statistics to see how many can be finished before the deadline and earn rewards.
+
 
 ---
 
-## Technologies Used
 
-Example:
+## Technologies Used
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Backend**: Firebase for hosting
 - **Database**: Firestore
+- **APIs**: Map rendered with [MapLibreGLJS](https://maplibre.org/) using tiles from [MapTiler](https://www.maptiler.com/)
+- **APIs**: Geocoding/autocomplete functionality for location search from [StadiaMaps](https://stadiamaps.com/)
+
 
 ---
+
 
 ## Usage
 
-1. Open your browser and visit `http://localhost:3000`.
-2. Browse the list of hiking trails displayed on the main page.
-3. Click the heart icon (or similar) to mark a trail as a favorite.
-4. View your favorite hikes in the favorites section.
+1. Open your browser and visit `https://group-project-8a6ee.web.app/`.
+2. View both your own and others’ real-time locations displayed on the map.
+3. Click the plus icon to create a to-do list, group to-do list, or an event.
+4. Fill out all necessary fields to launch a to-do list.
+5. Tasks will now display on the page, and each one includes a checkbox to mark as completed.
+6.  For a group to-do list, add users by email for them to join the group.
+7. Add details and tasks to launch a group to-do list.
+8. To host a new event, provide all necessary information, including the location.
+9. Navigate to the dashboard to view all available events to join.
+10. Navigate to the profile page and click the second icon in the top left corner to view all joined events.
+11. On the same page, add as user's email to add them as a friend. 
+12. View sent friend requests and incoming friend requests on the bottom of the page.
+
 
 ---
+
 
 ## Project Structure
 
@@ -56,62 +72,40 @@ elmo-hikes/
 
 
 ## Contributors 
--**Abhia**- BCIT CST student, likes going out, shopping and drinking iced coffee.
+- **Abhia** - BCIT CST student, likes going out, shopping and drinking iced coffee.
 - **Minsung** - BCIT CST Student with a passion for coding and inventing something new. Fun fact:I like modifiying cars and going for a cruise.
 - **Jessie Yuen** - BCIT CST Student with an enthusiasm for arts and shopping. Enjoys the great outdoors.
 - **Faida** - BCIT CST Student who likes video games.
+
+
 ---
+
 
 ## Acknowledgments
 
-- Trail data and images are for demonstration purposes only.
-- Code snippets were adapted from resources such as [Stack Overflow](https://stackoverflow.com/) and [MDN Web Docs](https://developer.mozilla.org/).
-- Icons sourced from [FontAwesome](https://fontawesome.com/) and images from [Unsplash](https://unsplash.com/).
+- AI tools such as [ChatGPT](https://chatgpt.com/) were used for debugging, explainations, and code suggestions for portions of this project. 
+- Icons sourced from [Bootstrap](https://icons.getbootstrap.com/) and [Flaticon](https://www.flaticon.com/).
+
 
 ---
+
 
 ## Limitations and Future Work
 
 ### Limitations
 
-- Limited trail details (e.g., no live trail conditions).
-- Accessibility features can be further improved.
+- Events do not appear on the map.
+- Notifications/Alerts are not implemented.
 
 ### Future Work
 
-- Implement map view and trailhead directions.
-- Add filtering and sorting options (e.g., by difficulty, distance).
-- Create a dark mode for better usability in low-light conditions.
-
-## Statistics & Rewards (new)
-
-This project now includes a basic statistics and rewards system backed by Firestore.
-
-- Events: user actions are stored in a top-level `events` collection. Each document has:
-	- `userUid` (string)
-	- `type` ("arrival" | "completion")
-	- `timestamp` (serverTimestamp)
-	- `meta` (object with taskId, scheduledTime, onTime, locationId, etc.)
-
-- Rewards: each user has a `userRewards/{uid}` document that tracks `points` earned.
-	- Completions award 10 points.
-	- On-time arrivals award 20 points.
-
-Deployment notes
-- Make sure Firestore is enabled for the Firebase project in `src/firebaseConfig.js` and deploy the rules in `firestore.rules` before testing the feature. If you manage the Firebase project from the CLI:
-
-```bash
-firebase deploy --only firestore:rules --project <your-project-id>
-```
-
-Security
-- Firestore rules restrict both `events` and `userRewards` so users can only create/read/update their own documents. See `firestore.rules` for full details.
-
-Testing
-- Use the "Seed sample data" button on `statistics.html` to populate sample events and points for quick testing.
+- Events show up on the map.
+- Add notifications to alert users of upcoming deadlines.
+- Personal and group tasks are displayed together on a separate page or on the dashboard.
 
 
 ---
+
 
 ## License
 
