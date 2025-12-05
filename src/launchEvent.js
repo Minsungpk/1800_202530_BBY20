@@ -19,8 +19,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-console.log("Firebase initialized:", app.options.projectId);
-
 const input = document.getElementById("search-container");
 const resultsList = document.getElementById("autocomplete-results");
 let selectedCoordinates = null;

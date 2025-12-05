@@ -84,8 +84,6 @@ async function sendMyLocationToFirebase(position) {
       },
       { merge: true }
     );
-
-    console.log("Updated my location in Firestore:", lat, lng);
   } catch (err) {
     console.error("Error updating location:", err);
   }
@@ -169,8 +167,6 @@ async function startFriendsLocationsListener() {
     friends.forEach((friendId) => {
       listenToLocationDoc(friendId, false);
     });
-
-    console.log("Started location listeners for friends:", friends);
   } catch (err) {
     console.error("Error starting friends listeners:", err);
   }
@@ -181,8 +177,6 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     userId = user.uid;
     userDisplayName = user.displayName || user.email || "Anonymous";
-
-    console.log("Logged in as:", userId, userDisplayName);
     if ("geolocation" in navigator) {
       navigator.geolocation.watchPosition(
         sendMyLocationToFirebase,
@@ -194,7 +188,6 @@ onAuthStateChanged(auth, (user) => {
     }
     startFriendsLocationsListener();
   } else {
-    console.log("No user logged in. Redirecting to login...");
     window.location.href = "login.html";
   }
 });
