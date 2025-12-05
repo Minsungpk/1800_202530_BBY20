@@ -11,9 +11,9 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     try {
       await initializeNewUser(user.uid, user.displayName, user.email);
-      console.log("Firestore user document initialized for", user.uid);
     } catch (error) {
       console.error("Error initializing user document:", error);
     }
   }
 });
+

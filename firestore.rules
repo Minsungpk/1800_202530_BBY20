@@ -2,47 +2,11 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Allow each authenticated user to manage their own 'events' documents.
-    // Documents are expected to have a field `userUid` equal to the authenticated uid.
-    match /events/{eventId} {
-
-      // Read only if the requester is the owner
-      allow get, list: if request.auth != null && request.auth.uid == resource.data.userUid;
-
-  // Create only if authenticated and the new document's userUid matches the requester's uid
-  // NOTE: we avoid strict equality on timestamps because serverTimestamp() is resolved
-  // by the backend and exact equality checks can fail in rules evaluation.
-  allow create: if request.auth != null
-        && request.resource.data.userUid == request.auth.uid
-        && request.resource.data.type in ['arrival', 'completion']
-        // Basic shape checks (optional but helpful)
-        && request.resource.data.meta is map;
-
-      // Update/delete only if the existing doc's owner matches request.auth.uid
-      allow update, delete: if request.auth != null && resource.data.userUid == request.auth.uid;
-    }
-
-    // Per-user tasks collection: allow users to create/read/update/delete their own tasks
-    match /tasks/{taskId} {
-      allow get, list: if request.auth != null && request.auth.uid == resource.data.userUid;
-      allow create: if request.auth != null
-                    && request.resource.data.userUid == request.auth.uid
-                    && request.resource.data.text is string;
-      allow update, delete: if request.auth != null && resource.data.userUid == request.auth.uid;
-    }
-
-    // Per-user rewards document. Each user may have a single document named by their UID.
-    match /userRewards/{uid} {
-      allow get, list: if request.auth != null && request.auth.uid == uid;
-      allow create, update: if request.auth != null
-                            && request.auth.uid == uid
-                            && request.resource.data.points is number;
-      allow delete: if false; // don't allow deletions from client
-    }
-
-    // Fallback: deny everything else by default
+    // SIMPLE DEMO RULES:
+    // Allow anyone (even not logged in) to read/write anything.
+    // This is okay for your course project / demo.
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if true;
     }
   }
 }

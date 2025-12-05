@@ -1,24 +1,20 @@
-// ======================================================================
-// 1. IMPORT FIREBASE MODULES (from CDN)
-// ======================================================================
-// These imports allow this JavaScript file to talk to Firebase services.
+//imports for Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import {
   getFirestore,
   doc,
   setDoc,
-  collection,
   onSnapshot,
   Timestamp,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+
 import {
   getAuth,
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
-// ======================================================================
-// 2. FIREBASE CONFIGURATION + INITIALIZATION
-// ======================================================================
+//Firebase configurations and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -28,21 +24,14 @@ const firebaseConfig = {
   appId: "1:922685674876:web:6edeac0ff4fb485db780f9",
   measurementId: "G-1LCVJ62HEL",
 };
-
-// Initialize Firebase app + services
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// These will be filled AFTER the user logs in
 let userId = null;
 let userDisplayName = null;
 
-// ======================================================================
-// 3. CREATE THE MAP USING MAPLIBRE
-// ======================================================================
-
-const API_KEY = "87b3526b-21eb-4cdd-a643-e3060a8a93e9";
+//map creation
 const map = new maplibregl.Map({
   container: "map",
   // style: `https://api.maptiler.com/maps/019a5278-dbf9-77ba-8b85-d04e6ac21b57/style.json?key=${API_KEY}`,
@@ -53,11 +42,9 @@ const map = new maplibregl.Map({
   bearing: 0,
 });
 
-// Enable map rotation controls
 map.dragRotate.enable();
 map.touchZoomRotate.enableRotation();
 
-// Add map navigation controls (zoom buttons, compass)
 map.addControl(
   new maplibregl.NavigationControl({
     visualizePitch: true,
@@ -66,10 +53,7 @@ map.addControl(
   })
 );
 
-// ======================================================================
-// 4. GEOLOCATE CONTROL (blue dot only - NOT Firestore)
-// ======================================================================
-
+// geolocate control
 const geolocate = new maplibregl.GeolocateControl({
   positionOptions: { enableHighAccuracy: true },
   trackUserLocation: true,
@@ -77,15 +61,10 @@ const geolocate = new maplibregl.GeolocateControl({
 });
 
 map.addControl(geolocate);
-
-// Start geolocation visual when map loads
 map.on("load", () => geolocate.trigger());
 
-// ======================================================================
-// 5. SEND MY LOCATION TO FIREBASE (real-time updating)
-// ======================================================================
+//send location to Firebase
 async function sendMyLocationToFirebase(position) {
-  // If we don't know who the user is yet, skip
   if (!userId) {
     console.warn("No logged-in user yet, skipping location update.");
     return;
@@ -103,99 +82,102 @@ async function sendMyLocationToFirebase(position) {
         updatedAt: Timestamp.now(),
         displayName: userDisplayName,
       },
-      { merge: true } // keep other fields if they exist
+      { merge: true }
     );
-
-    console.log("Updated my location in Firestore:", lat, lng);
   } catch (err) {
     console.error("Error updating location:", err);
   }
 }
 
-// ======================================================================
-// 6. LISTEN FOR ALL USERS' LOCATIONS (real-time map updates)
-// ======================================================================
-const markers = {}; // one marker per userId
+//myself and friends locations only
+const markers = {};
 
-function startLocationsListener() {
-  onSnapshot(collection(db, "locations"), (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const otherUserId = change.doc.id;
-      const data = change.doc.data();
+function updateMarkerForUser(uid, data, isMe = false) {
+  if (!data || data.lat == null || data.lng == null) return;
 
-      // Skip invalid data
-      if (data.lat == null || data.lng == null) return;
+  const popupText =
+    (isMe ? "(You) " : "") + (data.displayName || data.userDisplayName || uid);
 
-      const isMe = otherUserId === userId;
+  if (markers[uid]) {
+    markers[uid].setLngLat([data.lng, data.lat]);
+    const popup = markers[uid].getPopup();
+    if (popup) popup.setText(popupText);
+    return;
+  }
+  const iconUrl = "./images/otherpin.png";
 
-      // Text to show in popup (name/email/uid)
-      const popupText = data.displayName || data.userDisplayName || otherUserId;
 
-      // ADDED or MODIFIED → create or move marker
-      if (change.type === "added" || change.type === "modified") {
-        if (markers[otherUserId]) {
-          // Move existing marker
-          markers[otherUserId].setLngLat([data.lng, data.lat]);
+  const el = document.createElement("img");
+  el.src = iconUrl;
+  el.alt = popupText;
+  el.style.width = "40px";
+  el.style.height = "40px";
+  el.style.borderRadius = "50%";
+  el.style.objectFit = "cover";
 
-          // Update popup text if popup exists
-          const existingPopup = markers[otherUserId].getPopup();
-          if (existingPopup) {
-            existingPopup.setText(popupText);
-          }
-        } else {
-          // ---------------------------------------------
-          // Create custom icon element (image marker)
-          // ---------------------------------------------
-          const iconUrl = "./images/otherpin.png"; // 🔹 other users' icon
-          // ? "./images/pin.png"     // 🔹 your icon
+  const popup = new maplibregl.Popup({ offset: 25 }).setText(popupText);
 
-          const el = document.createElement("img");
-          el.src = iconUrl;
-          el.alt = popupText;
-          el.style.width = "40px";
-          el.style.height = "40px";
-          el.style.borderRadius = "50%"; // optional: make it circular
-          el.style.objectFit = "cover";
+  markers[uid] = new maplibregl.Marker({ element: el })
+    .setLngLat([data.lng, data.lat])
+    .setPopup(popup)
+    .addTo(map);
 
-          // Create popup
-          const popup = new maplibregl.Popup({ offset: 25 }).setText(popupText);
-
-          // Create new marker with custom element + popup
-          markers[otherUserId] = new maplibregl.Marker({
-            element: el,
-          })
-            .setLngLat([data.lng, data.lat])
-            .setPopup(popup)
-            .addTo(map);
-
-          // Automatically show popup
-          markers[otherUserId].togglePopup();
-        }
-      }
-
-      // REMOVED → delete marker
-      if (change.type === "removed") {
-        if (markers[otherUserId]) {
-          markers[otherUserId].remove();
-          delete markers[otherUserId];
-        }
-      }
-    });
-  });
+  markers[uid].togglePopup();
 }
 
-// ======================================================================
-// 7. AUTH STATE LISTENER – START EVERYTHING AFTER LOGIN
-// ======================================================================
+//one location document only
+function listenToLocationDoc(uid, isMe = false) {
+  const locRef = doc(db, "locations", uid);
+
+  onSnapshot(
+    locRef,
+    (snap) => {
+      if (!snap.exists()) {
+        if (markers[uid]) {
+          markers[uid].remove();
+          delete markers[uid];
+        }
+        return;
+      }
+      updateMarkerForUser(uid, snap.data(), isMe);
+    },
+    (err) => {
+      console.error("Location listener error for", uid, err);
+    }
+  );
+}
+
+//load my friends and start listeners
+async function startFriendsLocationsListener() {
+  if (!userId) return;
+
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+
+    let friends = [];
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+      friends = Array.isArray(data.friends) ? data.friends : [];
+    }
+
+    //always listen to my own musuem
+    listenToLocationDoc(userId, true);
+
+    //listen to each friend's location
+    friends.forEach((friendId) => {
+      listenToLocationDoc(friendId, false);
+    });
+  } catch (err) {
+    console.error("Error starting friends listeners:", err);
+  }
+}
+
+//auth state listener
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // ✅ User is logged in
     userId = user.uid;
     userDisplayName = user.displayName || user.email || "Anonymous";
-
-    console.log("Logged in as:", userId, userDisplayName);
-
-    // Start watching GPS → sendMyLocationToFirebase
     if ("geolocation" in navigator) {
       navigator.geolocation.watchPosition(
         sendMyLocationToFirebase,
@@ -205,13 +187,9 @@ onAuthStateChanged(auth, (user) => {
     } else {
       console.error("Geolocation is not supported on this device.");
     }
-
-    // Start listening to all users' locations
-    startLocationsListener();
+    startFriendsLocationsListener();
   } else {
-    // ❌ No user logged in → redirect to login page
-    console.log("No user logged in. Redirecting to login...");
-    // Adjust path if needed (e.g., "./login.html" or "/auth/login.html")
     window.location.href = "login.html";
   }
 });
+
