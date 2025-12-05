@@ -190,58 +190,77 @@
     </div>
 
     <script type="module">
-      import { auth } from "./src/firebaseConfig.js";
       import { signup } from "./src/auth2.js";
-
-      const userEl = document.getElementById("username");
+    
+      // Form elements
+      const userEl  = document.getElementById("username");
       const emailEl = document.getElementById("email");
-      const passEl = document.getElementById("password");
-      const confEl = document.getElementById("confirm");
-      const errEl = document.getElementById("error");
-
+      const passEl  = document.getElementById("password");
+      const confEl  = document.getElementById("confirm");
+      const errEl   = document.getElementById("error");
+    
+      // Email validation
       const emailOk = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-
-      document
-        .getElementById("signupBtn")
-        .addEventListener("click", async (e) => {
-          e.preventDefault();
-          errEl.textContent = "";
-
-          const email = emailEl.value.trim();
-          const pass = passEl.value;
-          const conf = confEl.value;
-          const username = userEl.value.trim();
-
-          if (!username)
-            return (errEl.textContent = "Please enter a username.");
-
-          if (!emailOk(email))
-            return (errEl.textContent = "Enter a valid email.");
-          if (!pass || pass.length < 6)
-            return (errEl.textContent =
-              "Password must be at least 6 characters.");
-          if (pass !== conf)
-            return (errEl.textContent = "Passwords do not match.");
-
-          try {
-            await signup(email, pass, username);
-            const msg = encodeURIComponent("Account created! Please sign in.");
-            window.location.href = `login.html?msg=${msg}`;
-          } catch (err) {
-            const code = err?.code || "";
-            if (code === "auth/email-already-in-use")
-              errEl.textContent = "Email already in use. Go back to sign in.";
-            else if (code === "auth/invalid-email")
-              errEl.textContent = "Invalid email.";
-            else
-              errEl.textContent = `Firebase: ${err.message || "Signup failed"}`;
+    
+      // Handle Sign-Up
+      document.getElementById("signupBtn").addEventListener("click", async (e) => {
+        e.preventDefault();
+        errEl.textContent = "";
+    
+        const username = userEl.value.trim();
+        const email    = emailEl.value.trim();
+        const pass     = passEl.value;
+        const conf     = confEl.value;
+    
+        // Validation
+        if (!username) {
+          errEl.textContent = "Please enter a username.";
+          return;
+        }
+    
+        if (!emailOk(email)) {
+          errEl.textContent = "Enter a valid email.";
+          return;
+        }
+    
+        if (!pass || pass.length < 6) {
+          errEl.textContent = "Password must be at least 6 characters.";
+          return;
+        }
+    
+        if (pass !== conf) {
+          errEl.textContent = "Passwords do not match.";
+          return;
+        }
+    
+        // Create account
+        try {
+          await signup(email, pass, username);
+          const msg = encodeURIComponent("Account created! Please sign in.");
+    
+          // IMPORTANT: Redirect to index.html using root path
+          window.location.href = `/?msg=${msg}`;
+    
+        } catch (err) {
+          const code = err?.code || "";
+    
+          if (code === "auth/email-already-in-use") {
+            errEl.textContent = "Email already in use. Go back to sign in.";
+          } else if (code === "auth/invalid-email") {
+            errEl.textContent = "Invalid email.";
+          } else {
+            errEl.textContent = `Firebase: ${err.message || "Signup failed"}`;
           }
-        });
-
+        }
+      });
+    
+      // Back to login (index.html)
       document.getElementById("backBtn").addEventListener("click", (e) => {
         e.preventDefault();
-        window.location.href = "login.html";
+        window.location.href = "/";
       });
     </script>
+    
+    
   </body>
 </html>
