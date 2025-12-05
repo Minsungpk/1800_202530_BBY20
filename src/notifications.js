@@ -7,14 +7,13 @@ import {
   query,
   where,
   orderBy,
-  onSnapshot
+  onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 import {
   getAuth,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 
-// 🔹 Same config you already use elsewhere
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -29,36 +28,33 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-console.log("✅ Notifications page: Firebase initialized");
+console.log("Notifications page: Firebase initialized");
 
 const notificationsList = document.getElementById("notificationsList");
 
-// 🔹 Wait for the login state
+//waiting for the login state
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    console.log("⚠️ No user logged in on notifications page");
+    console.log("No user logged in on notifications page");
     notificationsList.innerHTML = `
       <p class="text-muted mb-0">Please log in to see your notifications.</p>
     `;
     return;
   }
 
-  console.log("🔐 Logged in as:", user.uid, user.email);
+  console.log("Logged in as:", user.uid, user.email);
   loadNotificationsForUser(user.uid);
 });
 
-// 🔹 Load notifications for this user
+//load notifications for this user
 function loadNotificationsForUser(userUid) {
-  console.log("📥 Loading notifications for:", userUid);
-
-  // Query: notifications where userUid == current user, newest first
+  console.log("Loading notifications for:", userUid);
   const q = query(
     collection(db, "notifications"),
     where("userUid", "==", userUid),
     orderBy("createdAt", "desc")
   );
 
-  // Real-time listener: updates instantly when data changes
   onSnapshot(
     q,
     (snapshot) => {
@@ -69,7 +65,6 @@ function loadNotificationsForUser(userUid) {
         return;
       }
 
-      // Build HTML for each notification
       let html = "";
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
