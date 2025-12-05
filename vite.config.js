@@ -15,6 +15,7 @@ export default defineConfig({
                 launchEvent: resolve(__dirname, "launchevent.html"),
                 profile: resolve(__dirname, "profile.html"),
                 signup: resolve(__dirname, "signup.html"),
+                skeleton: resolve(__dirname, "skeleton.html"),
                 statistics: resolve(__dirname, "statistics.html"),
                 todoList: resolve(__dirname, "todolist.html"),
                 userEvents: resolve(__dirname, "userevents.html"),
@@ -22,3 +23,5 @@ export default defineConfig({
         }
     }
 });
+
+

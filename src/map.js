@@ -106,7 +106,8 @@ function updateMarkerForUser(uid, data, isMe = false) {
     if (popup) popup.setText(popupText);
     return;
   }
-  const iconUrl = isMe ? "./images/pin.png" : "./images/otherpin.png";
+  const iconUrl = "./images/otherpin.png";
+
 
   const el = document.createElement("img");
   el.src = iconUrl;
@@ -198,3 +199,4 @@ onAuthStateChanged(auth, (user) => {
     window.location.href = "login.html";
   }
 });
+

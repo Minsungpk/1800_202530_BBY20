@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Launch Event</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Custom CSS -->
+
+    <script src="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@stadiamaps/maplibre-search-box/dist/maplibre-search-box.umd.js"></script>
+    <link
+      href="https://unpkg.com/@stadiamaps/maplibre-search-box/dist/maplibre-search-box.css"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/launchEvent-D1whgO4D.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="stylesheet" crossorigin href="/assets/launchEvent-DbOrvhJG.css">
+    <link rel="stylesheet" crossorigin href="/assets/style-HP4BJ-1-.css">
+  </head>
+
+  <body class="bg-light">
+    <div id="createevent" class="container createevent">
+      <h1>Launch a new event!</h1>
+
+      <form id="eventForm">
+        <div class="formbox">
+          <label for="eventname" class="form-label"><b>Event Name:</b></label>
+          <input type="text" id="eventname" class="form-control" required />
+        </div>
+
+        <div class="formbox">
+          <label for="eventdescription" class="form-label"
+            ><b>Event Description:</b></label
+          >
+          <textarea
+            id="eventdescription"
+            class="form-control"
+            placeholder="What are you planning to do?"
+            required
+          ></textarea>
+        </div>
+
+        <div class="formbox">
+          <label for="eventdate" class="form-label"
+            ><b>Event Date & Time:</b></label
+          >
+          <input
+            type="datetime-local"
+            id="eventdate"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="formbox">
+          <label for="eventlocation" class="form-label"
+            ><b>Event Location:</b></label
+          >
+          <div id="location-search">
+            <input
+              type="text"
+              id="search-container"
+              class="form-control"
+              placeholder="Where will you host this?"
+              required
+            />
+            <ul id="autocomplete-results" class="autocomplete-results"></ul>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-info custom-btn">
+          Launch Event
+        </button>
+      </form>
+    </div>
+
+    <!-- Footer navigation -->
+    <footer class="footer">
+      <div class="footer-icon" onclick="window.location.href='landing.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-map-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"
+          />
+        </svg>
+      </div>
+
+      <div class="footer-icon" onclick="window.location.href='joinEvent.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-compass-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.5 7.5 0 0 1 5.538 7.24m-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"
+          />
+        </svg>
+      </div>
+
+      <div class="footer-icon" onclick="openSheet()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-plus-circle-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
+          />
+        </svg>
+      </div>
+
+      <div class="footer-icon" onclick="window.location.href='statistics.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-bar-chart-line-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1z"
+          />
+        </svg>
+      </div>
+
+      <div class="footer-icon" onclick="window.location.href='profile.html'">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-person-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+          />
+        </svg>
+      </div>
+    </footer>
+
+    <!-- Bottom sheet (create menu) -->
+    <div id="bottomSheet" class="bottom-sheet">
+      <div class="sheet-content">
+        <button class="close-btn" onclick="closeSheet()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-x-lg"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+            />
+          </svg>
+        </button>
+
+        <h5 class="sheet-title">Create</h5>
+
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='todolist.html'"
+        >
+          To-Do List
+        </button>
+
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='groupTodoList.html'"
+        >
+          Group To-Do List
+        </button>
+
+        <button
+          class="sheet-btn"
+          onclick="window.location.href='launchevent.html'"
+        >
+          Events
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom-sheet behaviour -->
+    <script src="/bottom-window.js"></script>
+  </body>
+</html>
