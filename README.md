@@ -56,16 +56,64 @@ Developed for the COMP 1800 course, this project applies User-Centred Dmesign pr
 ## Project Structure
 
 ```
-elmo-hikes/
-├── src/
-│   ├── main.js
-├── styles/
-│   └── style.css
+1800_202530_BBY20/
+├── .firebase/
+│   └── hosting.ZGlzdA.cache
+├── .vscode/
+│   └── settings.json
+├── dist/
+├── node_modules/
 ├── public/
-├── images/
+│   ├── images/
+│   └── bottom-window.js
+├── src/
+│   ├── app.jsx
+│   ├── auth2.js
+│   ├── firebaseConfig.js
+│   ├── friends.js
+│   ├── groupTodo.js
+│   ├── joinEvent.js
+│   ├── launchEvent.js
+│   ├── loginpage.jsx
+│   ├── logout.js
+│   ├── main.jsx
+│   ├── mainpage.jsx
+│   ├── map.js
+│   ├── newUser.js
+│   ├── statistics.js
+│   └── userevents.js
+├── styles/
+│   ├── grouptodolist.css
+│   ├── joinevent.css
+│   ├── landing.css
+│   ├── launchevent.css
+│   ├── loginpage.css
+│   ├── profile.css
+│   ├── statistics.css
+│   ├── style.css
+│   ├── todolist.css
+│   └── userevents.css
+├── .firebaserc
+├── .gitignore
+├── firebase.json
+├── firestore.indexes.json
+├── firestore.rules
+├── groupTodoList.html
 ├── index.html
+├── joinEvent.html
+├── landing.html
+├── launchevent.html
+├── package-lock.json
 ├── package.json
+├── profile.html
 ├── README.md
+├── signup.html
+├── skeleton.html
+├── statistics.html
+├── todolist.html
+├── userevents.html
+└── vite.config.js
+
 ```
 
 ---
