@@ -1,0 +1,233 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --primary: #A3BCF9;
+  --success: #198754;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light-bg: #f8f9fa;
+  --card-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+body {
+  font-family: Rubik;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.page-header {
+  padding: 20px;
+  padding-bottom: 40px; 
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: Rubik;
+
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+}
+
+.add-form-card {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 2rem;
+  margin-left: 20px;
+  margin-right: 20px;
+  transition: box-shadow 0.3s ease;
+}
+
+.add-form-card:focus-within {
+  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
+}
+
+.add-form-card .card-body {
+  padding: 1rem;
+}
+
+.form-control {
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.btn-primary {
+  background: #A3BCF9;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.filters-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+
+.btn-group .btn {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-group .btn-check:checked + .btn {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  margin-bottom: 18px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow 0.2s ease;
+}
+
+.todo-item:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.todo-item.completed {
+  background: #f8f9fa;
+  opacity: 0.85;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.todo-checkbox {
+  width: 1.4rem;
+  height: 1.4rem;
+  cursor: pointer;
+  accent-color: var(--success);
+  transform: scale(1.15);
+  flex-shrink: 0;
+}
+
+.todo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #212529;
+  word-break: break-word;
+}
+
+.todo-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 10px;
+  color: #6c757d;
+}
+
+.todo-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.todo-meta-item i {
+  color: var(--primary);
+}
+
+.btn-group-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-group-actions .btn {
+  padding: 10px 14px !important;
+  background: #A3BCF9 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  transition: background 0.2s ease !important;
+}
+
+.btn-group-actions .btn:hover {
+  background: #7f9be0 !important;
+}
+
+.edit-input {
+  border-radius: 12px;
+  border: 2px solid var(--primary);
+  padding: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.stats-footer {
+  text-align: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 16px;
+  margin-top: 2rem;
+  font-weight: 600;
+  color: #495057;
+  box-shadow: var(--card-shadow);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  opacity: 0.3;
+  margin-bottom: 1rem;
+}
+
