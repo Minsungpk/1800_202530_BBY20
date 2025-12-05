@@ -1,5 +1,3 @@
-
-
 import {
   doc,
   getDoc,
@@ -10,7 +8,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 import { db } from "./firebaseConfig.js";
-
 
 export const initializeNewUser = async (userId, name, email) => {
   const userRef = doc(db, "users", userId);
@@ -30,9 +27,8 @@ export const initializeNewUser = async (userId, name, email) => {
   }
 };
 
-
 export const sendFriendRequest = async (fromUserId, toUserId) => {
-  if (fromUserId === toUserId) return; // cannot add yourself
+  if (fromUserId === toUserId) return;
 
   const toUserRef = doc(db, "users", toUserId);
   const toUserSnap = await getDoc(toUserRef);
@@ -47,7 +43,6 @@ export const sendFriendRequest = async (fromUserId, toUserId) => {
     friendRequests: arrayUnion(fromUserId),
   });
 };
-
 
 export const acceptFriendRequest = async (userId, requesterId) => {
   const userRef = doc(db, "users", userId);
@@ -70,7 +65,6 @@ export const acceptFriendRequest = async (userId, requesterId) => {
     friends: arrayUnion(userId),
   });
 };
-
 
 export const declineFriendRequest = async (userId, requesterId) => {
   const userRef = doc(db, "users", userId);

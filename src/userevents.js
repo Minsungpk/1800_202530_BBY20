@@ -11,7 +11,7 @@ import {
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-// Firebase config
+//Firebase configurations
 const firebaseConfig = {
   apiKey: "AIzaSyDD_2z29qDHPVXeSXyZ0T9VO_n_PcW1EqU",
   authDomain: "group-project-8a6ee.firebaseapp.com",
@@ -22,14 +22,13 @@ const firebaseConfig = {
   measurementId: "G-1LCVJ62HEL",
 };
 
-// Init Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 const joinedEventsList = document.getElementById("joinedEventsList");
 
-// Auth listener
+//authentication listener
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     await loadJoinedEvents(user);
@@ -39,11 +38,10 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Load joined events
+//load joined events
 async function loadJoinedEvents(user) {
   const joinedEventsRef = collection(db, `users/${user.uid}/joinedEvents`);
 
-  // Listen for changes in joinedEvents
   onSnapshot(joinedEventsRef, async (snapshot) => {
     joinedEventsList.innerHTML = "";
 
@@ -56,9 +54,8 @@ async function loadJoinedEvents(user) {
       const joinedData = docSnap.data();
       const eventRef = joinedData.eventRef;
 
-      if (!eventRef) continue; // skip if no reference
+      if (!eventRef) continue;
 
-      // Get the actual event document using the reference
       const eventSnap = await getDoc(eventRef);
       if (!eventSnap.exists()) {
         console.warn("Event doc not found:", docSnap.id);
@@ -66,8 +63,6 @@ async function loadJoinedEvents(user) {
       }
 
       const eventData = eventSnap.data();
-
-      // Render card
       const card = document.createElement("div");
       card.className = "event-card";
       card.innerHTML = `
