@@ -1,55 +1,20 @@
-/* Navbar */
-.container-fluid {
-  background-color: #576490;
-  display: none;
-}
-
-.navbar.bg-info {
-  background-color: #576490 !important;
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.navbar, .navbar * {
-  border-color: #576490
-}
-
-.navbar-brand {
-  font-family: "Helvetica", sans-sqerif;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 1px;
-}
-
-/* map */
-html, body {
+body,
+html {
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
-#map {
-  position: fixed;
-  top: 0;
- left: 0;
-  width: 100%;
-  height: 100%; 
-  z-index: 1;
-}
-
-/* footer */
 footer.footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 60px;
+  height: 70px !important;
   background-color: #7796cb;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1rem 0;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
@@ -58,30 +23,30 @@ footer.footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
+  width: 55px !important;
+  height: 55px !important;
   border-radius: 50%;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .footer-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
   color: white;
+  margin-bottom: 10px !important;
 }
 
 .footer-icon:hover {
-  transform: scale(1.15);
+  transform: scale(1.12);
 }
 
-/* Bottom Sheet */
 .bottom-sheet {
   position: fixed;
-  bottom: -40%;
+  bottom: -350px;
   left: 0;
   width: 100%;
-  height: 40%;
+  height: 350px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -97,9 +62,14 @@ footer.footer {
   width: 100%;
   height: 100%;
   background: white;
-  border-radius: 20px 20px 0 0;
+  border-radius: 22px 22px 0 0;
   padding: 20px;
-  box-shadow: 0 -4px 18px rgba(0,0,0,0.25);
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.25);
+}
+
+.sheet-title {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .sheet-btn {
@@ -121,22 +91,20 @@ footer.footer {
   font-size: 22px;
 }
 
-
 #nav {
   display: flex;
   justify-content: flex-start; /* keeps items on the left */
   align-items: center;
   padding: 10px;
 }
-.setting{
+.setting {
   width: 60px;
 }
 
-#profile{
+#profile {
   text-align: center;
   font-size: 50px;
 }
-
 
 .profilepicture {
   width: 200px;
@@ -145,6 +113,6 @@ footer.footer {
   object-fit: cover;
 }
 
-.caption{
+.caption {
   font-size: 20px;
 }

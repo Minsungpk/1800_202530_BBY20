@@ -1,0 +1,132 @@
+@import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
+
+body {
+  background: #f5f6fa;
+  font-family: Rubik;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+#nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 16px;
+}
+
+#nav img,
+.logout {
+  width: 26px;
+  height: 26px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+#nav .setting:hover {
+  opacity: 1;
+}
+
+#profile {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#profileName p{
+  font-size: 52px;
+}
+
+.profilepicture {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  cursor: pointer;
+}
+
+#profileName {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+#profileEmail {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+#sendFriendRequestSection {
+  margin-top: 25px;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+}
+
+#sendFriendRequestSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.send-request-btn {
+  background-color: #A3BCF9; 
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.send-request-btn:hover {
+  background-color: #7f9be0; 
+}
+
+
+.input-group .form-control {
+  border-radius: 10px !important;
+}
+
+.btn-info {
+  border-radius: 10px;
+}
+
+.friends-card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 20px auto;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.friends-card h4 {
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.list-group-item {
+  background: #f7f7f7;
+  border-radius: 12px !important;
+  padding: 14px;
+  margin-bottom: 10px;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-group-item button {
+  margin-left: 6px;
+}
+
