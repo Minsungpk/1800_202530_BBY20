@@ -1,6 +1,5 @@
 @import url(https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap);
 
-
 :root {
   --primary: #0d6efd;
   --success: #198754;
@@ -280,7 +279,6 @@ main {
   margin-bottom: 1rem;
 }
 
-/* Groups View Specific Styles */
 #groupsView {
   display: block;
 }

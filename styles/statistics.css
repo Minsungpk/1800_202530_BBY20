@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 body {
   font-family: Rubik;
@@ -12,7 +12,7 @@ main {
   padding-bottom: 70px; /* space for footer */
 }
 
-.page-header h1{
+.page-header h1 {
   font-size: 2rem;
   font-weight: bold;
   font-family: Rubik;
@@ -20,17 +20,17 @@ main {
   margin-bottom: 55px;
 }
 
-
 .kpi-card {
   background: white;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
   text-align: center;
 }
 
-.kpi-card h5, .kpi-label {
+.kpi-card h5,
+.kpi-label {
   margin: 0;
   font-weight: 600;
 }
@@ -54,11 +54,12 @@ main {
   font-size: 0.85rem;
 }
 
-.chart-card, .timeline-card {
+.chart-card,
+.timeline-card {
   background: white;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
 }
 
@@ -76,8 +77,12 @@ main {
   border-radius: 8px;
 }
 
-.timeline-item.completion { border-left-color: #354477; }
-.timeline-item.arrival { border-left-color: #576490; }
+.timeline-item.completion {
+  border-left-color: #354477;
+}
+.timeline-item.arrival {
+  border-left-color: #576490;
+}
 
 .timeline-dot {
   width: 1.5rem;
@@ -96,5 +101,3 @@ main {
   padding: 2rem;
   color: #6c757d;
 }
-
-

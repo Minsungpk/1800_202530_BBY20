@@ -53,13 +53,13 @@ input.addEventListener("input", async () => {
     li.addEventListener("click", () => {
       input.value = place.properties.label;
       resultsList.innerHTML = "";
-      selectedCoordinates = place.geometry.coordinates; // store [lng, lat]
+      selectedCoordinates = place.geometry.coordinates;
     });
 
     resultsList.appendChild(li);
   });
 });
-
+//event form descriptions
 document.getElementById("eventForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -90,7 +90,7 @@ document.getElementById("eventForm").addEventListener("submit", async (e) => {
       },
       createdAt: Timestamp.fromDate(new Date()),
     });
-
+    //message returned
     alert(`Event "${name}" created successfully! ID: ${docRef.id}`);
     e.target.reset();
     selectedCoordinates = null;
